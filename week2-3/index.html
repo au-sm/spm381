@@ -212,7 +212,7 @@ ul.bullets li.q::before{background:var(--coral);}
 /* full canvas */
 .full-canvas-slide{padding:0 !important;}
 .pdf-page-slide{padding:0 !important;}
-.pdf-page-slide .pp-wrap{position:relative;width:100%;height:100%;zoom:var(--zoom,1);}
+.pdf-page-slide .pp-wrap{position:relative;width:100%;height:100%;overflow:hidden;transform:scale(var(--zoom,1));transform-origin:center center;}
 .pdf-page-slide img{width:100%;height:100%;object-fit:cover;display:block;}
 .pdf-page-slide .pp-link{position:absolute;display:block;cursor:pointer;border-radius:4px;transition:background .15s ease;}
 .pdf-page-slide .pp-link:hover{background:rgba(255,255,255,.08);}
@@ -1025,7 +1025,7 @@ table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
     else if(e.key==='0'){ e.preventDefault(); zoomReset(); }
   });
 
-  const ZOOM_MIN = 0.75, ZOOM_MAX = 2, ZOOM_STEP = 0.1;
+  const ZOOM_MIN = 0.75, ZOOM_MAX = 2, ZOOM_STEP = 0.05;
   let zoomLevel = 1;
   try{
     const saved = parseFloat(localStorage.getItem('spm381_zoom'));
