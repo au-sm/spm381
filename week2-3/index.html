@@ -424,10 +424,33 @@ table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
     return wrap;
   }
 
+  // Marker syntax for real pptx hyperlinks carried through the JSON pipeline:
+  // "...some text [[LINK:https://example.com|the linked words]] more text..."
+  // becomes a real <a target="_blank" rel="noopener"> wherever bullets/body
+  // text are rendered. Separate from linkifyText/buildSource (plain-URL
+  // autolinking for source/notes fields) — that helper is untouched.
+  const LINK_MARKER_RE = /\[\[LINK:([^|\]]+)\|([^\]]+)\]\]/g;
+  function renderMarkedText(text){
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    LINK_MARKER_RE.lastIndex = 0;
+    while((m = LINK_MARKER_RE.exec(text))){
+      if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const a = document.createElement('a');
+      a.href = m[1].trim();
+      a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = m[2];
+      frag.appendChild(a);
+      last = LINK_MARKER_RE.lastIndex;
+    }
+    if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
   function buildBullets(list){
     const ul = el('ul','bullets');
     list.forEach((t,i)=>{
-      const li = el('li', isQuestion(t)?'q':'', escapeHTML(t));
+      const li = el('li', isQuestion(t)?'q':'');
+      li.appendChild(renderMarkedText(t));
       revealItem(li, 90*i);
       ul.appendChild(li);
     });
@@ -436,7 +459,8 @@ table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
   function buildQuestions(list){
     const ul = el('ul','questions');
     list.forEach((t,i)=>{
-      const li = el('li','', escapeHTML(t));
+      const li = el('li','');
+      li.appendChild(renderMarkedText(t));
       revealItem(li, 90*i);
       ul.appendChild(li);
     });
@@ -706,14 +730,14 @@ table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
         inner = el('div','slide-inner prompt-wrap');
         if(slide.title){ inner.appendChild(titleEl(slide.title,60)); }
         if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
-        if(slide.statement){ const p = el('p','statement-text reveal-item', escapeHTML(slide.statement)); revealItem(p,120); inner.appendChild(p); }
+        if(slide.statement){ const p = el('p','statement-text reveal-item'); p.appendChild(renderMarkedText(slide.statement)); revealItem(p,120); inner.appendChild(p); }
         break;
       }
       case 'stat-list': {
         inner = el('div','slide-inner');
         const hasImg = slide.images && slide.images.length;
         inner.appendChild(titleEl(slide.title,60));
-        if(slide.lede){ const l = el('p','lede reveal-item', escapeHTML(slide.lede)); revealItem(l,140); inner.appendChild(l); }
+        if(slide.lede){ const l = el('p','lede reveal-item'); l.appendChild(renderMarkedText(slide.lede)); revealItem(l,140); inner.appendChild(l); }
         if(slide.stats) inner.appendChild(buildStats(slide.stats, 180));
         if(hasImg){
           const tc = el('div','two-col');
