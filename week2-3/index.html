@@ -212,8 +212,10 @@ ul.bullets li.q::before{background:var(--coral);}
 /* full canvas */
 .full-canvas-slide{padding:0 !important;}
 .pdf-page-slide{padding:0 !important;}
-.pdf-page-slide .pp-wrap{position:relative;width:100%;height:100%;}
+.pdf-page-slide .pp-wrap{position:relative;width:100%;height:100%;zoom:var(--zoom,1);}
 .pdf-page-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.pdf-page-slide .pp-link{position:absolute;display:block;cursor:pointer;border-radius:4px;transition:background .15s ease;}
+.pdf-page-slide .pp-link:hover{background:rgba(255,255,255,.08);}
 .full-canvas-slide .fc-wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:0;overflow:hidden;}
 .full-canvas-slide img{max-width:88%;max-height:82%;object-fit:contain;border-radius:14px;box-shadow:0 40px 90px -30px rgba(0,0,0,.7);opacity:0;transform:scale(.96);transition:opacity 1s var(--ease),transform 1.1s var(--ease);}
 .full-canvas-slide.active img{opacity:1;transform:scale(1);}
@@ -351,7 +353,7 @@ table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
   <div id="notesBody"><h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p></div>
 </aside>
 
-<script type="application/json" id="slide-data">[{"type": "pdf-page", "src": "assets/pdf-slides/slide-01.png", "alt": "Title"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-02.png", "alt": "Framing"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-03.png", "alt": "Case 1 \u2014 US Open"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-04.png", "alt": "USTA Statement"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-05.png", "alt": "Case 2 \u2014 FIFA World Cup"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-06.png", "alt": "Case 3 \u2014 Winter Olympics"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-07.png", "alt": "Amber Glenn Quote"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-08.png", "alt": "Case 4/5 \u2014 NCAA & Quan Hongchan"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-09.png", "alt": "Synthesis"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-10.png", "alt": "Discussion"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-11.png", "alt": "Sources"}]</script>
+<script type="application/json" id="slide-data">[{"type": "pdf-page", "src": "assets/pdf-slides/slide-01.png", "alt": "Title"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-02.png", "alt": "Framing"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-03.png", "alt": "Case 1 \u2014 US Open", "links": [{"href": "https://www.youtube.com/watch?v=QL4X_662Yd0", "left": 33.8, "top": 70.7, "width": 27.8, "height": 4}]}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-04.png", "alt": "USTA Statement"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-05.png", "alt": "Case 2 \u2014 FIFA World Cup"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-06.png", "alt": "Case 3 \u2014 Winter Olympics", "links": [{"href": "https://www.youtube.com/watch?v=1JvQ_IxWVbM", "left": 61.8, "top": 29.8, "width": 28.2, "height": 4}]}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-07.png", "alt": "Amber Glenn Quote"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-08.png", "alt": "Case 4/5 \u2014 NCAA & Quan Hongchan"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-09.png", "alt": "Synthesis"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-10.png", "alt": "Discussion"}, {"type": "pdf-page", "src": "assets/pdf-slides/slide-11.png", "alt": "Sources"}]</script>
 <script>
 
 (function(){
@@ -838,6 +840,17 @@ table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
         const image = document.createElement('img');
         image.src = slide.src; image.loading = 'lazy'; image.alt = slide.alt || '';
         inner.appendChild(image);
+        if(slide.links){
+          slide.links.forEach(lk=>{
+            const a = document.createElement('a');
+            a.className = 'pp-link';
+            a.href = lk.href; a.target = '_blank'; a.rel = 'noopener';
+            a.title = lk.href;
+            a.style.left = lk.left+'%'; a.style.top = lk.top+'%';
+            a.style.width = lk.width+'%'; a.style.height = lk.height+'%';
+            inner.appendChild(a);
+          });
+        }
         break;
       }
       case 'full-canvas-content': {
