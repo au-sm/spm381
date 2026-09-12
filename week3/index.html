@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPM 381 &middot; Week 3 &mdash; Fan Socialization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+
+:root{
+  --bg:#0b1220;
+  --bg2:#0e1728;
+  --surface:#141f38;
+  --surface2:#1a2744;
+  --paper:#f5f1e7;
+  --paper-ink:#1b1710;
+  --ink:#f3f0e8;
+  --muted:rgba(243,240,232,.62);
+  --muted2:rgba(243,240,232,.4);
+  --rule:rgba(243,240,232,.14);
+  --gold:#dba548;
+  --gold-soft:rgba(219,165,72,.16);
+  --blue:#6c93d6;
+  --teal:#4fc3a8;
+  --green:#a3cf5e;
+  --coral:#ec6a5c;
+  --violet:#c88bd8;
+  --sand:#e7dcc2;
+  --font-display: Georgia,'Iowan Old Style','Palatino Linotype','Book Antiqua','Times New Roman',serif;
+  --font-body: -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --font-mono: ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --dur: .7s;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.bg-wash{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 600px at 12% -10%, rgba(219,165,72,.10), transparent 60%),
+    radial-gradient(ellipse 1100px 800px at 110% 110%, rgba(108,147,214,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg2),var(--bg) 40%);
+}
+.deck{position:fixed;inset:0;z-index:1;}
+.slide{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;
+  transform:translateY(26px) scale(.985);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility 0s linear var(--dur);
+  visibility:hidden;
+  pointer-events:none;
+  padding: clamp(24px,4vh,56px) clamp(24px,5vw,96px);
+}
+.slide.active{
+  opacity:1;transform:translateY(0) scale(1);
+  visibility:visible;pointer-events:auto;z-index:2;transition-delay:0s;
+}
+.slide-inner{width:100%;max-width:1360px;max-height:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(14px,2vh,22px);overflow:auto;padding-right:2px;zoom:var(--zoom,1);}
+.slide-inner::-webkit-scrollbar{width:6px;height:6px;}
+.slide-inner::-webkit-scrollbar-thumb{background:rgba(219,165,72,.3);border-radius:3px;}
+.slide-inner::-webkit-scrollbar-track{background:transparent;}
+
+/* chrome */
+.chrome-top{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;gap:16px;
+  padding:16px clamp(20px,4vw,48px) 0;
+  pointer-events:none;
+}
+.brand{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+.brand b{color:var(--gold);font-weight:600;}
+.progress-track{flex:1;height:2px;background:var(--rule);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--coral));transition:width .5s var(--ease);}
+.section-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;}
+.counter{font-family:var(--font-mono);font-size:11px;color:var(--muted);white-space:nowrap;min-width:52px;text-align:right;}
+
+.chrome-bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,4vw,48px) 20px;
+  pointer-events:none;
+}
+.navbtn{
+  pointer-events:auto;
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--rule);background:rgba(20,31,56,.7);backdrop-filter:blur(6px);
+  color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .25s ease, border-color .25s ease, transform .2s ease;
+}
+.navbtn:hover{background:var(--gold-soft);border-color:var(--gold);transform:translateY(-2px);}
+.navbtn:active{transform:translateY(0);}
+.navbtn svg{width:18px;height:18px;}
+.navbtn:disabled{opacity:.25;cursor:default;transform:none;}
+.hint{
+  pointer-events:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted2);opacity:1;transition:opacity 1s ease;z-index:19;
+}
+.hint.hide{opacity:0;}
+.notes-toggle{
+  pointer-events:auto;background:none;border:1px solid var(--rule);border-radius:999px;
+  padding:5px 12px;cursor:pointer;flex-shrink:0;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:var(--muted);transition:border-color .2s ease,color .2s ease;
+}
+.notes-toggle:hover{border-color:var(--gold);color:var(--gold);}
+.home-btn{text-decoration:none;display:inline-flex;align-items:center;}
+
+.zoom-controls{pointer-events:auto;display:flex;align-items:center;flex-shrink:0;}
+.zoom-btn{
+  background:none;border:1px solid var(--rule);color:var(--muted);cursor:pointer;
+  font-family:var(--font-mono);font-size:13px;line-height:1;
+  padding:5px 10px;transition:border-color .2s ease,color .2s ease;
+}
+.zoom-btn:hover{border-color:var(--gold);color:var(--gold);}
+.zoom-controls .zoom-btn + .zoom-btn{margin-left:-1px;}
+.zoom-controls .zoom-btn:first-child{border-radius:999px 0 0 999px;}
+.zoom-controls .zoom-btn:last-child{border-radius:0 999px 999px 0;}
+.zoom-reset{min-width:46px;text-align:center;font-size:10px;letter-spacing:.03em;}
+.zoom-btn:disabled{opacity:.3;cursor:default;}
+.zoom-btn:disabled:hover{border-color:var(--rule);color:var(--muted);}
+
+/* reveal primitives */
+.reveal-item{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
+.slide.active .reveal-item.in{opacity:1;transform:translateY(0);}
+
+.kicker{font-family:var(--font-mono);font-size:clamp(10.5px,1vw,12.5px);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+.kicker::before{content:'';display:inline-block;width:22px;height:1px;background:var(--gold);margin-right:10px;vertical-align:middle;}
+
+h1.disp{font-family:var(--font-display);font-weight:400;line-height:1.06;margin:0;color:var(--ink);letter-spacing:-.01em;}
+.title-hero{font-size:clamp(40px,7.2vw,92px);}
+.title-slide{font-size:clamp(25px,3.35vw,42px);}
+.title-slide.long{font-size:clamp(21px,2.5vw,32px);}
+.subtitle{font-family:var(--font-display);font-style:italic;color:var(--muted);font-size:clamp(16px,1.8vw,22px);margin:6px 0 0;}
+.meta-badge{display:inline-block;margin-top:22px;padding:7px 16px;border:1px solid var(--rule);border-radius:999px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);}
+
+.lede{font-family:var(--font-display);font-style:italic;color:var(--sand);font-size:clamp(16px,1.6vw,20px);margin:0;}
+
+ul.bullets{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
+ul.bullets li{
+  font-size:clamp(15px,1.35vw,19px);line-height:1.5;color:var(--ink);
+  padding-left:22px;position:relative;
+}
+ul.bullets li::before{content:'';position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--gold);}
+ul.bullets li.q{color:var(--sand);font-style:italic;font-family:var(--font-display);font-size:clamp(16px,1.5vw,21px);}
+ul.bullets li.q::before{background:var(--coral);}
+
+.questions{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;}
+.questions li{
+  font-family:var(--font-display);font-style:italic;color:var(--sand);
+  font-size:clamp(17px,1.7vw,23px);line-height:1.45;padding-left:26px;position:relative;
+}
+.questions li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--coral);}
+
+.prompt-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:28px;justify-content:center;height:100%;}
+.prompt-wrap .questions{gap:28px;}
+.prompt-wrap .questions li{font-size:clamp(22px,2.6vw,36px);padding-left:0;}
+.prompt-wrap .questions li::before{display:none;}
+.statement-text{font-family:var(--font-display);font-style:italic;color:var(--ink);font-size:clamp(20px,2.4vw,32px);line-height:1.4;max-width:900px;}
+
+.source{font-family:var(--font-mono);font-size:11.5px;color:var(--muted2);margin-top:4px;word-break:break-word;}
+.source::before{content:'Source — ';color:var(--muted);}
+
+/* stats row */
+.stat-row{display:flex;flex-wrap:wrap;gap:clamp(20px,3vw,48px);margin:6px 0 4px;}
+.stat{display:flex;flex-direction:column;gap:4px;}
+.stat-num{font-family:var(--font-display);font-size:clamp(34px,4.6vw,64px);color:var(--gold);line-height:1;white-space:nowrap;}
+.stat-num .u{font-size:.45em;font-family:var(--font-mono);color:var(--sand);margin-left:2px;}
+.stat-label{font-size:12.5px;color:var(--muted);max-width:220px;line-height:1.35;}
+
+/* media / exhibits */
+.media-grid{display:grid;gap:20px;align-items:start;}
+.media-grid.cols-1{grid-template-columns:1fr;}
+.media-grid.cols-2{grid-template-columns:1fr 1fr;}
+.exhibit{position:relative;border-radius:14px;overflow:hidden;}
+.exhibit .kb{overflow:hidden;display:block;border-radius:inherit;max-height:46vh;}
+.exhibit img{display:block;width:100%;height:auto;max-height:46vh;object-fit:contain;opacity:0;transform:scale(1.07);transition:opacity .9s var(--ease), transform 1.3s var(--ease);}
+.slide.active .exhibit.in img{opacity:1;transform:scale(1);}
+.exhibit.frame{background:var(--surface);padding:10px;box-shadow:0 24px 60px -20px rgba(0,0,0,.6);border:1px solid var(--rule);}
+.exhibit.frame img{border-radius:6px;}
+.exhibit.paper{background:var(--paper);padding:16px;box-shadow:0 24px 60px -20px rgba(0,0,0,.55);}
+.exhibit.paper img{border-radius:2px;}
+.exhibit.solo{max-width:920px;margin:0 auto;}
+.exhibit .cap{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.03em;margin-top:10px;padding:0 2px;}
+.exhibit .img-callout{position:absolute;font-family:var(--font-body);font-weight:800;color:#1a1a1a;line-height:1;pointer-events:none;font-size:clamp(14px,2.1vw,26px);}
+.exhibit.paper .cap{color:#8a7f63;}
+.exhibit.frame .cap{color:var(--muted);}
+.exhibit.decorative{border-radius:10px;opacity:.5;}
+.exhibit.decorative img{border-radius:10px;}
+
+@keyframes kenburns{ from{transform:scale(1);} to{transform:scale(1.06);} }
+.slide.active .kb.kb-anim{animation:kenburns 16s ease-out forwards;}
+
+.two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center;}
+.two-col.reverse{grid-template-columns:1fr 1.1fr;}
+
+/* full banner */
+.banner-frame{width:100%;border-radius:14px;overflow:hidden;}
+.banner-frame.paper{background:var(--paper);padding:14px;box-shadow:0 24px 60px -20px rgba(0,0,0,.55);}
+.banner-frame.frame{background:var(--surface);padding:10px;border:1px solid var(--rule);box-shadow:0 24px 60px -20px rgba(0,0,0,.6);}
+.banner-frame img{width:100%;display:block;border-radius:4px;opacity:0;transform:scale(1.05);transition:opacity .9s var(--ease),transform 1.3s var(--ease);max-height:52vh;object-fit:contain;margin:0 auto;}
+.slide.active .banner-frame.in img{opacity:1;transform:scale(1);}
+
+/* full canvas */
+.full-canvas-slide{padding:0 !important;}
+.full-canvas-slide .fc-wrap{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:0;overflow:hidden;}
+.full-canvas-slide img{max-width:88%;max-height:82%;object-fit:contain;border-radius:14px;box-shadow:0 40px 90px -30px rgba(0,0,0,.7);opacity:0;transform:scale(.96);transition:opacity 1s var(--ease),transform 1.1s var(--ease);}
+.full-canvas-slide.active img{opacity:1;transform:scale(1);}
+
+.fc-content{position:relative;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:clamp(24px,4vh,56px) clamp(24px,5vw,96px);}
+.fc-bg{position:absolute;inset:0;z-index:0;opacity:.38;}
+.fc-bg img{width:100%;height:100%;object-fit:cover;}
+.fc-fg{position:relative;z-index:1;max-width:760px;}
+.fc-insets{position:relative;z-index:1;display:flex;gap:16px;margin-top:18px;}
+.fc-insets .exhibit{width:220px;flex-shrink:0;}
+
+/* chart */
+.chart-wrap{width:100%;}
+.chart-legend{display:flex;flex-wrap:wrap;gap:14px 22px;margin-bottom:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--muted);}
+.chart-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+.chart-svg{width:100%;height:auto;overflow:visible;}
+.chart-svg .grid line{stroke:var(--rule);stroke-width:1;}
+.chart-svg .grid text{fill:var(--muted2);font-family:var(--font-mono);font-size:9.5px;}
+.chart-svg .xlabels text{fill:var(--muted2);font-family:var(--font-mono);font-size:9px;}
+.chart-svg path.line{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+.chart-svg circle.pt{opacity:0;transition:opacity .5s var(--ease), transform .5s var(--ease);transform:scale(0);transform-box:fill-box;transform-origin:center;}
+.chart-svg .bar{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);transition:transform .8s var(--ease);}
+.chart-unit{font-family:var(--font-mono);font-size:10.5px;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;}
+.chart-multi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.chart-multi-grid .chart-block{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px 16px 10px;}
+.chart-block h4{margin:0 0 8px;font-family:var(--font-body);font-weight:600;font-size:13px;color:var(--ink);}
+.chart-multi-grid .chart-svg .grid text{font-size:28px;}
+.chart-multi-grid .chart-svg .xlabels text{font-size:26px;}
+.chart-multi-grid .chart-svg .grid line{stroke-width:2.5px;}
+
+/* table */
+.table-wrap{background:var(--paper);border-radius:14px;padding:18px 20px;box-shadow:0 24px 60px -20px rgba(0,0,0,.55);max-height:56vh;overflow:auto;}
+table.data{width:100%;border-collapse:collapse;font-family:var(--font-body);color:var(--paper-ink);}
+table.data thead th{
+  text-align:left;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:#6b6350;border-bottom:2px solid #d9cfb5;padding:8px 10px;position:sticky;top:0;background:var(--paper);
+}
+table.data tbody td{padding:7px 10px;font-size:13px;border-bottom:1px solid #e7ddc4;}
+table.data tbody tr{opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease;}
+table.data tbody tr.in{opacity:1;transform:translateY(0);}
+table.data tbody tr td:first-child{font-family:var(--font-mono);color:#8a7f63;}
+table.data tbody tr:nth-child(1) td:first-child{color:var(--gold);font-weight:700;}
+table.data tbody tr:nth-child(2) td:first-child{color:#9a9a9a;font-weight:700;}
+table.data tbody tr:nth-child(3) td:first-child{color:#b3792f;font-weight:700;}
+table.data tbody tr.section-row td{font-family:var(--font-body);font-weight:700;color:var(--gold) !important;background:#efe7d3;text-transform:uppercase;font-size:11px;letter-spacing:.04em;}
+
+/* flow (process ladder) */
+.flow-wrap{display:flex;flex-direction:column;gap:14px;width:100%;max-width:820px;margin:0 auto;}
+.flow-step{display:flex;align-items:center;gap:18px;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:16px 20px;}
+.flow-step .fnum{font-family:var(--font-display);font-size:26px;color:var(--gold);flex-shrink:0;width:36px;text-align:center;}
+.flow-step .flabel{font-family:var(--font-body);font-weight:700;font-size:15px;color:var(--ink);width:130px;flex-shrink:0;}
+.flow-step .fdetail{font-size:13.5px;color:var(--muted);line-height:1.45;}
+.flow-arrow{align-self:center;color:var(--muted2);font-size:16px;line-height:1;}
+.flow-step:nth-child(4n+1){border-color:rgba(219,165,72,.35);}
+.flow-step:nth-child(4n+3){border-color:rgba(108,147,214,.35);}
+
+/* hub diagram */
+.hub-wrap{position:relative;width:100%;max-width:400px;max-height:44vh;aspect-ratio:1/1;margin:8px auto 0;}
+.hub-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);
+  width:88px;height:88px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--gold), #b9812f);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:18px;color:#1b1710;font-weight:700;
+  box-shadow:0 18px 40px -12px rgba(219,165,72,.55);
+  opacity:0;transition:opacity .6s var(--ease), transform .6s var(--ease);
+  z-index:2;
+}
+.slide.active .hub-center.in{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.hub-spoke-line{position:absolute;top:50%;left:50%;height:1px;background:var(--rule);transform-origin:0 0;opacity:0;transition:opacity .5s var(--ease);}
+.slide.active .hub-spoke-line.in{opacity:1;}
+.hub-node{
+  position:absolute;transform:translate(-50%,-50%) scale(.7);
+  background:var(--surface2);border:1px solid var(--rule);border-radius:999px;
+  padding:6px 12px;font-size:11.5px;color:var(--ink);white-space:nowrap;
+  opacity:0;transition:opacity .5s var(--ease), transform .5s var(--ease);
+  z-index:2;
+}
+.slide.active .hub-node.in{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+/* quadrant diagram */
+.quad-wrap{width:100%;max-width:640px;margin:0 auto;}
+.quad-axis-title{text-align:center;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;}
+.quad-grid{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:8px;}
+.quad-col-label,.quad-row-label{
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+}
+.quad-row-label{writing-mode:vertical-rl;transform:rotate(180deg);justify-content:center;padding:4px 0;}
+.quad-cell{
+  background:var(--surface);border:1px solid var(--rule);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:18px 12px;min-height:96px;
+  font-family:var(--font-display);font-size:clamp(15px,1.7vw,20px);color:var(--ink);
+  opacity:0;transform:scale(.92);transition:opacity .5s var(--ease),transform .5s var(--ease);
+}
+.slide.active .quad-cell.in{opacity:1;transform:scale(1);}
+.quad-cell.win{border-color:rgba(163,207,94,.4);}
+.quad-cell.loss{border-color:rgba(236,106,92,.4);}
+
+/* closing */
+.closing-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:18px;text-align:center;}
+.closing-wrap .rule{width:64px;height:1px;background:var(--gold);}
+
+/* notes panel */
+.notes-panel{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,86vw);
+  background:rgba(10,16,30,.97);backdrop-filter:blur(10px);
+  border-left:1px solid var(--rule);z-index:15;
+  transform:translateX(100%);transition:transform .45s var(--ease);
+  padding:80px 28px 28px;display:flex;flex-direction:column;gap:14px;
+}
+.notes-panel.open{transform:translateX(0);}
+.notes-panel h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0;}
+.notes-panel p{font-family:var(--font-display);font-size:16px;line-height:1.6;color:var(--ink);white-space:pre-wrap;}
+.notes-panel .close-notes{position:absolute;top:24px;right:24px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;}
+.notes-empty{color:var(--muted2);font-style:italic;font-family:var(--font-display);}
+
+/* scrollbar for table/notes */
+.table-wrap::-webkit-scrollbar, .notes-panel::-webkit-scrollbar{width:8px;}
+.table-wrap::-webkit-scrollbar-thumb, .notes-panel::-webkit-scrollbar-thumb{background:rgba(219,165,72,.35);border-radius:4px;}
+
+@media (max-width: 880px){
+  .media-grid.cols-2{grid-template-columns:1fr;}
+  .two-col, .two-col.reverse{grid-template-columns:1fr;}
+  .chart-multi-grid{grid-template-columns:1fr;}
+  .fc-insets{display:none;}
+  .stat-row{gap:20px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{transition:opacity .15s linear !important;transform:none !important;}
+  .reveal-item{transition:none !important;opacity:1 !important;transform:none !important;}
+  .exhibit img, .banner-frame img, .full-canvas-slide img{transition:none !important;opacity:1 !important;transform:none !important;}
+  .kb.kb-anim{animation:none !important;}
+  .chart-svg .bar{transition:none !important;transform:scaleY(1) !important;}
+  .chart-svg circle.pt{transition:none !important;opacity:1 !important;transform:scale(1) !important;}
+  .chart-svg path.line{transition:none !important;stroke-dashoffset:0 !important;}
+  table.data tbody tr{transition:none !important;opacity:1 !important;transform:none !important;}
+  .hub-center,.hub-node,.hub-spoke-line,.quad-cell{transition:none !important;opacity:1 !important;}
+  .hub-center,.hub-node{transform:translate(-50%,-50%) scale(1) !important;}
+  .quad-cell{transform:scale(1) !important;}
+}
+.reduced .slide{transition:opacity .15s linear !important;transform:none !important;}
+.reduced .reveal-item{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .exhibit img, .reduced .banner-frame img, .reduced .full-canvas-slide img{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .kb.kb-anim{animation:none !important;}
+.reduced .chart-svg .bar{transition:none !important;transform:scaleY(1) !important;}
+.reduced .chart-svg circle.pt{transition:none !important;opacity:1 !important;transform:scale(1) !important;}
+.reduced .chart-svg path.line{transition:none !important;stroke-dashoffset:0 !important;}
+.reduced table.data tbody tr{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .hub-center,.reduced .hub-node,.reduced .hub-spoke-line,.reduced .quad-cell{transition:none !important;opacity:1 !important;}
+
+</style>
+</head>
+<body>
+<div class="bg-wash"></div>
+
+<div class="chrome-top">
+  <a class="notes-toggle home-btn" href="../" title="Back to course home">&larr; Home</a>
+  <div class="brand"><b>SPM 381</b> &middot; Fan Socialization &middot; Week 3</div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="section-label" id="sectionLabel"></div>
+  <div class="counter" id="counter"></div>
+  <a class="notes-toggle home-btn" id="pdfDownload" href="SPM381_Week3_Slides.pdf" download title="Download this deck as a PDF">Download PDF</a>
+  <button class="notes-toggle" id="notesToggle" title="Toggle speaker notes (N)">Notes &middot; N</button>
+  <div class="zoom-controls" role="group" aria-label="Zoom controls">
+    <button class="zoom-btn" id="zoomOutBtn" title="Zoom out (&minus;)" aria-label="Zoom out">&minus;</button>
+    <button class="zoom-btn zoom-reset" id="zoomResetBtn" title="Reset zoom (0)" aria-label="Reset zoom">100%</button>
+    <button class="zoom-btn" id="zoomInBtn" title="Zoom in (+)" aria-label="Zoom in">+</button>
+  </div>
+</div>
+
+<main class="deck" id="deck"></main>
+
+<div class="chrome-bottom">
+  <button class="navbtn" id="prevBtn" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="navbtn" id="nextBtn" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<div class="hint" id="hint">Click, scroll wheel, or press &rarr; to continue &middot; N for notes</div>
+
+<aside class="notes-panel" id="notesPanel">
+  <button class="close-notes" id="closeNotes" aria-label="Close notes">&times;</button>
+  <div id="notesBody"><h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p></div>
+</aside>
+
+<script type="application/json" id="slide-data">[{"type": "title", "kicker": "SPM 381 — Consumer Behavior in Sport", "title": "Fan Socialization", "subtitle": "SPM381 Consumer Behavior in Sport | Fall 2026", "meta": "Arcadia University Sport Management · Week 3"}, {"type": "media", "title": "This Week", "bullets": ["Fan socialization", "Psychological Continuum Model (PCM)", "BIRGing & CORFing", "COFFing & Blasting", "Readings: Textbook p.120–142 & Wann (2001) p. 155–208 — see Table 8.2"], "source": "Readings are posted under Module 3 ‘Lecture Slide & Readings’"}, {"type": "media", "title": "Announcement", "bullets": ["Your Current Topic Discussion Paper #1 due on Oct 04th, 11:59 pm", "Instructions are given on the course website — see ‘Current Topic Discussion Papers’ link"], "images": [{"src": "assets/s3_p0.jpg", "w": 480, "h": 245, "frame": "frame"}]}, {"type": "media", "title": "Know Your Fans", "bullets": ["Sport consumers can be categorized by their level of fandom — the degree to which they are (or are not) a fan", "It’s critical for managers to know whether someone is a fan of their team. Why?", "This knowledge will influence marketing plan, ticket sales strategies, and management of seating patterns"]}, {"type": "media", "title": "Socialization", "bullets": ["What is socialization?", "“A process through which people learn the attitudes, values, and actions appropriate to individuals as members of a particular society” (see textbook p. 122)", "Through socialization, we learn the different roles in society and how to live and act within various roles"]}, {"type": "media", "title": "Fan Socialization", "bullets": ["We learn and internalize the attitudes, values, knowledge, and behaviors associated with fans of a team", "How do people become a fan?", "When can you become a fan of a team?", "People can be socialized into being fans at any point during the life span"]}, {"type": "flow", "title": "Psychological Continuum Model", "kicker": "Funk & James (2001) · Review textbook p. 79", "stages": [{"label": "Awareness", "detail": "Socialization introduces the sport or team into a person’s life"}, {"label": "Attraction", "detail": "Hedonic motives × dispositional needs × social/situational factors"}, {"label": "Attachment", "detail": "Meaning × self-concept × values form a psychological connection"}, {"label": "Allegiance", "detail": "Durability and impactfulness of an enduring fan commitment"}], "source": "Funk & James (2008), Figure 1 — Revised Psychological Continuum Model"}, {"type": "media", "bullets": ["MJ was my favorite basketball player, and the Chicago Bulls were my favorite NBA team", "I was thinking I have to visit the United Center in Chicago", "In 2014, I made it — indeed", "Watch how he played: [[LINK:https://www.youtube.com/watch?v=79MQ4_r7QZM|https://www.youtube.com/watch?v=79MQ4_r7QZM]]"], "images": [{"src": "assets/s8_p0.jpg", "w": 768, "h": 432, "frame": "frame"}]}, {"type": "full-canvas", "images": [{"src": "assets/s9_p0.jpg", "w": 1081, "h": 1442, "frame": "solo"}]}, {"type": "media", "bullets": ["Was great to be there to experience the Bulls game!!!"], "images": [{"src": "assets/s10_p0.jpg", "w": 1809, "h": 1357, "frame": "frame"}]}, {"type": "stat-list", "title": "Fan Socialization", "lede": "Kolbe and James (2000) conducted interviews, focus groups, and a mail survey with fans of the Cleveland Browns.", "bullets": ["Fans were asked to identify (1) “the one person who had the most influence on them becoming a Browns fan,” and (2) “how important various activities like attending games in person were to them becoming a fan”", "What are the implications from this information?", "Any practical implications for sport management professions?"], "stats": [{"value": "38.8", "suffix": "%", "label": "of Browns fans named “father” as one person most influential in becoming a team fan"}, {"value": "56", "suffix": "%", "label": "had become true fans of the team prior to age 15 (most between ages 6–15)"}], "images": [{"src": "assets/s11_p0.gif", "w": 545, "h": 421, "frame": "paper"}]}, {"type": "media", "title": "Fan Socialization, cont.", "bullets": ["Kolbe and James (2000), cont.", "Adult fans indicated a distinct difference from the other groups: players and coaches contributed most to their attachment with a professional football team", "Emotional connection between the city and the team"], "images": [{"src": "assets/s12_p0.gif", "w": 545, "h": 421, "frame": "paper"}]}, {"type": "media", "title": "Fan Socialization Across the Lifecycle", "bullets": ["A lifecycle perspective is used to consider how the various agents may influence fan socialization, and to what extent specific agents may have more or less impact at different points in one’s life"]}, {"type": "stat-list", "title": "Fan Socialization Across the Lifecycle", "lede": "A lifecycle perspective considers how various agents influence fan socialization at each life stage.", "stats": [{"value": "1", "label": "Childhood — birth through pre-adolescence"}, {"value": "2", "label": "Adolescence — 10 to 18"}, {"value": "3", "label": "Young adult — college years through 20s"}, {"value": "4", "label": "Older adult — 30 and above"}], "bullets": ["The four-stage perspective focuses on key life stages and explains how the various agents may influence a person’s connection to a sports team relative to each stage", "If we think about becoming a fan from a lifecycle perspective, most people are socialized into the role by six socialization agents, either individually or in some combination"]}, {"type": "media", "title": "Fan Socialization Across the Lifecycle", "bullets": ["Socializing agents — what caused you to become a fan?", "Family", "Friends", "Media", "Organization (e.g., Arcadia University)", "Geography (e.g., Philadelphia, NY, NJ)", "Participation in a sport", "Various socializing agents have a differential impact at various stages!!!"]}, {"type": "hub", "title": "Fan Socialization Across the Lifecycle", "kicker": "Six Socializing Agents", "center": "Fan", "spokes": ["Family", "Friends / Peers", "Media", "Organization", "Geography", "Sport"]}, {"type": "divider", "kicker": "Section", "title": "Self-Presentational Strategies: Fan Reactions to the Game Outcomes"}, {"type": "table", "title": "BIRGing and CORFing", "bullets": ["One of the most common tactics used by fans to maintain their psychological health is to strategically adjust their associations with their team (Wann et al., 2001)", "Self-presentational strategies:"], "table": {"headers": ["Strategy", "Definition"], "rows": [["Strategies following team success", ""], ["1. Basking In Reflected Glory (BIRGing)", "Involves increasing one’s association with successful teams to enhance psychological health."], ["2. Cutting Off Future Failure (COFFing)", "Involves decreasing one’s association with a currently successful team to protect one’s future psychological health should the team perform poorly at a later date."], ["Strategies following team failure", ""], ["1. Cutting Off Reflected Failure (CORFing)", "Involves decreasing one’s association with an unsuccessful team to protect one’s psychological health."], ["2. Blasting", "Involves out-group derogation and/or aggression to regain one’s psychological health."]]}, "source": "Table 8.2; Wann et al. (2011), p. 169 (this week’s reading)"}, {"type": "media", "title": "BIRGing and CORFing, cont.", "bullets": ["Cialdini et al. (1976) conducted college football field studies to demonstrate the BIRG phenomenon", "Measured students’ tendency to wear university-identifying apparel", "The proportion of students who wore university-identifying apparel increased following a win by the university’s football team", "A team identification is influenced by external group identities when the team represents the external identities well"], "images": [{"src": "assets/s19_p0.jpg", "w": 1200, "h": 800, "frame": "frame"}], "notes": "Team success is critical to build a strong perceived fit between external group identities and team identification."}, {"type": "media", "title": "BIRGing and CORFing, cont.", "bullets": ["Telephoned respondents and asked them to describe a recent game involving their university’s football team", "“We won” & “We got beat” vs. “They lost”", "Participants were more likely to use the pronoun “we” to describe a recent win, and “they” to describe a defeat"], "images": [{"src": "assets/s20_p0.jpg", "w": 300, "h": 197, "frame": "frame"}, {"src": "assets/s20_p1.jpg", "w": 1024, "h": 683, "frame": "frame"}]}, {"type": "media", "title": "Blasting", "bullets": ["CORFing doesn’t seem to be an option for truly loyal fans under their favorite team’s poor performance (Trail & James, 2015)", "Fans (to maintain their own self-esteem) would derogate or blame the referees, the other team, or even the other team’s fans (i.e., out-group)", "Why? Fans want to avoid the perception of failure by blaming poor performance on some factor other than the team’s actual performance"], "images": [{"src": "assets/s21_p0.jpg", "w": 1600, "h": 1064, "frame": "frame"}], "notes": "Locus of causality, controllability, stability"}, {"type": "quadrant", "title": "BIRGing and CORFing, cont.", "bullets": ["CORFing — fans will try to cut off reflected failure when a team or player does not do well", "Not all people CORF when a team loses; true fans don’t CORF (Trail & James, 2015)", "Ex) People who were not identified with the NY Yankees were much more likely to CORF after the Yankees lost the World Series against the Florida Marlins in 2003 (Kwon et al., 2008)", "BIRGing and CORFing exist on two separate parallel continuums (Trail & James, 2015)"], "quadrant": {"axisTitle": "Coping mechanism", "colLabels": ["Win", "Loss"], "rowLabels": ["High Team ID", "Low Team ID"], "cells": [["BIRGing", "BIRGing / Blasting"], ["COFFing", "CORFing"]]}}, {"type": "closing", "title": "Thank you!"}]</script>
+<script>
+
+(function(){
+  const SLIDES = JSON.parse(document.getElementById('slide-data').textContent);
+  const deck = document.getElementById('deck');
+  const progressFill = document.getElementById('progressFill');
+  const counterEl = document.getElementById('counter');
+  const sectionLabel = document.getElementById('sectionLabel');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const hint = document.getElementById('hint');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesBody = document.getElementById('notesBody');
+  const notesToggle = document.getElementById('notesToggle');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const zoomResetBtn = document.getElementById('zoomResetBtn');
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(prefersReduced) document.documentElement.classList.add('reduced');
+
+  const SECTIONS = [
+    {from:0,to:0,label:'Opening'},
+    {from:1,to:1,label:'This Week'},
+    {from:2,to:2,label:'Announcement'},
+    {from:3,to:6,label:'Know Your Fans & the PCM'},
+    {from:7,to:9,label:'A Personal Case'},
+    {from:10,to:11,label:'Kolbe & James (2000)'},
+    {from:12,to:15,label:'Across the Lifecycle'},
+    {from:16,to:16,label:'Self-Presentational Strategies'},
+    {from:17,to:20,label:'BIRGing & CORFing'},
+    {from:21,to:21,label:'Blasting'},
+    {from:22,to:22,label:'Closing'}
+  ];
+  function sectionFor(i){
+    for(const s of SECTIONS){ if(i>=s.from && i<=s.to) return s.label; }
+    return '';
+  }
+
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function revealItem(node, delayMs){
+    node.classList.add('reveal-item');
+    node.style.transitionDelay = (delayMs||0)+'ms';
+    return node;
+  }
+  function isQuestion(text){ return /\?\s*$/.test(text.trim()); }
+  function titleEl(text, delay){
+    const cls = 'disp title-slide'+(text.length>52?' long':'')+' reveal-item';
+    const h = el('h1',cls, escapeHTML(text));
+    revealItem(h, delay||0);
+    return h;
+  }
+
+  function buildKicker(text){ return el('p','kicker reveal-item', escapeHTML(text)); }
+
+  function escapeHTML(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Parses the [[LINK:url|text]] marker syntax used to preserve real pptx hyperlinks
+  // inside plain-string bullet/question/statement fields (source/notes fields keep
+  // using linkifyText for bare-URL detection, untouched). Returns a DocumentFragment
+  // of safe text nodes + real <a> elements -- never innerHTML, so no separate
+  // escaping step is needed.
+  const LINK_MARKER_RE = /\[\[LINK:(.*?)\|(.*?)\]\]/g;
+  function renderMarkedText(text){
+    const frag = document.createDocumentFragment();
+    const str = String(text);
+    let last = 0, m;
+    LINK_MARKER_RE.lastIndex = 0;
+    while((m = LINK_MARKER_RE.exec(str))){
+      if(m.index > last) frag.appendChild(document.createTextNode(str.slice(last, m.index)));
+      const a = document.createElement('a');
+      a.href = m[1]; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = m[2];
+      frag.appendChild(a);
+      last = LINK_MARKER_RE.lastIndex;
+    }
+    if(last < str.length) frag.appendChild(document.createTextNode(str.slice(last)));
+    return frag;
+  }
+
+  function buildExhibit(img, delay, extraClass){
+    const wrap = el('div','exhibit '+(img.frame||'paper')+(extraClass?' '+extraClass:''));
+    wrap.style.transitionDelay = (delay||0)+'ms';
+    const kb = el('div','kb');
+    const im = document.createElement('img');
+    im.src = img.src; im.loading='lazy'; im.alt = img.caption || '';
+    if(img.w && img.h) im.style.aspectRatio = img.w+' / '+img.h;
+    kb.appendChild(im);
+    if(img.callout){
+      const co = el('div','img-callout', escapeHTML(img.callout.text));
+      co.style.left = (img.callout.x*100)+'%';
+      co.style.top = (img.callout.y*100)+'%';
+      kb.appendChild(co);
+    }
+    wrap.appendChild(kb);
+    if(img.caption){ wrap.appendChild(el('div','cap', escapeHTML(img.caption))); }
+    return wrap;
+  }
+
+  function buildBullets(list){
+    const ul = el('ul','bullets');
+    list.forEach((t,i)=>{
+      const li = el('li', isQuestion(t)?'q':'');
+      li.appendChild(renderMarkedText(t));
+      revealItem(li, 90*i);
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  function buildQuestions(list){
+    const ul = el('ul','questions');
+    list.forEach((t,i)=>{
+      const li = el('li','');
+      li.appendChild(renderMarkedText(t));
+      revealItem(li, 90*i);
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  const URL_RE = /\b((?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?:\.[a-z]{2,})?(?:\/[^\s]*)?)/gi;
+  function linkifyText(text){
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    URL_RE.lastIndex = 0;
+    while((m = URL_RE.exec(text))){
+      if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      let url = m[0], trail = '';
+      while(/[.,;:)\]]$/.test(url)){ trail = url.slice(-1) + trail; url = url.slice(0, -1); }
+      const href = /^https?:\/\//i.test(url) ? url : 'https://' + url;
+      const a = document.createElement('a');
+      a.href = href; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = url;
+      frag.appendChild(a);
+      if(trail) frag.appendChild(document.createTextNode(trail));
+      last = URL_RE.lastIndex;
+    }
+    if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
+  function buildSource(text){
+    const p = el('p','source reveal-item');
+    p.appendChild(linkifyText(text));
+    return p;
+  }
+  function buildStats(stats, baseDelay){
+    const row = el('div','stat-row reveal-item');
+    row.style.transitionDelay = (baseDelay||0)+'ms';
+    stats.forEach(s=>{
+      const st = el('div','stat');
+      const num = el('div','stat-num');
+      num.dataset.target = s.value;
+      num.dataset.prefix = s.prefix||'';
+      num.dataset.suffix = s.suffix||'';
+      num.textContent = (s.prefix||'')+'0'+(s.suffix||'');
+      st.appendChild(num);
+      st.appendChild(el('div','stat-label', escapeHTML(s.label)));
+      row.appendChild(st);
+    });
+    return row;
+  }
+
+  // ---------- chart engine ----------
+  function fmtNum(v, percent){
+    if(percent) return (v*100).toFixed(1).replace(/\.0$/,'') + '%';
+    if(Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US');
+    return (Math.round(v*100)/100).toString();
+  }
+
+  function buildLineChart(spec){
+    const W = 1000, H = 360, padL = 46, padR = 16, padT = 14, padB = 30;
+    const plotW = W-padL-padR, plotH = H-padT-padB;
+    const cats = spec.categories;
+    let allVals = [];
+    spec.series.forEach(s=> s.values.forEach(v=>{ if(v!==null && v!==undefined) allVals.push(v); }));
+    let vmin = Math.min(0, Math.min(...allVals));
+    let vmax = Math.max(...allVals);
+    if(vmax === vmin) vmax = vmin+1;
+    const pad = (vmax-vmin)*0.12;
+    vmax += pad; if(vmin<0) vmin -= pad*0.3;
+    const x = i => padL + (i/(cats.length-1))*plotW;
+    const y = v => padT + plotH - ((v-vmin)/(vmax-vmin))*plotH;
+
+    const svgNS='http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.setAttribute('class','chart-svg');
+
+    const grid = document.createElementNS(svgNS,'g'); grid.setAttribute('class','grid');
+    const steps = 4;
+    for(let i=0;i<=steps;i++){
+      const v = vmin + (vmax-vmin)*(i/steps);
+      const gy = y(v);
+      const line = document.createElementNS(svgNS,'line');
+      line.setAttribute('x1',padL); line.setAttribute('x2',W-padR);
+      line.setAttribute('y1',gy); line.setAttribute('y2',gy);
+      grid.appendChild(line);
+      const text = document.createElementNS(svgNS,'text');
+      text.setAttribute('x',padL-8); text.setAttribute('y',gy+3); text.setAttribute('text-anchor','end');
+      text.textContent = fmtNum(v, spec.percent);
+      grid.appendChild(text);
+    }
+    svg.appendChild(grid);
+
+    // x labels (thin out)
+    const xlabels = document.createElementNS(svgNS,'g'); xlabels.setAttribute('class','xlabels');
+    const maxLabels = 9;
+    const stepIdx = Math.max(1, Math.ceil(cats.length/maxLabels));
+    cats.forEach((c,i)=>{
+      if(i % stepIdx !== 0 && i !== cats.length-1) return;
+      const text = document.createElementNS(svgNS,'text');
+      text.setAttribute('x', x(i)); text.setAttribute('y', H-8); text.setAttribute('text-anchor','middle');
+      text.textContent = c;
+      xlabels.appendChild(text);
+    });
+    svg.appendChild(xlabels);
+
+    const paths = [];
+    spec.series.forEach((s)=>{
+      let d = ''; let started=false;
+      s.values.forEach((v,i)=>{
+        if(v===null || v===undefined){ started=false; return; }
+        const px=x(i), py=y(v);
+        d += (started ? ' L ' : ' M ') + px.toFixed(2)+','+py.toFixed(2);
+        started = true;
+      });
+      const path = document.createElementNS(svgNS,'path');
+      path.setAttribute('d', d);
+      path.setAttribute('class','line');
+      path.setAttribute('stroke', s.color);
+      path.setAttribute('data-name', s.name);
+      svg.appendChild(path);
+      paths.push(path);
+
+      if(spec.kind === 'line_markers'){
+        s.values.forEach((v,i)=>{
+          if(v===null||v===undefined) return;
+          const c = document.createElementNS(svgNS,'circle');
+          c.setAttribute('class','pt');
+          c.setAttribute('cx', x(i)); c.setAttribute('cy', y(v)); c.setAttribute('r', 3.4);
+          c.setAttribute('fill', s.color);
+          c.dataset.delay = i*22;
+          svg.appendChild(c);
+        });
+      }
+    });
+
+    const wrap = el('div','chart-wrap');
+    const legend = el('div','chart-legend');
+    spec.series.forEach(s=>{
+      const span = el('span','','');
+      span.innerHTML = '<span class="dot" style="background:'+s.color+'"></span>'+escapeHTML(s.name);
+      legend.appendChild(span);
+    });
+    wrap.appendChild(legend);
+    wrap.appendChild(svg);
+    if(spec.unit) wrap.appendChild(el('div','chart-unit', escapeHTML(spec.unit)));
+
+    wrap._play = function(){
+      paths.forEach(p=>{
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+        p.style.transition = 'none';
+        // force reflow
+        p.getBoundingClientRect();
+        p.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(.22,.61,.36,1)';
+        requestAnimationFrame(()=>{ p.style.strokeDashoffset = 0; });
+      });
+      svg.querySelectorAll('circle.pt').forEach(c=>{
+        c.style.transitionDelay = (700 + Number(c.dataset.delay||0)) + 'ms';
+        requestAnimationFrame(()=>{ c.style.opacity=1; c.style.transform='scale(1)'; });
+      });
+    };
+    wrap._reset = function(){
+      paths.forEach(p=>{ p.style.transition='none'; const len=p.getTotalLength(); p.style.strokeDasharray=len; p.style.strokeDashoffset=len; });
+      svg.querySelectorAll('circle.pt').forEach(c=>{ c.style.transition='none'; c.style.opacity=0; c.style.transform='scale(0)'; });
+    };
+    wrap._reset();
+    return wrap;
+  }
+
+  function buildBarChart(spec){
+    const W = 1000, H = 360, padL = 46, padR = 16, padT = 14, padB = 30;
+    const plotW = W-padL-padR, plotH = H-padT-padB;
+    const cats = spec.categories;
+    const s = spec.series[0];
+    const vmax = Math.max(...s.values) * 1.12;
+    const bw = plotW/cats.length * 0.62;
+    const gap = plotW/cats.length;
+    const y = v => padT + plotH - (v/vmax)*plotH;
+
+    const svgNS='http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.setAttribute('class','chart-svg');
+
+    const grid = document.createElementNS(svgNS,'g'); grid.setAttribute('class','grid');
+    const steps=4;
+    for(let i=0;i<=steps;i++){
+      const v = vmax*(i/steps);
+      const gy = y(v);
+      const line = document.createElementNS(svgNS,'line');
+      line.setAttribute('x1',padL); line.setAttribute('x2',W-padR);
+      line.setAttribute('y1',gy); line.setAttribute('y2',gy);
+      grid.appendChild(line);
+      const text = document.createElementNS(svgNS,'text');
+      text.setAttribute('x',padL-8); text.setAttribute('y',gy+3); text.setAttribute('text-anchor','end');
+      text.textContent = fmtNum(v,false);
+      grid.appendChild(text);
+    }
+    svg.appendChild(grid);
+
+    const xlabels = document.createElementNS(svgNS,'g'); xlabels.setAttribute('class','xlabels');
+    const maxLabels = 10;
+    const stepIdx = Math.max(1, Math.ceil(cats.length/maxLabels));
+    const bars = [];
+    cats.forEach((c,i)=>{
+      const cx = padL + gap*i + gap/2;
+      const rect = document.createElementNS(svgNS,'rect');
+      rect.setAttribute('class','bar');
+      rect.setAttribute('x', (cx-bw/2).toFixed(2));
+      rect.setAttribute('y', y(s.values[i]).toFixed(2));
+      rect.setAttribute('width', bw.toFixed(2));
+      rect.setAttribute('height', (plotH - (y(s.values[i]) - padT)).toFixed(2));
+      rect.setAttribute('fill', s.color);
+      rect.style.transitionDelay = (i*26)+'ms';
+      svg.appendChild(rect);
+      bars.push(rect);
+      if(i % stepIdx === 0 || i===cats.length-1){
+        const text = document.createElementNS(svgNS,'text');
+        text.setAttribute('x', cx); text.setAttribute('y', H-8); text.setAttribute('text-anchor','middle');
+        text.textContent = c;
+        xlabels.appendChild(text);
+      }
+    });
+    svg.appendChild(xlabels);
+
+    const wrap = el('div','chart-wrap');
+    wrap.appendChild(svg);
+    if(spec.unit) wrap.appendChild(el('div','chart-unit', escapeHTML(spec.unit)));
+    wrap._play = function(){ bars.forEach(b=>{ b.style.transform='scaleY(1)'; }); };
+    wrap._reset = function(){ bars.forEach(b=>{ b.style.transform='scaleY(0)'; }); };
+    return wrap;
+  }
+
+  function buildChart(spec){
+    if(spec.kind === 'bar') return buildBarChart(spec);
+    return buildLineChart(spec);
+  }
+
+  // ---------- slide type builders ----------
+  function build(slide, idx){
+    const s = el('section','slide');
+    s.dataset.index = idx;
+    let inner;
+
+    switch(slide.type){
+      case 'title': {
+        inner = el('div','slide-inner');
+        inner.style.textAlign='center'; inner.style.alignItems='center';
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker));
+        const h = el('h1','disp title-hero reveal-item', escapeHTML(slide.title));
+        revealItem(h,120);
+        inner.appendChild(h);
+        if(slide.subtitle){ const sub = el('p','subtitle reveal-item', escapeHTML(slide.subtitle)); revealItem(sub,260); inner.appendChild(sub); }
+        if(slide.meta){ const m = el('div','meta-badge reveal-item', escapeHTML(slide.meta)); revealItem(m,380); inner.appendChild(m); }
+        break;
+      }
+      case 'divider': {
+        inner = el('div','slide-inner');
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker));
+        inner.appendChild(titleEl(slide.title,90));
+        if(slide.images && slide.images.length){
+          const grid = el('div','media-grid '+(slide.images.length>1?'cols-2':'cols-1'));
+          slide.images.forEach((im,i)=> grid.appendChild(buildExhibit(im, 220+i*140)));
+          inner.appendChild(grid);
+        }
+        break;
+      }
+      case 'prompt': {
+        inner = el('div','slide-inner prompt-wrap');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,60)); }
+        if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
+        if(slide.statement){ const p = el('p','statement-text reveal-item'); p.appendChild(renderMarkedText(slide.statement)); revealItem(p,120); inner.appendChild(p); }
+        break;
+      }
+      case 'stat-list': {
+        inner = el('div','slide-inner');
+        const hasImg = slide.images && slide.images.length;
+        inner.appendChild(titleEl(slide.title,60));
+        if(slide.lede){ const l = el('p','lede reveal-item', escapeHTML(slide.lede)); revealItem(l,140); inner.appendChild(l); }
+        if(slide.stats) inner.appendChild(buildStats(slide.stats, 180));
+        if(hasImg){
+          const tc = el('div','two-col');
+          const left = el('div','');
+          if(slide.bullets) left.appendChild(buildBullets(slide.bullets));
+          const right = buildExhibit(slide.images[0], 260);
+          tc.appendChild(left); tc.appendChild(right);
+          inner.appendChild(tc);
+        } else {
+          if(slide.bullets) inner.appendChild(buildBullets(slide.bullets));
+        }
+        if(slide.notes){} // shown via notes panel only
+        break;
+      }
+      case 'media': {
+        inner = el('div','slide-inner');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,50)); }
+        if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
+        if(slide.bullets) inner.appendChild(buildBullets(slide.bullets));
+        if(slide.images && slide.images.length){
+          const grid = el('div','media-grid '+(slide.images.length>1?'cols-2':'cols-1'));
+          slide.images.forEach((im,i)=> grid.appendChild(buildExhibit(im, 200+i*160)));
+          inner.appendChild(grid);
+        }
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        if(slide.stats) inner.appendChild(buildStats(slide.stats, 260));
+        break;
+      }
+      case 'chart': {
+        inner = el('div','slide-inner');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,50)); }
+        if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
+        const cw = buildChart(slide.chart);
+        cw.classList.add('reveal-item'); revealItem(cw,220);
+        if(slide.images && slide.images.length){
+          const tc = el('div','two-col reverse');
+          const right = buildExhibit(slide.images[0], 300);
+          tc.appendChild(cw); tc.appendChild(right);
+          inner.appendChild(tc);
+        } else {
+          inner.appendChild(cw);
+        }
+        s._charts = [cw];
+        break;
+      }
+      case 'chart-multi': {
+        inner = el('div','slide-inner');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,50)); }
+        if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
+        const grid = el('div','chart-multi-grid reveal-item'); revealItem(grid,180);
+        const charts = [];
+        slide.charts.forEach(cs=>{
+          const block = el('div','chart-block');
+          block.appendChild(el('h4','', escapeHTML(cs.label)));
+          const cw = buildChart(cs);
+          block.appendChild(cw);
+          grid.appendChild(block);
+          charts.push(cw);
+        });
+        inner.appendChild(grid);
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        s._charts = charts;
+        break;
+      }
+      case 'full-banner': {
+        inner = el('div','slide-inner');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,40)); }
+        if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
+        const im = slide.images[0];
+        const bf = el('div','banner-frame '+(im.frame||'paper')+' reveal-item'); revealItem(bf,200);
+        const kb = el('div','kb');
+        const image = document.createElement('img'); image.src=im.src; image.loading='lazy';
+        if(im.w&&im.h) image.style.aspectRatio = im.w+' / '+im.h;
+        kb.appendChild(image); bf.appendChild(kb);
+        inner.appendChild(bf);
+        s._exhibitsExtra = [bf];
+        break;
+      }
+      case 'full-canvas': {
+        s.classList.add('full-canvas-slide');
+        inner = el('div','fc-wrap');
+        const im = slide.images[0];
+        const image = document.createElement('img'); image.src=im.src; image.loading='lazy';
+        inner.appendChild(image);
+        break;
+      }
+      case 'full-canvas-content': {
+        s.classList.add('full-canvas-slide');
+        inner = el('div','fc-content');
+        const bgWrap = el('div','fc-bg');
+        const bgImg = document.createElement('img'); bgImg.src = slide.background.src; bgImg.loading='lazy';
+        bgWrap.appendChild(bgImg);
+        inner.appendChild(bgWrap);
+        const fg = el('div','fc-fg');
+        if(slide.title){ fg.appendChild(titleEl(slide.title,40)); }
+        if(slide.bullets) fg.appendChild(buildBullets(slide.bullets));
+        inner.appendChild(fg);
+        if(slide.images && slide.images.length){
+          const insets = el('div','fc-insets');
+          slide.images.forEach((im,i)=> insets.appendChild(buildExhibit(im, 260+i*140)));
+          inner.appendChild(insets);
+        }
+        break;
+      }
+      case 'table': {
+        inner = el('div','slide-inner');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,40)); }
+        if(slide.questions) inner.appendChild(buildQuestions(slide.questions));
+        const tw = el('div','table-wrap reveal-item'); revealItem(tw,200);
+        const table = el('table','data');
+        const thead = el('thead','');
+        const htr = el('tr','');
+        slide.table.headers.forEach(hd=> htr.appendChild(el('th','',escapeHTML(hd))));
+        thead.appendChild(htr); table.appendChild(thead);
+        const tbody = el('tbody','');
+        slide.table.rows.forEach((row,i)=>{
+          const isSection = row.length>1 && row[1]==='';
+          const tr = el('tr', isSection?'section-row':'');
+          tr.style.transitionDelay = (i*22)+'ms';
+          row.forEach(c=> tr.appendChild(el('td','',escapeHTML(c))));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        tw.appendChild(table);
+        inner.appendChild(tw);
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        s._tableRows = tbody.querySelectorAll('tr');
+        break;
+      }
+      case 'flow': {
+        inner = el('div','slide-inner');
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker));
+        inner.appendChild(titleEl(slide.title,60));
+        const wrap = el('div','flow-wrap');
+        slide.stages.forEach((st,i)=>{
+          const row = el('div','flow-step reveal-item');
+          revealItem(row, 140+i*130);
+          row.appendChild(el('div','fnum', String(i+1)));
+          row.appendChild(el('div','flabel', escapeHTML(st.label)));
+          row.appendChild(el('div','fdetail', escapeHTML(st.detail)));
+          wrap.appendChild(row);
+          if(i < slide.stages.length-1){
+            const arrow = el('div','flow-arrow reveal-item','&darr;');
+            revealItem(arrow, 140+i*130+65);
+            wrap.appendChild(arrow);
+          }
+        });
+        inner.appendChild(wrap);
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        break;
+      }
+      case 'hub': {
+        inner = el('div','slide-inner');
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker));
+        inner.appendChild(titleEl(slide.title,50));
+        const wrap = el('div','hub-wrap');
+        const center = el('div','hub-center', escapeHTML(slide.center));
+        wrap.appendChild(center);
+        const n = slide.spokes.length;
+        const radiusPct = 40;
+        slide.spokes.forEach((label,i)=>{
+          const angle = (Math.PI*2*i/n) - Math.PI/2;
+          const dx = radiusPct*Math.cos(angle), dy = radiusPct*Math.sin(angle);
+          const x = 50 + dx, y = 50 + dy;
+          const line = el('div','hub-spoke-line');
+          const len = Math.sqrt(dx*dx+dy*dy);
+          line.style.width = 'calc(' + len + '% * 1.02)';
+          line.style.transform = 'rotate(' + (Math.atan2(dy,dx)*180/Math.PI) + 'deg)';
+          line.style.transitionDelay = (200+i*70)+'ms';
+          wrap.appendChild(line);
+          const node = el('div','hub-node', escapeHTML(label));
+          node.style.left = x+'%'; node.style.top = y+'%';
+          node.style.transitionDelay = (300+i*70)+'ms';
+          wrap.appendChild(node);
+        });
+        inner.appendChild(wrap);
+        break;
+      }
+      case 'quadrant': {
+        inner = el('div','slide-inner');
+        if(slide.title){ inner.appendChild(titleEl(slide.title,40)); }
+        if(slide.bullets) inner.appendChild(buildBullets(slide.bullets));
+        const q = slide.quadrant;
+        const qw = el('div','quad-wrap');
+        qw.appendChild(el('div','quad-axis-title', escapeHTML(q.axisTitle)));
+        const grid = el('div','quad-grid');
+        grid.appendChild(el('div',''));
+        grid.appendChild(el('div','quad-col-label win', escapeHTML(q.colLabels[0])));
+        grid.appendChild(el('div','quad-col-label loss', escapeHTML(q.colLabels[1])));
+        q.rowLabels.forEach((rl,ri)=>{
+          grid.appendChild(el('div','quad-row-label', escapeHTML(rl)));
+          q.cells[ri].forEach((cellText,ci)=>{
+            const cell = el('div','quad-cell '+(ci===0?'win':'loss')+' reveal-item', escapeHTML(cellText));
+            revealItem(cell, 160+(ri*2+ci)*90);
+            grid.appendChild(cell);
+          });
+        });
+        qw.appendChild(grid);
+        inner.appendChild(qw);
+        break;
+      }
+      case 'closing': {
+        inner = el('div','slide-inner closing-wrap');
+        const h = el('h1','disp title-hero reveal-item', escapeHTML(slide.title));
+        revealItem(h,80);
+        const rule = el('div','rule reveal-item'); revealItem(rule,40);
+        const rule2 = el('div','rule reveal-item'); revealItem(rule2,340);
+        inner.appendChild(rule);
+        inner.appendChild(h);
+        inner.appendChild(rule2);
+        break;
+      }
+      default: inner = el('div','slide-inner');
+    }
+    s.appendChild(inner);
+    return s;
+  }
+
+  const slideEls = SLIDES.map((s,i)=> build(s,i));
+  slideEls.forEach(e=> deck.appendChild(e));
+
+  let current = -1;
+  let notesOpen = false;
+
+  function animateCountUps(container){
+    const nums = container.querySelectorAll('.stat-num');
+    nums.forEach(n=>{
+      const target = n.dataset.target;
+      const numeric = parseFloat(String(target).replace(/,/g,''));
+      const prefix = n.dataset.prefix||'', suffix = n.dataset.suffix||'';
+      if(prefersReduced || isNaN(numeric)){
+        n.textContent = prefix+target+suffix;
+        return;
+      }
+      const dur = 1100; const start = performance.now();
+      function frame(t){
+        const p = Math.min(1,(t-start)/dur);
+        const eased = 1-Math.pow(1-p,3);
+        const val = numeric*eased;
+        let display;
+        if(String(target).includes(',')){
+          display = Math.round(val).toLocaleString('en-US');
+        } else if(String(target).includes('.')){
+          display = val.toFixed(1);
+        } else {
+          display = Math.round(val).toString();
+        }
+        n.textContent = prefix+display+suffix;
+        if(p<1) requestAnimationFrame(frame); else n.textContent = prefix+target+suffix;
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  function activate(idx){
+    const prevIdx = current;
+    current = idx;
+    slideEls.forEach((e,i)=>{
+      if(i===idx){
+        e.classList.add('active');
+      } else {
+        e.classList.remove('active');
+        // reset reveal states for replay
+        e.querySelectorAll('.reveal-item').forEach(r=> r.classList.remove('in'));
+        if(e._tableRows) e._tableRows.forEach(r=> r.classList.remove('in'));
+        if(e._charts) e._charts.forEach(c=> c._reset && c._reset());
+        e.querySelectorAll('.exhibit').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.banner-frame').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.kb').forEach(k=> k.classList.remove('kb-anim'));
+        e.querySelectorAll('.hub-center,.hub-node,.hub-spoke-line').forEach(x=> x.classList.remove('in'));
+      }
+    });
+    const activeEl = slideEls[idx];
+    requestAnimationFrame(()=>{
+      activeEl.querySelectorAll('.reveal-item').forEach(r=> r.classList.add('in'));
+      activeEl.querySelectorAll('.exhibit').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.banner-frame').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.kb').forEach(k=> k.classList.add('kb-anim'));
+      activeEl.querySelectorAll('.hub-center,.hub-node,.hub-spoke-line').forEach(x=> x.classList.add('in'));
+      if(activeEl._charts) activeEl._charts.forEach(c=> setTimeout(()=> c._play(), prefersReduced?0:250));
+      if(activeEl._tableRows) activeEl._tableRows.forEach(r=> r.classList.add('in'));
+      animateCountUps(activeEl);
+    });
+
+    // chrome updates
+    progressFill.style.width = ((idx)/(SLIDES.length-1)*100).toFixed(2)+'%';
+    counterEl.textContent = String(idx+1).padStart(2,'0')+' / '+SLIDES.length;
+    sectionLabel.textContent = sectionFor(idx);
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===SLIDES.length-1;
+
+    // notes
+    const notesText = SLIDES[idx].notes;
+    if(notesText){
+      notesBody.innerHTML = '<h3>Speaker Notes</h3><p></p>';
+      notesBody.querySelector('p').appendChild(linkifyText(notesText));
+      notesToggle.style.opacity = 1;
+    } else {
+      notesBody.innerHTML = '<h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p>';
+      notesToggle.style.opacity = .45;
+    }
+
+    location.hash = 's'+(idx+1);
+  }
+
+  function next(){ if(current < SLIDES.length-1) activate(current+1); hideHint(); }
+  function prev(){ if(current > 0) activate(current-1); hideHint(); }
+
+  let hintHidden = false;
+  function hideHint(){ if(!hintHidden){ hint.classList.add('hide'); hintHidden = true; } }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  deck.addEventListener('click', (e)=>{
+    if(e.target.closest('.table-wrap')) return;
+    if(e.target.closest('a')) return;
+    next();
+  });
+
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft' || e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ e.preventDefault(); activate(0); }
+    else if(e.key==='End'){ e.preventDefault(); activate(SLIDES.length-1); }
+    else if(e.key==='n' || e.key==='N'){ toggleNotes(); }
+    else if(e.key==='Escape'){ if(notesOpen) toggleNotes(); }
+    else if(e.key==='+' || e.key==='='){ e.preventDefault(); zoomIn(); }
+    else if(e.key==='-' || e.key==='_'){ e.preventDefault(); zoomOut(); }
+    else if(e.key==='0'){ e.preventDefault(); zoomReset(); }
+  });
+
+  const ZOOM_MIN = 0.75, ZOOM_MAX = 2, ZOOM_STEP = 0.1;
+  let zoomLevel = 1;
+  try{
+    const saved = parseFloat(localStorage.getItem('spm381_zoom'));
+    if(!isNaN(saved) && saved>=ZOOM_MIN && saved<=ZOOM_MAX) zoomLevel = saved;
+  }catch(err){}
+  function applyZoom(){
+    document.documentElement.style.setProperty('--zoom', zoomLevel.toFixed(2));
+    zoomResetBtn.textContent = Math.round(zoomLevel*100)+'%';
+    zoomOutBtn.disabled = zoomLevel<=ZOOM_MIN;
+    zoomInBtn.disabled = zoomLevel>=ZOOM_MAX;
+    try{ localStorage.setItem('spm381_zoom', zoomLevel); }catch(err){}
+  }
+  function zoomIn(){ zoomLevel = Math.min(ZOOM_MAX, +(zoomLevel+ZOOM_STEP).toFixed(2)); applyZoom(); }
+  function zoomOut(){ zoomLevel = Math.max(ZOOM_MIN, +(zoomLevel-ZOOM_STEP).toFixed(2)); applyZoom(); }
+  function zoomReset(){ zoomLevel = 1; applyZoom(); }
+  zoomInBtn.addEventListener('click', (e)=>{ e.stopPropagation(); zoomIn(); });
+  zoomOutBtn.addEventListener('click', (e)=>{ e.stopPropagation(); zoomOut(); });
+  zoomResetBtn.addEventListener('click', (e)=>{ e.stopPropagation(); zoomReset(); });
+  applyZoom();
+
+  function toggleNotes(){
+    notesOpen = !notesOpen;
+    notesPanel.classList.toggle('open', notesOpen);
+  }
+  notesToggle.addEventListener('click', toggleNotes);
+  document.getElementById('closeNotes').addEventListener('click', toggleNotes);
+
+  setTimeout(hideHint, 5000);
+
+  // init from hash
+  let startIdx = 0;
+  const m = location.hash.match(/s(\d+)/);
+  if(m){ const n = parseInt(m[1],10)-1; if(n>=0 && n<SLIDES.length) startIdx = n; }
+  activate(startIdx);
+})();
+
+</script>
+</body>
+</html>
