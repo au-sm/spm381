@@ -240,9 +240,10 @@ ul.bullets li.q::before{background:var(--sky);}
 
 /* lifecycle compare */
 .compare-curves{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,36px);align-items:start;margin-top:6px;}
+.compare-curves.single{grid-template-columns:1fr;max-width:440px;margin-left:0;}
 .curve-panel{background:var(--paper);border-radius:8px;padding:10px 14px 8px;box-shadow:0 20px 46px -22px rgba(0,0,0,.5);}
 .curve-panel h4{margin:0 0 4px;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6b6350;text-align:center;}
-.curve-panel img{width:100%;display:block;max-height:19vh;object-fit:contain;margin:0 auto;}
+.curve-panel img{width:100%;display:block;max-height:24vh;object-fit:contain;margin:0 auto;}
 .curve-svg{width:100%;height:auto;max-height:19vh;}
 .stage-legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;}
 .stage-item{display:flex;align-items:baseline;gap:8px;}
@@ -826,18 +827,14 @@ ul.bullets li.q::before{background:var(--sky);}
         if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
         inner.appendChild(titleEl(slide.title,40));
         if(slide.lede){ const l = el('p','lede reveal-item', escapeHTML(slide.lede)); revealItem(l,120); inner.appendChild(l); }
-        const grid = el('div','compare-curves reveal-item'); revealItem(grid,220);
+        if(slide.agentImpact) inner.appendChild(buildAgentMatrix(slide.stages, slide.agentImpact, 220));
+        const grid = el('div','compare-curves single reveal-item'); revealItem(grid,520);
         const plcPanel = el('div','curve-panel');
         plcPanel.appendChild(el('h4','','Product Life Cycle'));
         const plcImg = document.createElement('img'); plcImg.src = slide.plcImage.src; plcImg.loading='lazy';
         plcPanel.appendChild(plcImg);
         grid.appendChild(plcPanel);
-        const fanPanel = el('div','curve-panel');
-        fanPanel.appendChild(el('h4','','Fan Life Cycle'));
-        fanPanel.appendChild(buildFanCurve(slide.stages));
-        grid.appendChild(fanPanel);
         inner.appendChild(grid);
-        if(slide.agentImpact) inner.appendChild(buildAgentMatrix(slide.stages, slide.agentImpact, 420));
         break;
       }
       case 'media': {
