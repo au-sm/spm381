@@ -195,8 +195,8 @@ ul.bullets li.q::before{background:var(--sky);}
 .diptych{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--line);border-radius:3px;overflow:hidden;}
 .diptych .photo{border-radius:0;height:min(46vh,420px);}
 .diptych .photo img{height:100%;border-radius:0;}
-.diptych .photo.contain{background:var(--surface2);}
-.diptych .photo.contain img{height:100%;width:100%;object-fit:contain;}
+.diptych .photo.contain{height:auto;align-self:center;}
+.diptych .photo.contain img{width:100%;height:auto;object-fit:contain;}
 .diptych .cutline{padding-left:14px;margin-top:8px;}
 
 /* concept diagram (converge / branch) */
