@@ -1,42 +1,37 @@
 /**
- * SPM 261 / SPM 381 — Slide Questions & Comments
- * -------------------------------------------------
- * Backend for the "Question?" button embedded in the lecture decks on
- * both course sites. A student clicks it on any slide, types a question
- * or comment, and it becomes one row in that COURSE's own Google Sheet
- * -- tagged with which deck and which slide it came from -- plus an
- * instant email so you don't have to keep either Sheet open.
+ * SPM 381 — Slide Questions & Comments
+ * -------------------------------------
+ * Backend for the "Question?" button embedded in the SPM381 lecture
+ * decks (Week 3 and on). A student clicks it on any slide, types a
+ * question or comment, and it becomes one row in this course's own
+ * Google Sheet -- tagged with which deck and which slide it came from
+ * -- plus an instant email so you don't have to keep the Sheet open.
  *
- * One standalone Apps Script project serves every deck on BOTH sites.
- * Which Sheet a submission lands in is picked automatically from the
- * "deck" string the page sends (it starts with "SPM261" or "SPM381"),
- * via two separate Script Properties -- see below.
+ * This is a SEPARATE, independent deployment from the SPM261 backend
+ * (SPM261_26/questions/backend.gs). Each course has its own Apps
+ * Script project, its own Sheet, and its own /exec URL.
  *
  * SETUP (one time)
- *  1. For EACH course, create (or pick) a Google Sheet to hold its
- *     submissions. Copy each Sheet's ID out of its URL: the long string
- *     between /d/ and /edit.
+ *  1. Create (or pick) a Google Sheet to hold SPM381 submissions.
+ *     Copy its ID out of the URL: the long string between /d/ and /edit.
  *  2. script.google.com -> New project. Paste this file in. Save.
- *  3. Project Settings (gear) -> Script Properties -> add BOTH:
- *       SHEET_ID_SPM261 = <SPM261's Sheet ID>
- *       SHEET_ID_SPM381 = <SPM381's Sheet ID>
+ *  3. Project Settings (gear) -> Script Properties -> add:
+ *       SHEET_ID = <the Sheet ID from step 1>
  *  4. Deploy -> New deployment -> type "Web app"
  *       Execute as: Me
  *       Who has access: Anyone            <-- required so students (not signed in) can submit
  *     Deploy, authorize, copy the Web app URL (ends in /exec).
- *  5. Put that SAME URL in both SPM261_26/questions/config.js and
- *     SPM381_26/questions/config.js, and push both.
+ *  5. Put that URL in SPM381_26/questions/config.js and push.
  *
- * UPDATING AN EXISTING DEPLOYMENT (e.g. adding a new course, or a code
- * change like this one): paste the new code into the same script
- * project, Save, then Deploy -> Manage deployments -> pencil icon on
- * the active deployment -> Version: "New version" -> Deploy. This keeps
- * the same /exec URL, so neither config.js needs to change.
+ * UPDATING AN EXISTING DEPLOYMENT: paste the new code into the same
+ * script project, Save, then Deploy -> Manage deployments -> pencil
+ * icon on the active deployment -> Version: "New version" -> Deploy.
+ * This keeps the same /exec URL, so config.js does NOT need to change.
  *
  * No triggers, no cron. Every submission is a synchronous doPost that
- * appends one row to the right Sheet and sends one email. Open either
- * Sheet any time to read its full history -- newest at the bottom, or
- * add a filter/sort to read by slide.
+ * appends one row and sends one email. Open the Sheet any time to read
+ * the full history -- newest at the bottom, or add a filter/sort to
+ * read by deck or slide.
  */
 
 var NOTIFY_EMAIL = 'kimjw@arcadia.edu';   // gets an email on every submission
@@ -45,7 +40,7 @@ var PROPS = PropertiesService.getScriptProperties();
 function doGet(e){
   // Visiting the deployed URL directly in a browser should show this,
   // confirming the backend is live before you wire up the frontend.
-  return json_({ ok: true, msg: 'SPM261/SPM381 questions backend is live. POST a question to submit one.' });
+  return json_({ ok: true, msg: 'SPM381 questions backend is live. POST a question to submit one.' });
 }
 
 function doPost(e){
@@ -66,7 +61,7 @@ function handle_(body){
     var slideTitle = String(body.slideTitle || '').slice(0, 200);
     var name = String(body.name || 'Anonymous').trim().slice(0, 120) || 'Anonymous';
 
-    appendRow_(deck, [new Date(), deck, slideIndex, slideTitle, text, name]);
+    appendRow_([new Date(), deck, slideIndex, slideTitle, text, name]);
     notify_(deck, slideIndex, slideTitle, text, name);
     return { ok: true };
   } finally {
@@ -74,15 +69,9 @@ function handle_(body){
   }
 }
 
-function sheetIdFor_(deck){
-  var course = /^SPM381/i.test(String(deck || '')) ? 'SPM381' : 'SPM261';
-  var id = PROPS.getProperty('SHEET_ID_' + course) || PROPS.getProperty('SHEET_ID');
-  if (!id) throw new Error('Missing Script Property SHEET_ID_' + course + ' (or legacy SHEET_ID)');
-  return id;
-}
-
-function appendRow_(deck, row){
-  var id = sheetIdFor_(deck);
+function appendRow_(row){
+  var id = PROPS.getProperty('SHEET_ID');
+  if (!id) throw new Error('Missing Script Property SHEET_ID');
   var ss = SpreadsheetApp.openById(id);
   var sh = ss.getSheetByName('Questions') || ss.insertSheet('Questions');
   if (sh.getLastRow() === 0) {
@@ -95,8 +84,7 @@ function appendRow_(deck, row){
 function notify_(deck, slideIndex, slideTitle, text, name){
   if (!NOTIFY_EMAIL) return;
   try {
-    var course = /^SPM381/i.test(String(deck || '')) ? 'SPM381' : 'SPM261';
-    var subject = course + ' question — ' + (deck || 'a deck') + ', slide ' + slideIndex;
+    var subject = 'SPM381 question — ' + (deck || 'a deck') + ', slide ' + slideIndex;
     var body = [
       'From: ' + name,
       'Deck: ' + (deck || '(not sent)'),
@@ -121,7 +109,7 @@ function notify_(deck, slideIndex, slideTitle, text, name){
  * then check NOTIFY_EMAIL's inbox (and spam folder) for a test message.
  */
 function testEmail(){
-  MailApp.sendEmail(NOTIFY_EMAIL, 'SPM261 questions backend — test email',
+  MailApp.sendEmail(NOTIFY_EMAIL, 'SPM381 questions backend — test email',
     'If you got this, email notifications are working.');
 }
 
