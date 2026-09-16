@@ -54,7 +54,8 @@
     '.pulse-btn{pointer-events:auto;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(12,13,18,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s ease,border-color .15s ease,opacity .3s ease;}' +
     '.pulse-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.45);}' +
     '.pulse-btn:active{transform:translateY(0);}' +
-    '.pulse-btn.sent{opacity:.35;}' +
+    '.pulse-btn.locked{opacity:.3;cursor:not-allowed;}' +
+    '.pulse-btn.locked.sent{opacity:1;cursor:default;box-shadow:0 0 0 2px rgba(255,255,255,.6);}' +
     '.pulse-status{pointer-events:none;font:11px system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.6);margin-left:2px;white-space:nowrap;}' +
     '.poll-card{position:fixed;left:50%;bottom:98px;transform:translateX(-50%);z-index:22;width:min(420px,88vw);background:rgba(13,14,19,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px 16px;box-shadow:0 12px 32px rgba(0,0,0,.4);color:#f2f3f5;font:14px/1.4 system-ui,-apple-system,sans-serif;}' +
     '.poll-card.collapsed .poll-q,.poll-card.collapsed .poll-options,.poll-card.collapsed .poll-results,.poll-card.collapsed .poll-status{display:none;}' +
@@ -120,8 +121,23 @@
     flashPulseStatus._t = setTimeout(function(){ pulseStatus.textContent = ''; }, 2200);
   }
 
+  // one reaction per browser, ever -- once tapped, all three lock permanently
+  // (persisted so it stays locked across reloads, same idea as poll voting).
+  var pulseLockKey = 'spm381_pulse_reacted';
+  function lockPulseButtons(chosen){
+    reactionWrap.querySelectorAll('.pulse-btn').forEach(function(b){
+      b.disabled = true;
+      b.classList.add('locked');
+      if (b.dataset.reaction === chosen) b.classList.add('sent');
+    });
+  }
+  var alreadyReacted = null;
+  try { alreadyReacted = localStorage.getItem(pulseLockKey); } catch (e) {}
+  if (alreadyReacted) lockPulseButtons(alreadyReacted);
+
   reactionWrap.querySelectorAll('.pulse-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
+      if (btn.disabled) return;
       var reaction = btn.dataset.reaction;
       var info = slideInfo();
       if (!window.QUESTIONS_API){
@@ -136,8 +152,8 @@
           deck: deckLabel(), slideIndex: info.index + 1, slideTitle: info.title
         })
       }).catch(function(){ flashPulseStatus("Couldn't send"); });
-      btn.classList.add('sent');
-      setTimeout(function(){ btn.classList.remove('sent'); }, 450);
+      try { localStorage.setItem(pulseLockKey, reaction); } catch (e) {}
+      lockPulseButtons(reaction);
     });
   });
 
