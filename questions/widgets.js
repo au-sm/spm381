@@ -121,19 +121,30 @@
     flashPulseStatus._t = setTimeout(function(){ pulseStatus.textContent = ''; }, 2200);
   }
 
-  // one reaction per browser, ever -- once tapped, all three lock permanently
-  // (persisted so it stays locked across reloads, same idea as poll voting).
-  var pulseLockKey = 'spm381_pulse_reacted';
+  // One reaction per slide, per browser -- locks after a click, but resets
+  // when the student moves to a different slide (persisted per-slide in
+  // localStorage, so a reload of the SAME slide stays locked instead of
+  // letting them vote again).
+  var pulseLockBase = 'spm381_pulse_reacted';
+  function pulseSlideKey(idx){ return pulseLockBase + '_s' + idx; }
   function lockPulseButtons(chosen){
     reactionWrap.querySelectorAll('.pulse-btn').forEach(function(b){
       b.disabled = true;
       b.classList.add('locked');
-      if (b.dataset.reaction === chosen) b.classList.add('sent');
+      b.classList.toggle('sent', b.dataset.reaction === chosen);
     });
   }
-  var alreadyReacted = null;
-  try { alreadyReacted = localStorage.getItem(pulseLockKey); } catch (e) {}
-  if (alreadyReacted) lockPulseButtons(alreadyReacted);
+  function unlockPulseButtons(){
+    reactionWrap.querySelectorAll('.pulse-btn').forEach(function(b){
+      b.disabled = false;
+      b.classList.remove('locked', 'sent');
+    });
+  }
+  function syncPulseForSlide(idx){
+    var chosen = null;
+    try { chosen = localStorage.getItem(pulseSlideKey(idx)); } catch (e) {}
+    if (chosen) lockPulseButtons(chosen); else unlockPulseButtons();
+  }
 
   reactionWrap.querySelectorAll('.pulse-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
@@ -152,7 +163,7 @@
           deck: deckLabel(), slideIndex: info.index + 1, slideTitle: info.title
         })
       }).catch(function(){ flashPulseStatus("Couldn't send"); });
-      try { localStorage.setItem(pulseLockKey, reaction); } catch (e) {}
+      try { localStorage.setItem(pulseSlideKey(info.index), reaction); } catch (e) {}
       lockPulseButtons(reaction);
     });
   });
@@ -303,6 +314,7 @@
     if (info.index === lastIndex) return;
     lastIndex = info.index;
     alignPulseBar();
+    syncPulseForSlide(info.index);
     var pollDef = (window.SLIDE_POLLS || {})[info.index];
     if (pollDef && pollDef.id && pollDef.question && pollDef.options && pollDef.options.length){
       showPoll(pollDef, info.index);
