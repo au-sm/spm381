@@ -49,7 +49,7 @@
   // ---------- inject styles ----------
   var style = document.createElement('style');
   style.textContent =
-    '.pulse-wrap{position:fixed;left:clamp(20px,4vw,48px);top:54px;z-index:21;display:flex;align-items:center;gap:6px;pointer-events:none;}' +
+    '.pulse-wrap{position:fixed;left:50%;transform:translateX(-50%);top:54px;z-index:21;display:flex;align-items:center;gap:6px;pointer-events:none;}' +
     '.pulse-label{pointer-events:none;font:600 10.5px/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-right:2px;user-select:none;}' +
     '.pulse-btn{pointer-events:auto;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(12,13,18,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s ease,border-color .15s ease,opacity .3s ease;}' +
     '.pulse-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.45);}' +
