@@ -126,7 +126,7 @@
   // localStorage, so a reload of the SAME slide stays locked instead of
   // letting them vote again).
   var pulseLockBase = 'spm381_pulse_reacted';
-  function pulseSlideKey(idx){ return pulseLockBase + '_s' + idx; }
+  function pulseSlideKey(idx){ return pulseLockBase + '_' + location.pathname + '_s' + idx; }
   function lockPulseButtons(chosen){
     reactionWrap.querySelectorAll('.pulse-btn').forEach(function(b){
       b.disabled = true;
