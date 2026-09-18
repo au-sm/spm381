@@ -977,7 +977,7 @@ ul.bullets li.q::before{background:var(--sky);}
           inner.appendChild(body);
         }
 
-        if(slide.source) inner.appendChild(buildSource(slide.source));
+        if(slide.source){ const src = buildSource(slide.source); src.classList.add('source-lg'); inner.appendChild(src); }
         if(slide.stats) inner.appendChild(buildStats(slide.stats, 300));
         break;
       }
