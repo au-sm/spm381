@@ -1193,7 +1193,8 @@ table.mini-data tr:last-child td{border-bottom:none;}
           const text = el('div','split-text');
           text.appendChild(bodyContent(120));
           const media = el('div','split-media');
-          media.appendChild(buildPhoto(slide.images[0], {delay:260}));
+          const im0s = slide.images[0];
+          media.appendChild(buildPhoto(im0s, {delay:260, contain: im0s.fit==='contain', kb: im0s.still!==true}));
           grid.appendChild(text); grid.appendChild(media);
           inner.appendChild(grid);
         } else if(layout === 'diptych'){
