@@ -266,6 +266,13 @@ mark.hl-yellow{background:none;color:#f5cf3d;font-weight:600;}
 
 /* layout: diptych */
 .diptych{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--line);border-radius:3px;overflow:hidden;}
+/* CSS Grid's default min-width:auto on grid items refuses to shrink a
+   track below its content's intrinsic/natural width -- without this, a
+   wide source image forces its whole column (and the image inside it)
+   wider than the viewport on narrow screens, silently overflowing
+   sideways past .slide-inner's own overflow-x:hidden with no visual cue
+   at all (this is exactly what was happening on mobile/narrow widths). */
+.diptych>div{min-width:0;}
 .diptych .photo{border-radius:0;height:min(46vh,420px);}
 .diptych .photo img{height:100%;border-radius:0;}
 .diptych .photo.contain{height:auto;max-height:min(46vh,420px);align-self:center;}
