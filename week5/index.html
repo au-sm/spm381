@@ -401,7 +401,15 @@ mark.hl-yellow{background:none;color:#f5cf3d;font-weight:600;}
 @media (max-width: 880px){
   .split-grid,.split-grid.reverse{grid-template-columns:1fr;}
   .split-grid.reverse .split-text{order:1;} .split-grid.reverse .split-media{order:2;}
-  .diptych{grid-template-columns:1fr;}
+  /* Below the breakpoint .diptych collapses from 2 columns to 1, stacking
+     both images -- its own overflow:hidden then zeroes its flex automatic
+     minimum size (per the flexbox spec, any flex item with non-visible
+     overflow gets this), so .slide-inner's scroll never sees the true
+     stacked height and the second image gets silently clipped off with no
+     scrollbar. overflow:visible here restores correct height reporting;
+     each .photo still clips its own image via its own overflow:hidden, so
+     this only gives up the (2-column-only) rounded outer-corner look. */
+  .diptych{grid-template-columns:1fr;overflow:visible;}
   .stat-row{gap:22px;}
 }
 
