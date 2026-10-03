@@ -418,6 +418,17 @@ table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
 .stack-body > div:has(> .photo.contain)::before{content:none !important;display:none !important;}
 .cmp-fig{display:none !important;}
 ul.bullets li.q::before{content:'' !important;width:.42em !important;height:.42em !important;line-height:0 !important;border-radius:50% !important;background:var(--rust) !important;color:transparent !important;border:none !important;box-shadow:none !important;margin-top:.62em;}
+
+.photo{position:relative;}
+.photo img{cursor:zoom-in;}
+.photo-zoom{position:absolute;top:12px;right:12px;z-index:6;width:40px;height:40px;border-radius:50%;border:1px solid rgba(32,28,22,.18);background:rgba(255,255,255,.92);color:var(--rust,#8f1d1d);font:600 24px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center;cursor:zoom-in;opacity:0;transform:scale(.85);transition:opacity .2s ease,transform .2s ease;box-shadow:0 6px 16px rgba(32,28,22,.18);}
+.photo:hover .photo-zoom,.photo-zoom:focus-visible{opacity:1;transform:scale(1);}
+@media (hover:none){.photo-zoom{opacity:1;transform:scale(1);}}
+.lightbox-backdrop{position:fixed;inset:0;z-index:80;background:rgba(20,18,15,.88);opacity:0;pointer-events:none;transition:opacity .25s ease;display:flex;align-items:center;justify-content:center;padding:4vh 4vw;cursor:zoom-out;}
+.lightbox-backdrop.open{opacity:1;pointer-events:auto;}
+.lightbox-backdrop img{width:92vw;height:86vh;max-width:none;max-height:none;object-fit:contain;background:transparent;border-radius:6px;box-shadow:none;transform:scale(.96);transition:transform .25s ease;}
+.lightbox-backdrop.open img{transform:scale(1);}
+.lightbox-close{position:absolute;top:22px;right:26px;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid rgba(32,28,22,.2);color:#201c16;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 </style>
 <style id="design-layers">
 /* ==== theme.css ==== */
@@ -2467,5 +2478,37 @@ html.reduced.m-on .photo img, html.reduced.m-on .blank-fill, html.reduced.m-on .
 </script>
 <script>window.SLIDE_POLLS = {};</script>
 <script src="../questions/widgets.js?v=3"></script>
+<div class="lightbox-backdrop" id="lightboxBackdrop"><button class="lightbox-close" id="lightboxClose" aria-label="Close enlarged image">&times;</button><img id="lightboxImg" src="" alt=""></div>
+<script>
+(function(){
+  var bd=document.getElementById('lightboxBackdrop'), lim=document.getElementById('lightboxImg');
+  function open(src,alt){ lim.src=src; lim.alt=alt||''; bd.classList.add('open'); }
+  function close(){ bd.classList.remove('open'); }
+  function srcOf(photo){ var im=photo.querySelector('img'); return im ? im.getAttribute('src') : null; }
+  function addButtons(){
+    document.querySelectorAll('#deck .photo').forEach(function(p){
+      if(p.querySelector('.photo-zoom') || !srcOf(p)) return;
+      var b=document.createElement('button'); b.className='photo-zoom'; b.type='button';
+      b.setAttribute('aria-label','Enlarge image'); b.title='Enlarge image'; b.textContent='+';
+      p.appendChild(b);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var p=e.target.closest && e.target.closest('#deck .photo');
+    if(p && (e.target.closest('.photo-zoom') || e.target.tagName==='IMG' || e.target.closest('svg'))){
+      var s=srcOf(p); if(!s) return;
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      open(s, (p.querySelector('img')||{}).alt);
+    }
+  }, true);
+  bd.addEventListener('click', function(e){ e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e){
+    if(!bd.classList.contains('open')) return;
+    e.stopPropagation(); e.stopImmediatePropagation();
+    if(e.key==='Escape') close();
+  }, true);
+  addButtons(); setTimeout(addButtons, 800); setTimeout(addButtons, 2500);
+})();
+</script>
 </body>
 </html>
