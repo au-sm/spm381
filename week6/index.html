@@ -415,6 +415,8 @@ table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
 .slide-inner > h1.title-slide + .kicker{margin:-4px 0 0;}
 .subhead{font-family:var(--font-display,Georgia,serif);font-size:clamp(20px,2vw,28px);font-weight:600;color:var(--ink);margin:-2px 0 0;}
 .slide-inner > .badge-corner{position:static;order:99;align-self:flex-end;margin:18px 4% 0 0;width:clamp(130px,14vw,200px);}
+.stack-body > div:has(> .photo.contain)::before{content:none !important;display:none !important;}
+.cmp-fig{display:none !important;}
 </style>
 <style id="design-layers">
 /* ==== theme.css ==== */
@@ -2011,7 +2013,6 @@ html.reduced.m-on .photo img, html.reduced.m-on .blank-fill, html.reduced.m-on .
     if(!photo) return;
     var holder = photo.parentNode;
     holder.classList.add('cmp-plate', f.plate === 'card' ? 'cmp-plate--card' : 'cmp-plate--flat');
-    holder.insertBefore(deco('span','cmp-fig','Fig.'), holder.firstChild);
     body.classList.add('cmp-figure-body');
     if(!body.querySelector('ul,.pullquote')) body.classList.add('cmp-figure-only');
   }
