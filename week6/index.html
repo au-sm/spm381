@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPM 381 &middot; Week 6 &mdash; Theories of Sport Consumer Behavior</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+
+:root{
+  --bg:#ffffff;
+  --bg2:#f7f5f0;
+  --surface:#f7f5f0;
+  --surface2:#f0ece2;
+  --paper:#f3ecdf;
+  --paper-ink:#221c17;
+  --ink:#201c16;
+  --muted:rgba(32,28,22,.64);
+  --muted2:rgba(32,28,22,.45);
+  --line:rgba(32,28,22,.14);
+  --rust:#a3392f;
+  --rust-soft:rgba(163,57,47,.12);
+  --sage:#2f7d6a;
+  --sage-soft:rgba(47,125,106,.12);
+  --sky:#b2772a;
+  --gold:#a3392f;
+  --font-display: ui-serif,Charter,'Iowan Old Style',Georgia,'Times New Roman',serif;
+  --font-body: system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono: ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --dur: .7s;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);
+  overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.bg-wash{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 1000px 620px at -6% -12%, rgba(163,57,47,.05), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 108% 112%, rgba(47,125,106,.05), transparent 62%),
+    linear-gradient(180deg,#ffffff,#faf8f4 45%);
+}
+.deck{position:fixed;inset:0;z-index:1;}
+.slide{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(22px);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility 0s linear var(--dur);
+  visibility:hidden;pointer-events:none;
+  padding: clamp(64px,9vh,96px) clamp(28px,6vw,104px) clamp(40px,6vh,64px);
+}
+.slide.active{opacity:1;transform:translateY(0);visibility:visible;pointer-events:auto;z-index:2;transition-delay:0s;}
+.slide-inner{position:relative;width:100%;max-width:1280px;max-height:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(14px,2vh,22px);overflow:auto;padding:2px 4px 2px 0;zoom:var(--zoom,1);}
+.slide-inner::-webkit-scrollbar{width:6px;}
+.slide-inner::-webkit-scrollbar-thumb{background:rgba(163,57,47,.28);border-radius:3px;}
+.slide-inner::-webkit-scrollbar-track{background:transparent;}
+
+/* page numeral — the deck's recurring graphic signature */
+.page-num{
+  position:fixed;right:clamp(20px,4vw,54px);bottom:clamp(14px,3vh,28px);
+  font-family:var(--font-display);font-size:clamp(64px,11vw,150px);line-height:1;
+  color:rgba(32,28,22,.045);pointer-events:none;z-index:0;user-select:none;
+}
+
+/* chrome */
+.chrome-top{
+  position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:22px;
+  padding:20px clamp(20px,4vw,48px) 0;pointer-events:none;
+}
+.brand{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;}
+.brand b{color:var(--rust);font-weight:600;}
+.progress-track{flex:1;height:1px;background:var(--line);position:relative;}
+.progress-fill{position:absolute;top:-1.5px;left:0;height:4px;width:0%;background:var(--rust);transition:width .5s var(--ease);}
+.progress-fill::after{content:'';position:absolute;right:-3px;top:-2px;width:8px;height:8px;border-radius:50%;background:var(--rust);box-shadow:0 0 10px 2px var(--rust-soft);}
+.section-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;}
+.counter{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);white-space:nowrap;min-width:48px;text-align:right;}
+
+.chrome-bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,4vw,48px) 22px;pointer-events:none;
+}
+.navbtn{
+  pointer-events:auto;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(255,255,255,.75);backdrop-filter:blur(6px);
+  color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 2px 10px rgba(32,28,22,.07);
+  transition:background .25s ease, border-color .25s ease, transform .2s ease;
+}
+.navbtn:hover{background:var(--rust-soft);border-color:var(--rust);transform:translateY(-2px);}
+.navbtn:active{transform:translateY(0);}
+.navbtn svg{width:16px;height:16px;}
+.navbtn:disabled{opacity:.22;cursor:default;transform:none;}
+
+/* ask a question */
+.ask-btn{
+  position:fixed;right:clamp(20px,4vw,48px);top:54px;z-index:21;
+  pointer-events:auto;height:34px;padding:0 16px;border-radius:20px;white-space:nowrap;
+  border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(6px);
+  color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:var(--font-body);font-weight:600;font-size:13px;
+  box-shadow:0 2px 10px rgba(32,28,22,.07);
+  transition:background .25s ease, border-color .25s ease, transform .2s ease;
+}
+.ask-btn:hover{background:var(--rust-soft);border-color:var(--rust);transform:translateY(-2px);}
+.ask-backdrop{
+  position:fixed;inset:0;z-index:30;background:rgba(32,28,22,.45);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.ask-backdrop.open{opacity:1;pointer-events:auto;}
+.ask-panel{
+  width:min(480px,100%);background:#ffffff;border:1px solid var(--line);border-radius:12px;
+  padding:26px 26px 22px;box-shadow:0 40px 90px -30px rgba(32,28,22,.35);
+  transform:translateY(14px) scale(.98);opacity:0;transition:transform .3s var(--ease),opacity .3s var(--ease);
+}
+.ask-backdrop.open .ask-panel{transform:translateY(0) scale(1);opacity:1;}
+.ask-title{font-family:var(--font-display);font-weight:700;font-size:19px;color:var(--ink);margin:0 0 4px;}
+.ask-context{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--rust);margin:0 0 16px;}
+.ask-panel textarea{
+  width:100%;min-height:96px;resize:vertical;background:var(--bg2);color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:14px/1.5 var(--font-body);
+  outline:none;transition:border-color .2s ease;box-sizing:border-box;
+}
+.ask-panel textarea:focus{border-color:var(--rust);}
+.ask-panel input[type=text]{
+  width:100%;margin-top:10px;background:var(--bg2);color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:13px var(--font-body);
+  outline:none;transition:border-color .2s ease;box-sizing:border-box;
+}
+.ask-panel input[type=text]:focus{border-color:var(--rust);}
+.ask-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;}
+.ask-hint{font-family:var(--font-mono);font-size:10.5px;color:var(--muted2);}
+.ask-actions{display:flex;gap:10px;}
+.ask-btn-cancel,.ask-btn-send{
+  font-family:var(--font-body);font-size:13px;font-weight:600;border-radius:7px;padding:9px 16px;
+  cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);
+  transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.ask-btn-cancel:hover{color:var(--ink);border-color:var(--muted);}
+.ask-btn-send{background:var(--rust);border-color:var(--rust);color:#fff6ef;}
+.ask-btn-send:hover{filter:brightness(1.08);}
+.ask-btn-send:disabled{opacity:.5;cursor:default;filter:none;}
+.ask-status{font-family:var(--font-mono);font-size:12px;margin-top:12px;min-height:16px;}
+.ask-status.err{color:#b23a2a;}
+.ask-status.ok{color:var(--sage);}
+.hint{
+  pointer-events:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted2);opacity:1;transition:opacity 1s ease;z-index:19;
+}
+.hint.hide{opacity:0;}
+.textlink{
+  pointer-events:auto;background:none;border:none;cursor:pointer;flex-shrink:0;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);padding:4px 0;position:relative;transition:color .2s ease;
+}
+.textlink::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rust);transform:scaleX(0);transform-origin:left;transition:transform .25s ease;}
+.textlink:hover{color:var(--ink);}
+.textlink:hover::after{transform:scaleX(1);}
+.home-btn{text-decoration:none;display:inline-flex;align-items:center;}
+
+.zoom-controls{pointer-events:auto;display:flex;align-items:center;gap:2px;flex-shrink:0;font-family:var(--font-mono);}
+.zoom-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;line-height:1;padding:4px 6px;transition:color .2s ease;}
+.zoom-btn:hover{color:var(--rust);}
+.zoom-reset{min-width:40px;text-align:center;font-size:10px;color:var(--muted2);}
+.zoom-btn:disabled{opacity:.3;cursor:default;}
+
+/* reveal primitives */
+.reveal-item{opacity:0;transform:translateY(12px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
+.slide.active .reveal-item.in{opacity:1;transform:translateY(0);}
+
+.kicker{font-family:var(--font-mono);font-size:clamp(10px,.95vw,12px);letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin:0 0 10px;display:flex;align-items:center;gap:10px;}
+.kicker::before{content:'';display:inline-block;width:26px;height:1px;background:var(--rust);}
+
+h1.disp{font-family:var(--font-display);font-weight:400;line-height:1.04;margin:0;color:var(--ink);letter-spacing:-.01em;}
+.title-hero{font-size:clamp(46px,8vw,108px);}
+.title-slide{font-size:clamp(27px,3.6vw,46px);}
+.title-slide.long{font-size:clamp(22px,2.7vw,34px);}
+.subtitle{font-family:var(--font-display);font-style:italic;color:var(--muted);font-size:clamp(16px,1.8vw,23px);margin:10px 0 0;max-width:640px;}
+.meta-badge{margin-top:26px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:.09em;color:var(--muted2);text-transform:uppercase;}
+
+.lede{font-family:var(--font-display);font-style:italic;color:var(--ink);font-size:clamp(16px,1.7vw,21px);margin:0;line-height:1.5;max-width:760px;}
+
+ul.bullets{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;max-width:760px;}
+ul.bullets li{font-size:clamp(18px,1.6vw,22px);line-height:1.55;color:var(--ink);padding-left:24px;position:relative;}
+ul.bullets li::before{content:'';position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:1px;background:var(--rust);transform:rotate(45deg);}
+ul.bullets li.q{color:var(--sky);font-style:italic;font-family:var(--font-display);font-size:clamp(19.5px,1.8vw,24.5px);}
+ul.bullets li.q::before{background:var(--sky);}
+
+.pullquote{position:relative;font-family:var(--font-display);font-style:italic;color:var(--ink);font-size:clamp(22px,2.6vw,36px);line-height:1.32;max-width:820px;padding-left:.1em;}
+mark.hl-yellow{background:rgba(163,57,47,.12);color:var(--rust);font-weight:600;padding:0 .1em;}
+.pullquote::before{content:'\201C';position:absolute;left:-.5em;top:-.28em;font-size:2.2em;color:var(--rust);font-family:var(--font-display);opacity:.45;}
+
+.source{font-family:var(--font-mono);font-size:11px;color:var(--muted2);margin-top:2px;word-break:break-word;}
+.source.source-lg{font-size:20px;}
+.source::before{content:'Source — ';color:var(--muted);}
+
+/* stats */
+.stat-row{display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px);margin:4px 0 6px;}
+.stat{display:flex;flex-direction:column;gap:8px;max-width:250px;}
+.stat-rule{width:30px;height:2px;background:var(--rust);}
+.stat-num{font-family:var(--font-display);font-size:clamp(38px,5vw,68px);color:var(--ink);line-height:1;white-space:nowrap;}
+.stat-num .u{font-size:.42em;font-family:var(--font-mono);color:var(--rust);margin-left:3px;}
+.stat-label{font-size:12.5px;color:var(--muted);line-height:1.4;}
+
+/* images — no mat, hairline + cutline, per house style */
+.photo{position:relative;border-radius:3px;overflow:hidden;box-shadow:0 10px 30px -14px rgba(32,28,22,.25);}
+.photo.flawed{outline:2px solid #b23a2a;outline-offset:3px;}
+.flaw-badge{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:7px;background:#b23a2a;color:#fff6ef;font-family:var(--font-mono);font-size:12.5px;font-weight:700;letter-spacing:.02em;padding:6px 12px 6px 9px;border-radius:20px;box-shadow:0 3px 10px rgba(0,0,0,.2);}
+.flaw-x{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#fff6ef;color:#b23a2a;font-size:10px;line-height:1;}
+.photo img{
+  display:block;width:100%;height:auto;object-fit:cover;
+  opacity:0;transform:scale(1.06);transition:opacity .9s var(--ease), transform 1.4s var(--ease);
+  border-radius:3px;
+}
+.slide.active .photo.in img{opacity:1;transform:scale(1);}
+.photo.contain{box-shadow:none;}
+.photo.contain img{object-fit:contain;}
+.cutline{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted2);margin-top:9px;padding-left:8px;border-left:2px solid var(--rust);}
+@keyframes kenburns{ from{transform:scale(1);} to{transform:scale(1.07);} }
+.slide.active .photo.kb img{animation:kenburns 15s var(--ease) forwards;}
+
+/* layout: default stack */
+.stack-body{display:flex;flex-direction:column;gap:20px;}
+.stack-body .photo{max-height:38vh;}
+.stack-body .photo img{max-height:38vh;width:auto;max-width:100%;margin:0 auto;object-fit:contain;}
+
+/* layout: split */
+.split-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,4.5vw,72px);align-items:center;}
+.split-grid.reverse{grid-template-columns:1fr 1.15fr;}
+.split-grid.reverse .split-text{order:2;}
+.split-grid.reverse .split-media{order:1;}
+.split-media .photo{height:min(52vh,480px);}
+.split-media .photo img{height:100%;}
+.split-media .photo.contain{height:auto;}
+.split-media .photo.contain img{height:auto;max-height:min(50vh,460px);}
+
+/* layout: banner (full-bleed hero photo w/ scrim) */
+.banner-slide{padding:0 !important;}
+.banner-wrap{position:relative;width:100%;height:100%;overflow:hidden;}
+.banner-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:opacity 1.1s var(--ease),transform 1.6s var(--ease);}
+.slide.active .banner-wrap.in img{opacity:1;transform:scale(1);}
+.banner-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,16,12,.82) 0%,rgba(20,16,12,.3) 42%,rgba(20,16,12,.05) 68%);}
+.banner-text{position:absolute;left:clamp(28px,6vw,104px);right:clamp(28px,6vw,104px);bottom:clamp(40px,7vh,80px);}
+.banner-text .pullquote{color:#fff;font-size:clamp(24px,3.4vw,44px);max-width:920px;}
+.banner-text .pullquote::before{color:var(--gold);}
+
+/* layout: badge (tiny corner logo, text dominant) */
+.badge-corner{position:absolute;top:0;right:0;width:clamp(56px,7vw,92px);opacity:.92;}
+.badge-corner img{width:100%;display:block;border-radius:4px;opacity:0;transition:opacity .8s var(--ease);}
+.slide.active .badge-corner.in img{opacity:1;}
+.badge-body ul.bullets li{font-size:clamp(20px,2vw,26.5px);}
+
+/* layout: diptych */
+.diptych{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--line);border-radius:3px;overflow:hidden;}
+.diptych .photo{border-radius:0;height:min(46vh,420px);box-shadow:none;}
+.diptych .photo img{height:100%;border-radius:0;}
+.diptych .photo.contain{height:auto;align-self:center;}
+.diptych .photo.contain img{width:100%;height:auto;object-fit:contain;}
+.diptych .cutline{padding-left:14px;margin-top:8px;}
+
+/* concept diagram (converge / branch) */
+.concept-wrap{position:relative;width:100%;max-width:640px;aspect-ratio:16/10;margin:10px auto 0;}
+.concept-group{position:absolute;border:1px dashed var(--line);border-radius:14px;opacity:0;transition:opacity .6s var(--ease);}
+.slide.active .concept-group.in{opacity:1;}
+.concept-group-label{position:absolute;top:-11px;left:14px;background:var(--bg);padding:0 8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+.concept-node{
+  position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border-radius:10px;padding:8px 12px;
+  font-family:var(--font-body);font-weight:600;font-size:clamp(11.5px,1.15vw,14px);color:var(--ink);
+  opacity:0;transform:scale(.9);transition:opacity .5s var(--ease),transform .5s var(--ease);z-index:2;
+}
+.slide.active .concept-node.in{opacity:1;transform:scale(1);}
+.concept-node .sub{font-family:var(--font-body);font-weight:400;font-size:.76em;color:var(--muted);margin-top:3px;}
+.concept-node.tone-a{background:var(--surface2);border:1px solid rgba(163,57,47,.28);}
+.concept-node.tone-b{background:rgba(163,57,47,.08);border:1px solid rgba(163,57,47,.4);}
+.concept-svg{position:absolute;inset:0;overflow:visible;}
+.concept-edge{fill:none;stroke:var(--muted2);stroke-width:1.4;opacity:0;transition:opacity .5s var(--ease);}
+.slide.active .concept-edge.in{opacity:.85;}
+
+/* flow (PCM ladder) */
+.flow-wrap{display:flex;flex-direction:column;gap:2px;width:100%;max-width:920px;margin:0 auto;}
+.flow-step{display:grid;grid-template-columns:64px 1fr 1.35fr;gap:18px;align-items:center;border-top:1px solid var(--line);padding:13px 0;}
+.flow-step:first-child{border-top:1px solid transparent;}
+.flow-step .flevel{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+.flow-step .flabel{font-family:var(--font-display);font-size:clamp(17px,1.7vw,23px);color:var(--ink);}
+.flow-step .fproc{font-size:16px;font-weight:600;color:var(--sky);margin-top:3px;line-height:1.4;}
+.flow-outs{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;}
+.flow-chip{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em;color:var(--sage);border:1px solid rgba(47,125,106,.35);background:var(--sage-soft);border-radius:999px;padding:4px 11px;}
+.flow-step:last-child .flow-chip{color:var(--rust);border-color:rgba(163,57,47,.35);background:var(--rust-soft);}
+@media (max-width: 760px){ .flow-step{grid-template-columns:1fr;gap:6px;} .flow-outs{justify-content:flex-start;} }
+
+/* agenda */
+.agenda-list{display:flex;flex-direction:column;width:100%;max-width:820px;}
+.agenda-row{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--line);align-items:baseline;}
+.agenda-row:first-child{border-top:1px solid transparent;}
+.agenda-n{font-family:var(--font-mono);font-size:13px;color:var(--rust);}
+.agenda-label{font-family:var(--font-display);font-size:clamp(19px,2vw,26px);color:var(--ink);}
+.agenda-detail{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* compare (dualistic typology panels) */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.6vw,32px);margin-top:6px;}
+.compare-panel{border-radius:10px;padding:20px 22px;background:var(--surface);border:1px solid var(--line);}
+.compare-panel.win{border-color:rgba(47,125,106,.35);}
+.compare-panel.loss{border-color:rgba(163,57,47,.3);}
+.compare-head{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+.compare-panel.win .compare-head{color:var(--sage);}
+.compare-panel.loss .compare-head{color:var(--rust);}
+.compare-item{padding:12px 0;border-top:1px solid var(--line);}
+.compare-item:first-of-type{border-top:none;padding-top:0;}
+.compare-item .ci-name{font-family:var(--font-display);font-size:19px;color:var(--ink);}
+.compare-item .ci-full{font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);margin-top:2px;}
+.compare-item .ci-detail{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px;}
+@media (max-width:760px){ .compare-grid{grid-template-columns:1fr;} }
+
+/* hub diagram */
+.hub-wrap{position:relative;width:100%;max-width:420px;max-height:42vh;aspect-ratio:1/1;margin:8px auto 0;}
+.hub-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);
+  width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 34% 30%,var(--rust),#7a2b22);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:18px;color:#fff;font-weight:600;
+  box-shadow:0 18px 40px -12px rgba(163,57,47,.4);opacity:0;transition:opacity .6s var(--ease),transform .6s var(--ease);z-index:2;
+}
+.slide.active .hub-center.in{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.hub-spoke-line{position:absolute;top:50%;left:50%;height:1px;background:var(--line);transform-origin:0 0;opacity:0;transition:opacity .5s var(--ease);}
+.slide.active .hub-spoke-line.in{opacity:1;}
+.hub-node{
+  position:absolute;transform:translate(-50%,-50%) scale(.7);background:var(--surface2);border:1px solid var(--line);border-radius:999px;
+  padding:6px 13px;font-size:11.5px;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .5s var(--ease),transform .5s var(--ease);z-index:2;
+}
+.slide.active .hub-node.in{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+/* fill-in-the-blank prompt */
+.blank-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 30px;max-width:820px;}
+.blank-card .blank-text{font-family:var(--font-display);font-size:clamp(19px,2vw,25px);line-height:1.6;color:var(--ink);}
+.blank-fill{display:inline-block;min-width:118px;border-bottom:2px solid var(--rust);text-align:center;color:var(--rust);font-weight:700;opacity:0;transition:opacity .5s var(--ease);}
+.blank-fill.in{opacity:1;}
+.blank-hint{margin-top:16px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);}
+
+/* data table (rebuilt native, replacing a flawed source screenshot) */
+.data-table-wrap{width:100%;max-width:980px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+.data-table-cap{padding:14px 20px;border-bottom:1px solid var(--line);background:var(--surface);}
+.data-table-cap .dtc-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);}
+.data-table-cap .dtc-title{font-family:var(--font-display);font-size:18px;color:var(--ink);margin-top:3px;}
+table.data-table{width:100%;border-collapse:collapse;}
+table.data-table th{text-align:left;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);padding:10px 20px;border-bottom:1px solid var(--line);}
+table.data-table td{padding:10px 20px;border-top:1px solid var(--line);vertical-align:top;font-size:13px;line-height:1.5;}
+table.data-table td.dt-cluster{font-family:var(--font-display);font-size:15px;color:var(--rust);white-space:nowrap;width:1%;}
+table.data-table td.dt-behaviors{color:var(--ink);}
+table.data-table td.dt-behaviors div{padding:1px 0;}
+table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
+.data-table-scroll{max-height:46vh;overflow:auto;}
+.data-table-scroll::-webkit-scrollbar{width:7px;}
+.data-table-scroll::-webkit-scrollbar-thumb{background:rgba(163,57,47,.28);border-radius:4px;}
+
+/* closing */
+.closing-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;text-align:center;}
+.closing-wrap .rule{width:56px;height:1px;background:var(--rust);}
+.closing-wrap .subtitle{margin-top:0;}
+
+/* notes panel */
+.notes-panel{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,86vw);background:rgba(255,255,255,.98);backdrop-filter:blur(10px);
+  border-left:1px solid var(--line);z-index:15;transform:translateX(100%);transition:transform .45s var(--ease);
+  padding:80px 28px 28px;display:flex;flex-direction:column;gap:14px;box-shadow:-20px 0 60px -30px rgba(32,28,22,.3);
+}
+.notes-panel.open{transform:translateX(0);}
+.notes-panel h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);margin:0;}
+.notes-panel p{font-family:var(--font-display);font-size:16px;line-height:1.6;color:var(--ink);white-space:pre-wrap;}
+.notes-panel .close-notes{position:absolute;top:24px;right:24px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;}
+.notes-empty{color:var(--muted2);font-style:italic;font-family:var(--font-display);}
+.notes-panel::-webkit-scrollbar{width:8px;}
+.notes-panel::-webkit-scrollbar-thumb{background:rgba(163,57,47,.3);border-radius:4px;}
+
+@media (max-width: 880px){
+  .split-grid,.split-grid.reverse{grid-template-columns:1fr;}
+  .split-grid.reverse .split-text{order:1;} .split-grid.reverse .split-media{order:2;}
+  .diptych{grid-template-columns:1fr;}
+  .stat-row{gap:22px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{transition:opacity .15s linear !important;transform:none !important;}
+  .reveal-item{transition:none !important;opacity:1 !important;transform:none !important;}
+  .photo img,.banner-wrap img{transition:none !important;opacity:1 !important;transform:none !important;}
+  .photo.kb img{animation:none !important;}
+  .hub-center,.hub-node,.hub-spoke-line,.concept-node,.concept-group,.concept-edge{transition:none !important;opacity:1 !important;}
+  .hub-center,.hub-node{transform:translate(-50%,-50%) scale(1) !important;}
+  .concept-node{transform:scale(1) !important;}
+  .blank-fill{opacity:1 !important;}
+}
+.reduced .slide{transition:opacity .15s linear !important;transform:none !important;}
+.reduced .reveal-item{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .photo img,.reduced .banner-wrap img{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .photo.kb img{animation:none !important;}
+.reduced .hub-center,.reduced .hub-node,.reduced .hub-spoke-line,.reduced .concept-node,.reduced .concept-group,.reduced .concept-edge{transition:none !important;opacity:1 !important;}
+.reduced .blank-fill{opacity:1 !important;}
+
+</style>
+</head>
+<body>
+<div class="bg-wash"></div>
+
+<div class="chrome-top">
+  <a class="textlink home-btn" href="../" title="Back to course home">&larr; Home</a>
+  <div class="brand"><b>SPM 381</b> &middot; Theories of Consumer Behavior &middot; Week 6</div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="section-label" id="sectionLabel"></div>
+  <div class="counter" id="counter"></div>
+  <button class="textlink" id="notesToggle" title="Toggle speaker notes (N)">Notes &middot; N</button>
+  <div class="zoom-controls" role="group" aria-label="Zoom controls">
+    <button class="zoom-btn" id="zoomOutBtn" title="Zoom out (&minus;)" aria-label="Zoom out">&minus;</button>
+    <button class="zoom-btn zoom-reset" id="zoomResetBtn" title="Reset zoom (0)" aria-label="Reset zoom">100%</button>
+    <button class="zoom-btn" id="zoomInBtn" title="Zoom in (+)" aria-label="Zoom in">+</button>
+  </div>
+</div>
+
+<main class="deck" id="deck"></main>
+<div class="page-num" id="pageNum"></div>
+
+<div class="chrome-bottom">
+  <button class="navbtn" id="prevBtn" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="navbtn" id="nextBtn" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<div class="hint" id="hint">Click, scroll wheel, or press &rarr; to continue &middot; N for notes</div>
+
+<aside class="notes-panel" id="notesPanel">
+  <button class="close-notes" id="closeNotes" aria-label="Close notes">&times;</button>
+  <div id="notesBody"><h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p></div>
+</aside>
+
+<button class="ask-btn" id="askBtn" title="Ask a question about this slide" aria-label="Ask a question about this slide">Question?</button>
+<div class="ask-backdrop" id="askBackdrop">
+  <div class="ask-panel">
+    <p class="ask-title">Ask a question or leave a comment</p>
+    <p class="ask-context" id="askContext"></p>
+    <textarea id="askText" placeholder="What's on your mind about this slide?" maxlength="4000"></textarea>
+    <input type="text" id="askName" placeholder="Your name" maxlength="120">
+    <div class="ask-row">
+      <span class="ask-hint">Goes straight to Dr. Kim.</span>
+      <div class="ask-actions">
+        <button class="ask-btn-cancel" id="askCancel">Cancel</button>
+        <button class="ask-btn-send" id="askSend">Send</button>
+      </div>
+    </div>
+    <div class="ask-status" id="askStatus"></div>
+  </div>
+</div>
+
+<script src="../questions/config.js"></script>
+<script type="application/json" id="slide-data">[
+{"type":"title","kicker":"SPM 381 · Consumer Behavior in Sport","title":"Theories of Sport Consumer Behavior","subtitle":"Identity, attitude, and planned behavior — the frameworks behind why fans do what they do","meta":"Arcadia University Sport Management · Week 6 · Fall 2026"},
+
+{"type":"media","kicker":"Defining the Field","title":"Definition of Sport Consumer Behavior","quote":"The dynamic interaction of affect and cognition, behavior, and the environment by which human beings conduct the exchange aspects of their lives (American Marketing Association, 2008).","bullets":["A textbook definition of consumer behavior is generally…","\"The study of individuals, groups, or organizations and the processes they use to select, secure, use, and dispose of products, services, experiences, or ideas to satisfy needs and the impacts that these processes have on the consumer and society\" (Hawkins, Best, & Coney, 2004, p. 7)."]},
+
+{"type":"media","layout":"split","kicker":"Definition, cont.","title":"Are You Kidding?","quote":"The study of why people buy. (p. 51)","bullets":["Simple definition of consumer behavior.","The core of it: the decision-making process."],"images":[{"src":"assets/s3-crying-toddler.png","w":300,"h":350,"caption":"Not every decision-making process goes smoothly."}],"notes":"The study of consumer behavior is essentially an attempt to understand what influences a person's decision to consume a product."},
+
+{"type":"hub","kicker":"Definition, cont.","title":"Factors Affecting Sport Consumption","center":"Sport Consumption","spokes":["Thoughts","Feelings","Other people"],"bullets":["Think about what other factors influence your sport consumption?????"],"notes":"Geographical locations & weather"},
+
+{"type":"blank","kicker":"Definition, cont.","title":"Why It Matters","blankText":"It is important for professional sport leagues and college athletic programs to at least maintain a base of sport consumers, and in more cases than not, for organizations to work on increasing their levels of [[BLANK]], [[BLANK]], and [[BLANK]].","fills":["Attendance","Viewership","Merchandise consumption"],"hint":"Reveals on advance — think about your answer first."},
+
+{"type":"media","layout":"split","kicker":"Definition, cont.","title":"Who Are Sport Consumers?","bullets":["Watch this clip! [[LINK:https://www.youtube.com/watch?v=mOHkRk00iI8|youtube.com/watch?v=mOHkRk00iI8]]","\"This was hilarious… but a guy at 1:44 😕\""],"images":[{"src":"assets/s6-basketball-fans.png","w":500,"h":258,"caption":"College basketball fans in full face-paint and team colors."}]},
+
+{"type":"media","kicker":"Who Are Sport Consumers?, cont.","title":"Not All Fans Are Alike","bullets":["Stewart et al. (2003) — this week's reading.","Not all consumers are equally passionate.","Neither are they all resistant to change (i.e., loyalty) that threatens team values and practices.","Some attend games on a regular basis, while others attend only on special occasions.","Challenge: narrowing a set of homogeneous traits across such different fans."]},
+
+{"type":"compare","kicker":"Who Are Sport Consumers?, cont.","title":"Dualistic Approaches (Boyle & Haynes, 2000)","badge":{"src":"assets/s8-barclays-premier-league-logo.png"},"panels":[{"tone":"win","label":"Traditional Fans","items":[{"name":"Traditional Fans","full":"Boyle & Haynes (2000)","detail":"True supporters with a strong sense of the game's history and culture."}]},{"tone":"loss","label":"Modern Fans","items":[{"name":"Modern Fans","full":"Boyle & Haynes (2000)","detail":"Attracted to the game because of its entertainment value."}]}]},
+
+{"type":"compare","kicker":"Who Are Sport Consumers?, cont.","title":"Dualistic Approaches (Nash, 2000)","panels":[{"tone":"win","label":"Core Fans","items":[{"name":"Core Fans","full":"Nash (2000)","detail":"Grew up with the game and built enduring emotional attachments to teams."}]},{"tone":"loss","label":"Corporate Fans","items":[{"name":"Corporate Fans","full":"Nash (2000)","detail":"Used the game to consolidate their social and professional network."}]}]},
+
+{"type":"compare","kicker":"Who Are Sport Consumers?, cont.","title":"Dualistic Approaches (Ferrand & Pages, 1996)","panels":[{"tone":"win","label":"Irrational Fans","items":[{"name":"Irrational Fans","full":"Ferrand & Pages (1996)","detail":"Emotional connections with a team."}]},{"tone":"loss","label":"Rational Fans","items":[{"name":"Rational Fans","full":"Ferrand & Pages (1996)","detail":"Inclined to use their club and team connection to secure social or commercial benefits."}]}]},
+
+{"type":"hub","kicker":"Who Are Sport Consumers?, cont.","title":"Dualistic Fan Typologies","center":"Fan Identity","spokes":["Local teams build community","Entertaining","Identifying with a city","Identifying with a team"]},
+
+{"type":"media","kicker":"Who Are Sport Consumers?, cont.","title":"Multidimensional Typologies","bullets":["Multidimensional typologies reveal a multiplicity of social and psychological factors that shape the behavior of sport consumers."]},
+
+{"type":"datatable","kicker":"Who Are Sport Consumers?, cont.","title":"Multidimensional Typologies","tableLabel":"Table 3 · Stewart et al. (2003)","tableTitle":"Multidimensional Approaches to Sport Consumption","columns":["Cluster type","Differentiating behaviors"],"rows":[["Underlying motivations",["Escape (to a less stressful 'sports-world')","Eustress (excitement, and entertaining event)","Social interaction"]],["Emotional attachment",["Obsessive attachment and strong commitment","Moderate attachment and conditional commitment","Slight attachment and fragile commitment"]],["Economic attachment",["High value: strong financial commitment","Moderate value: intermediate financial commitment","Low value: weak financial commitment"]],["Identity",["Team used to confirm self-concept","Team used to confirm civic and community pride","Team used to confirm social or cultural identity"]],["Loyalty",["Loyalty through game attendance","Loyalty through displaying team colors","Loyalty through chatter and conversation"]],["Connective focus",["Team is primary connection","Sport or league is primary connection","Player is primary connection"]],["Overt experiences",["Rational: strategic analysis","Symbolic: gestures, ceremonies and rituals","Social: play and social integration"]],["Attendance at games",["Frequent","Moderate","Low"]]],"source":"Stewart, Smith, & Nicholson (2003), Table 3"},
+
+{"type":"media","layout":"split","kicker":"Who Are Sport Consumers?, cont.","title":"Identity Theory in Practice","bullets":["Examples of your identities: a student of Arcadia University, a son or daughter of your parents, a fan of the Eagles, etc."],"images":[{"src":"assets/s20-packers-kids-identity-theory.jpeg","w":309,"h":231,"caption":"Two young Green Bay Packers fans — identity on display."}]},
+
+{"type":"flow","kicker":"Understanding Sport Consumer Behavior","title":"How Do We Study It?","stages":[{"level":"Step 1","label":"Segmentation Data","process":"Demographics","outcomes":["Gender","Age","Years as a fan","Zip code","Ticket-purchase frequency","Income"]},{"level":"Step 2","label":"Behavior Prediction","process":"Psychographics (CRM)","outcomes":["One file per customer","All transactions & interactions tracked (e.g., ticket purchases)"]}],"bullets":["(1) Collection of information about the consumers that will allow for segmentation.","(2) Collection of information about psychographic variables that are better predictors of actual behavior."]},
+
+{"type":"media","kicker":"Understanding Sport Consumer Behavior, cont.","title":"Designing the Investigation","bullets":["(1) What psychological variables do you need to include in your investigation?","(2) What tool (methods) do you want to adopt? Survey, interview, phone interview? Etc.","(3) Sample? Target population?","These are part of this week's discussion questions."]},
+
+{"type":"media","kicker":"How to Study Consumer Behavior","title":"Model?? Theory??","quote":"A variety of models and theories have been used to try and explain consumer behavior in general (p. 60).","bullets":[]},
+
+{"type":"agenda","kicker":"How to Study Consumer Behavior, cont.","title":"Four Theories","items":[{"n":"01","label":"Identity Theory","detail":"Trail (2018), p. 67"},{"n":"02","label":"Social Identity Theory","detail":"Trail (2018), p. 70"},{"n":"03","label":"Theory of Planned Behavior","detail":"Trail (2018), p. 70"},{"n":"04","label":"Attitude Theory","detail":"Trail (2018), p. 72"}],"source":"Trail, G. T. (2018, 3rd ed.). Sport Consumer Behavior. Seattle, WA — Chapter 2, Theories of Consumer Behavior, p. 51."},
+
+{"type":"media","kicker":"Theories · Identity Theory","title":"Identity Theory","bullets":["Self is made up of interdependent and independent, mutually reinforcing and conflicting parts (Mead, 1934).","People have as many identities as distinct networks of relationships in which they occupy positions and play roles."]},
+
+{"type":"media","layout":"split","kicker":"Theories · Identity Theory, cont.","title":"The Identity Standard Process","bullets":["Identity standard — believing that a fan should act in a certain way.","Drinking → \"you are not…\" → disconnection → choose other social groups."],"images":[{"src":"assets/s21-identity-standard-diagram.png","w":588,"h":346,"fit":"contain","caption":"Identity Standard and Perceived Situational Meanings feed a cognitive comparison that drives Behavior — the identity-control-theory process model."}]},
+
+{"type":"media","kicker":"Theories · Social Identity Theory","title":"Social Identity Theory","quote":"A social identity is a person's knowledge that he or she belongs to a group (Stets & Burke, 2000, p. 225).","bullets":["→ Identification with a collectivity (category-based identities; Black or White, Christian or Muslim)."]},
+
+{"type":"media","kicker":"Theories · Identity vs. Social Identity","title":"Identity Theory vs. Social Identity Theory","bullets":["Both have been used to examine the identity of \"fan.\"","Which theory is more appropriate to use? And why? (Trail, 2018, p. 67–70)","This is part of this week's discussion questions."]},
+
+{"type":"media","kicker":"Theories · Identity Theory, cont.","title":"Why Fans Act Differently","bullets":["Fans act differently because the identity standard is specific to the individual and varies to the extent that the individual wants it to vary relative to the perceived situational meanings."]},
+
+{"type":"media","kicker":"Theories · Attitude Theory","title":"Attitude Theory","bullets":["Attitudes motivate behavior and are comprised of both valence and intensity.","Attitude can be defined as all classes of evaluative responding — cognitive, affective, or behavioral.","Valence of the attitude refers to the positive or negative evaluation of the entity.","The intensity of attitude refers to the degree of the feeling."]},
+
+{"type":"media","kicker":"Theories · Attitude Theory, cont.","title":"Valence: The Attitude Spectrum","bullets":["Valence runs from very negative to very positive — intensity is how strongly it's felt."],"images":[{"src":"assets/s26-attitude-valence-scale.png","w":980,"h":175,"fit":"contain","still":true,"caption":"The seven-point valence scale, from Very Negative to Very Positive."}]},
+
+{"type":"media","kicker":"Theories · Attitude Theory, cont.","title":"The Structure of Attitude","bullets":["Cognitive, affective, and behavioral processes combine to form an attitude, which in turn produces cognitive, affective, and behavioral responses."],"images":[{"src":"assets/s27-attitude-structure-flowchart.png","w":646,"h":247,"fit":"contain","still":true,"caption":"Cognitive, Affective, and Behavioral Processes → Attitude → Cognitive, Affective, and Behavioral Responses."}]},
+
+{"type":"media","layout":"split","kicker":"Theories · Theory of Planned Behavior","title":"Theory of Planned Behavior (Ajzen, 1991)","bullets":["Subjective norm — a cultural thing: what's socially acceptable, perceived social pressure.","Perceived behavioral control — the perceived ease or difficulty of performing the behavior, assumed to reflect past experience as well as anticipated impediments and obstacles."],"images":[{"src":"assets/s28-theory-planned-behavior.png","w":669,"h":325,"fit":"contain","still":true,"caption":"Attitude, subjective norm, and perceived behavioral control shape intentions, which shape behavior (Ajzen, 1991)."}]},
+
+{"type":"closing","title":"Questions???","subtitle":"SPM 381 · Theories of Sport Consumer Behavior · Week 6"}
+]</script>
+<script>
+(function(){
+  const SLIDES = JSON.parse(document.getElementById('slide-data').textContent);
+  const deck = document.getElementById('deck');
+  const progressFill = document.getElementById('progressFill');
+  const counterEl = document.getElementById('counter');
+  const sectionLabel = document.getElementById('sectionLabel');
+  const pageNum = document.getElementById('pageNum');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const hint = document.getElementById('hint');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesBody = document.getElementById('notesBody');
+  const notesToggle = document.getElementById('notesToggle');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const zoomResetBtn = document.getElementById('zoomResetBtn');
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(prefersReduced) document.documentElement.classList.add('reduced');
+
+  const SECTIONS = [
+    {from:0,to:0,label:'Opening'},
+    {from:1,to:4,label:'Defining Sport Consumer Behavior'},
+    {from:5,to:13,label:'Who Are Sport Consumers?'},
+    {from:14,to:16,label:'Understanding Consumer Behavior'},
+    {from:17,to:17,label:'Models & Theories'},
+    {from:18,to:22,label:'Identity & Social Identity Theory'},
+    {from:23,to:25,label:'Attitude Theory'},
+    {from:26,to:26,label:'Theory of Planned Behavior'},
+    {from:27,to:27,label:'Closing'}
+  ];
+  function sectionFor(i){ for(const s of SECTIONS){ if(i>=s.from && i<=s.to) return s.label; } return ''; }
+
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function revealItem(node, delayMs){ node.classList.add('reveal-item'); node.style.transitionDelay=(delayMs||0)+'ms'; return node; }
+  function isQuestion(text){ return /\?\s*$/.test(text.trim()); }
+  function escapeHTML(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function titleEl(text, delay){
+    const cls = 'disp title-slide'+(text.length>52?' long':'')+' reveal-item';
+    const h = el('h1',cls, escapeHTML(text));
+    revealItem(h, delay||0);
+    return h;
+  }
+  function buildKicker(text, delay){ const k = el('p','kicker reveal-item', escapeHTML(text)); revealItem(k, delay||0); return k; }
+
+  const LINK_MARKER_RE = /\[\[LINK:([^|\]]+)\|([^\]]+)\]\]/g;
+  const HL_MARKER_RE = /==([^=]+)==/g;
+  function renderMarkedText(text){
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    LINK_MARKER_RE.lastIndex = 0;
+    while((m = LINK_MARKER_RE.exec(text))){
+      if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const a = document.createElement('a');
+      a.href = m[1].trim(); a.target = '_blank'; a.rel = 'noopener'; a.style.color = 'inherit';
+      a.textContent = m[2];
+      frag.appendChild(a);
+      last = LINK_MARKER_RE.lastIndex;
+    }
+    if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    const out = document.createDocumentFragment();
+    Array.from(frag.childNodes).forEach(node => {
+      if(node.nodeType !== Node.TEXT_NODE){ out.appendChild(node); return; }
+      const t = node.textContent;
+      let l2 = 0, mm;
+      HL_MARKER_RE.lastIndex = 0;
+      while((mm = HL_MARKER_RE.exec(t))){
+        if(mm.index > l2) out.appendChild(document.createTextNode(t.slice(l2, mm.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'hl-yellow';
+        mark.textContent = mm[1];
+        out.appendChild(mark);
+        l2 = HL_MARKER_RE.lastIndex;
+      }
+      if(l2 < t.length) out.appendChild(document.createTextNode(t.slice(l2)));
+    });
+    return out;
+  }
+  function buildBullets(list, baseDelay){
+    const ul = el('ul','bullets');
+    list.forEach((t,i)=>{
+      const li = el('li', isQuestion(t)?'q':'');
+      li.appendChild(renderMarkedText(t));
+      revealItem(li, (baseDelay||0)+90*i);
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  const URL_RE = /\b((?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?:\.[a-z]{2,})?(?:\/[^\s]*)?)/gi;
+  function linkifyText(text){
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    URL_RE.lastIndex = 0;
+    while((m = URL_RE.exec(text))){
+      if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      let url = m[0], trail = '';
+      while(/[.,;:)\]]$/.test(url)){ trail = url.slice(-1) + trail; url = url.slice(0, -1); }
+      const href = /^https?:\/\//i.test(url) ? url : 'https://' + url;
+      const a = document.createElement('a');
+      a.href = href; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = url;
+      frag.appendChild(a);
+      if(trail) frag.appendChild(document.createTextNode(trail));
+      last = URL_RE.lastIndex;
+    }
+    if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
+  function buildSource(text){ const p = el('p','source reveal-item'); p.appendChild(linkifyText(text)); return p; }
+  function buildPhoto(img, opts){
+    opts = opts||{};
+    const outer = el('div','');
+    const wrap = el('div','photo'+(opts.contain?' contain':'')+(opts.kb!==false?' kb':''));
+    if(opts.delay!=null) wrap.style.transitionDelay = opts.delay+'ms';
+    const im = document.createElement('img');
+    im.src = img.src; im.loading='lazy'; im.alt = img.caption || '';
+    if(img.w && img.h) im.style.aspectRatio = img.w+' / '+img.h;
+    wrap.appendChild(im);
+    if(img.flawBadge){
+      wrap.classList.add('flawed');
+      const badge = el('div','flaw-badge');
+      badge.innerHTML = '<span class="flaw-x">&#10005;</span> '+escapeHTML(img.flawBadge);
+      wrap.appendChild(badge);
+    }
+    outer.appendChild(wrap);
+    if(img.caption) outer.appendChild(el('div','cutline', escapeHTML(img.caption)));
+    return outer;
+  }
+  function badgeCorner(img, delay){
+    const b = el('div','badge-corner');
+    b.style.transitionDelay=(delay||0)+'ms';
+    const im = document.createElement('img'); im.src = img.src; im.loading='lazy';
+    b.appendChild(im);
+    return b;
+  }
+
+  // ---------- slide type builders ----------
+  function build(slide, idx){
+    const s = el('section','slide');
+    s.dataset.index = idx;
+    let inner = el('div','slide-inner');
+
+    switch(slide.type){
+      case 'title': {
+        inner.style.textAlign='center'; inner.style.alignItems='center'; inner.style.justifyContent='center';
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        const h = el('h1','disp title-hero reveal-item', escapeHTML(slide.title)); revealItem(h,140);
+        inner.appendChild(h);
+        if(slide.subtitle){ const sub = el('p','subtitle reveal-item', escapeHTML(slide.subtitle)); sub.style.margin='14px auto 0'; revealItem(sub,300); inner.appendChild(sub); }
+        if(slide.meta){ const m = el('div','meta-badge reveal-item', escapeHTML(slide.meta)); revealItem(m,420); inner.appendChild(m); }
+        break;
+      }
+      case 'agenda': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,60));
+        const list = el('div','agenda-list');
+        slide.items.forEach((it,i)=>{
+          const row = el('div','agenda-row reveal-item'); revealItem(row,180+i*110);
+          row.appendChild(el('div','agenda-n', escapeHTML(it.n)));
+          const right = el('div','');
+          right.appendChild(el('div','agenda-label', escapeHTML(it.label)));
+          right.appendChild(el('div','agenda-detail', escapeHTML(it.detail)));
+          row.appendChild(right);
+          list.appendChild(row);
+        });
+        inner.appendChild(list);
+        if(slide.source){ const src = buildSource(slide.source); src.classList.add('source-lg'); inner.appendChild(src); }
+        break;
+      }
+      case 'hub': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,50));
+        const wrap = el('div','hub-wrap');
+        wrap.appendChild(el('div','hub-center', escapeHTML(slide.center)));
+        const n = slide.spokes.length, radiusPct = 40;
+        slide.spokes.forEach((label,i)=>{
+          const angle = (Math.PI*2*i/n) - Math.PI/2;
+          const dx = radiusPct*Math.cos(angle), dy = radiusPct*Math.sin(angle);
+          const x = 50+dx, y = 50+dy;
+          const line = el('div','hub-spoke-line');
+          const len = Math.sqrt(dx*dx+dy*dy);
+          line.style.width = 'calc(' + len + '% * 1.02)';
+          line.style.transform = 'rotate(' + (Math.atan2(dy,dx)*180/Math.PI) + 'deg)';
+          line.style.transitionDelay = (200+i*70)+'ms';
+          wrap.appendChild(line);
+          const node = el('div','hub-node', escapeHTML(label));
+          node.style.left = x+'%'; node.style.top = y+'%'; node.style.transitionDelay = (300+i*70)+'ms';
+          wrap.appendChild(node);
+        });
+        inner.appendChild(wrap);
+        if(slide.bullets && slide.bullets.length) inner.appendChild(buildBullets(slide.bullets, 200+n*70+120));
+        break;
+      }
+      case 'blank': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,50));
+        const card = el('div','blank-card reveal-item'); revealItem(card,140);
+        const parts = slide.blankText.split('[[BLANK]]');
+        const txt = el('div','blank-text');
+        parts.forEach((part,i)=>{
+          txt.appendChild(document.createTextNode(part));
+          if(i < parts.length-1){
+            const fill = el('span','blank-fill', escapeHTML((slide.fills&&slide.fills[i])||'      '));
+            fill.style.transitionDelay = (600+i*220)+'ms';
+            txt.appendChild(fill);
+          }
+        });
+        card.appendChild(txt);
+        inner.appendChild(card);
+        if(slide.hint) inner.appendChild(el('div','blank-hint reveal-item', escapeHTML(slide.hint)));
+        break;
+      }
+      case 'datatable': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,40));
+        const wrap = el('div','data-table-wrap reveal-item'); revealItem(wrap,160);
+        const cap = el('div','data-table-cap');
+        cap.appendChild(el('div','dtc-label', escapeHTML(slide.tableLabel)));
+        cap.appendChild(el('div','dtc-title', escapeHTML(slide.tableTitle)));
+        wrap.appendChild(cap);
+        const scroll = el('div','data-table-scroll');
+        const table = el('table','data-table');
+        const thead = el('thead','');
+        const htr = el('tr','');
+        slide.columns.forEach(c=> htr.appendChild(el('th','',escapeHTML(c))));
+        thead.appendChild(htr); table.appendChild(thead);
+        const tbody = el('tbody','');
+        slide.rows.forEach((row,ri)=>{
+          const tr = el('tr','reveal-item'); revealItem(tr, 260+ri*70);
+          tr.appendChild(el('td','dt-cluster', escapeHTML(row[0])));
+          const behCell = el('td','dt-behaviors');
+          row[1].forEach(line=> behCell.appendChild(el('div','',escapeHTML(line))));
+          tr.appendChild(behCell);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        scroll.appendChild(table);
+        wrap.appendChild(scroll);
+        inner.appendChild(wrap);
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        break;
+      }
+      case 'flow': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,60));
+        if(slide.lede){ const l = el('p','lede reveal-item'); l.appendChild(renderMarkedText(slide.lede)); revealItem(l,120); inner.appendChild(l); }
+        const wrap = el('div','flow-wrap');
+        slide.stages.forEach((st,i)=>{
+          const row = el('div','flow-step reveal-item'); revealItem(row, 200+i*130);
+          const left = el('div','');
+          left.appendChild(el('div','flevel', escapeHTML(st.level||'')));
+          const mid = el('div','');
+          mid.appendChild(el('div','flabel', escapeHTML(st.label)));
+          if(st.process) mid.appendChild(el('div','fproc', escapeHTML(st.process)));
+          const outs = el('div','flow-outs');
+          (st.outcomes||[]).forEach(o=> outs.appendChild(el('span','flow-chip', escapeHTML(o))));
+          row.appendChild(left); row.appendChild(mid); row.appendChild(outs);
+          wrap.appendChild(row);
+        });
+        inner.appendChild(wrap);
+        if(slide.bullets) inner.appendChild(buildBullets(slide.bullets, 200+slide.stages.length*130+80));
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        break;
+      }
+      case 'compare': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        if(slide.badge) inner.appendChild(badgeCorner(slide.badge,140));
+        inner.appendChild(titleEl(slide.title,40));
+        if(slide.bullets) inner.appendChild(buildBullets(slide.bullets,120));
+        const grid = el('div','compare-grid');
+        slide.panels.forEach((p,pi)=>{
+          const panel = el('div','compare-panel '+p.tone+' reveal-item');
+          revealItem(panel, 280+pi*160);
+          panel.appendChild(el('div','compare-head', escapeHTML(p.label)));
+          p.items.forEach(it=>{
+            const item = el('div','compare-item');
+            item.appendChild(el('div','ci-name', escapeHTML(it.name)));
+            item.appendChild(el('div','ci-full', escapeHTML(it.full)));
+            item.appendChild(el('div','ci-detail', escapeHTML(it.detail)));
+            panel.appendChild(item);
+          });
+          grid.appendChild(panel);
+        });
+        inner.appendChild(grid);
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        break;
+      }
+      case 'media': {
+        const layout = slide.layout || 'stack';
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        if(slide.title) inner.appendChild(titleEl(slide.title,50));
+
+        function bodyContent(delayBase){
+          const frag = document.createDocumentFragment();
+          if(slide.quote){ const pq = el('p','pullquote reveal-item'); pq.appendChild(renderMarkedText(slide.quote)); revealItem(pq,delayBase); frag.appendChild(pq); delayBase+=140; }
+          if(slide.bullets && slide.bullets.length){ frag.appendChild(buildBullets(slide.bullets, delayBase)); }
+          return frag;
+        }
+
+        if(layout === 'split' || layout === 'split-reverse'){
+          const grid = el('div','split-grid'+(layout==='split-reverse'?' reverse':''));
+          const text = el('div','split-text');
+          text.appendChild(bodyContent(120));
+          const media = el('div','split-media');
+          const im0 = slide.images[0];
+          media.appendChild(buildPhoto(im0, {delay:260, contain: im0.fit==='contain', kb: im0.still!==true}));
+          grid.appendChild(text); grid.appendChild(media);
+          inner.appendChild(grid);
+        } else {
+          const body = el('div','stack-body');
+          body.appendChild(bodyContent(100));
+          if(slide.images && slide.images.length){
+            const im0 = slide.images[0];
+            body.appendChild(buildPhoto(im0,{delay:280, contain: im0.fit==='contain', kb: im0.still!==true}));
+          }
+          inner.appendChild(body);
+        }
+
+        if(slide.source){ const src = buildSource(slide.source); src.classList.add('source-lg'); inner.appendChild(src); }
+        break;
+      }
+      case 'closing': {
+        inner.classList.add('closing-wrap');
+        const h = el('h1','disp title-hero reveal-item', escapeHTML(slide.title)); revealItem(h,100);
+        const rule = el('div','rule reveal-item'); revealItem(rule,40);
+        const rule2 = el('div','rule reveal-item'); revealItem(rule2,360);
+        inner.appendChild(rule); inner.appendChild(h);
+        if(slide.subtitle){ const sub=el('p','subtitle reveal-item', escapeHTML(slide.subtitle)); revealItem(sub,220); inner.appendChild(sub); }
+        inner.appendChild(rule2);
+        break;
+      }
+      default: break;
+    }
+    s.appendChild(inner);
+    return s;
+  }
+
+  const slideEls = SLIDES.map((sl,i)=> build(sl,i));
+  slideEls.forEach(e=> deck.appendChild(e));
+
+  let current = -1, notesOpen = false;
+
+  function activate(idx){
+    current = idx;
+    slideEls.forEach((e,i)=>{
+      if(i===idx){ e.classList.add('active'); }
+      else{
+        e.classList.remove('active');
+        e.querySelectorAll('.reveal-item').forEach(r=> r.classList.remove('in'));
+        e.querySelectorAll('.photo').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.banner-wrap').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.hub-center,.hub-node,.hub-spoke-line').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.badge-corner').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.blank-fill').forEach(x=> x.classList.remove('in'));
+      }
+    });
+    const activeEl = slideEls[idx];
+    requestAnimationFrame(()=>{
+      activeEl.querySelectorAll('.reveal-item').forEach(r=> r.classList.add('in'));
+      activeEl.querySelectorAll('.photo').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.banner-wrap').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.hub-center,.hub-node,.hub-spoke-line').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.badge-corner').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.blank-fill').forEach(x=> x.classList.add('in'));
+    });
+
+    progressFill.style.width = ((idx)/(SLIDES.length-1)*100).toFixed(2)+'%';
+    counterEl.textContent = String(idx+1).padStart(2,'0')+' / '+SLIDES.length;
+    sectionLabel.textContent = sectionFor(idx);
+    pageNum.textContent = String(idx+1).padStart(2,'0');
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===SLIDES.length-1;
+
+    const notesText = SLIDES[idx].notes;
+    if(notesText){
+      notesBody.innerHTML = '<h3>Speaker Notes</h3><p></p>';
+      notesBody.querySelector('p').appendChild(linkifyText(notesText));
+      notesToggle.style.opacity = 1;
+    } else {
+      notesBody.innerHTML = '<h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p>';
+      notesToggle.style.opacity = .45;
+    }
+    location.hash = 's'+(idx+1);
+  }
+
+  function next(){ if(current < SLIDES.length-1) activate(current+1); hideHint(); }
+  function prev(){ if(current > 0) activate(current-1); hideHint(); }
+  let hintHidden = false;
+  function hideHint(){ if(!hintHidden){ hint.classList.add('hide'); hintHidden = true; } }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  deck.addEventListener('click', (e)=>{ if(e.target.closest('a')) return; next(); });
+
+  window.addEventListener('keydown', (e)=>{
+    const tag = (e.target && e.target.tagName) || '';
+    if(tag==='TEXTAREA' || tag==='INPUT' || (e.target && e.target.isContentEditable)) return;
+    if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft' || e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ e.preventDefault(); activate(0); }
+    else if(e.key==='End'){ e.preventDefault(); activate(SLIDES.length-1); }
+    else if(e.key==='n' || e.key==='N'){ toggleNotes(); }
+    else if(e.key==='Escape'){ if(notesOpen) toggleNotes(); }
+    else if(e.key==='+' || e.key==='='){ e.preventDefault(); zoomIn(); }
+    else if(e.key==='-' || e.key==='_'){ e.preventDefault(); zoomOut(); }
+    else if(e.key==='0'){ e.preventDefault(); zoomReset(); }
+  });
+
+  const ZOOM_MIN=0.75, ZOOM_MAX=2, ZOOM_STEP=0.1;
+  let zoomLevel = 1;
+  try{ const saved = parseFloat(localStorage.getItem('spm381_w6_zoom')); if(!isNaN(saved)&&saved>=ZOOM_MIN&&saved<=ZOOM_MAX) zoomLevel=saved; }catch(err){}
+  function applyZoom(){
+    document.documentElement.style.setProperty('--zoom', zoomLevel.toFixed(2));
+    zoomResetBtn.textContent = Math.round(zoomLevel*100)+'%';
+    zoomOutBtn.disabled = zoomLevel<=ZOOM_MIN; zoomInBtn.disabled = zoomLevel>=ZOOM_MAX;
+    try{ localStorage.setItem('spm381_w6_zoom', zoomLevel); }catch(err){}
+  }
+  function zoomIn(){ zoomLevel=Math.min(ZOOM_MAX,+(zoomLevel+ZOOM_STEP).toFixed(2)); applyZoom(); }
+  function zoomOut(){ zoomLevel=Math.max(ZOOM_MIN,+(zoomLevel-ZOOM_STEP).toFixed(2)); applyZoom(); }
+  function zoomReset(){ zoomLevel=1; applyZoom(); }
+  zoomInBtn.addEventListener('click',(e)=>{ e.stopPropagation(); zoomIn(); });
+  zoomOutBtn.addEventListener('click',(e)=>{ e.stopPropagation(); zoomOut(); });
+  zoomResetBtn.addEventListener('click',(e)=>{ e.stopPropagation(); zoomReset(); });
+  applyZoom();
+
+  function toggleNotes(){ notesOpen = !notesOpen; notesPanel.classList.toggle('open', notesOpen); }
+  notesToggle.addEventListener('click', toggleNotes);
+  document.getElementById('closeNotes').addEventListener('click', toggleNotes);
+
+  setTimeout(hideHint, 5000);
+
+  // ask a question / leave a comment
+  (function(){
+    const askBtn = document.getElementById('askBtn');
+    const backdrop = document.getElementById('askBackdrop');
+    const context = document.getElementById('askContext');
+    const textEl = document.getElementById('askText');
+    const nameEl = document.getElementById('askName');
+    const sendBtn = document.getElementById('askSend');
+    const cancelBtn = document.getElementById('askCancel');
+    const statusEl = document.getElementById('askStatus');
+    const DECK = 'SPM381 Week 6 — Theories of Sport Consumer Behavior';
+
+    function open(){
+      const slide = SLIDES[current] || {};
+      const title = slide.title || slide.text || slide.label || '(untitled)';
+      context.textContent = 'Slide ' + (current+1) + ' of ' + SLIDES.length + ' — ' + title;
+      statusEl.textContent = ''; statusEl.className = 'ask-status';
+      sendBtn.disabled = false; sendBtn.textContent = 'Send';
+      backdrop.classList.add('open');
+      setTimeout(()=> textEl.focus(), 50);
+    }
+    function close(){
+      backdrop.classList.remove('open');
+      textEl.value=''; nameEl.value='';
+    }
+    async function send(){
+      const question = textEl.value.trim();
+      const name = nameEl.value.trim();
+      if(!name){
+        statusEl.textContent = 'Please enter your name.';
+        statusEl.className = 'ask-status err';
+        nameEl.focus();
+        return;
+      }
+      if(!question){
+        statusEl.textContent = 'Please enter a question or comment.';
+        statusEl.className = 'ask-status err';
+        textEl.focus();
+        return;
+      }
+      if(!window.QUESTIONS_API){
+        statusEl.textContent = "This form isn't connected yet — let your professor know.";
+        statusEl.className = 'ask-status err';
+        return;
+      }
+      sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
+      statusEl.textContent = ''; statusEl.className = 'ask-status';
+      const slide = SLIDES[current] || {};
+      try{
+        await fetch(window.QUESTIONS_API, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({
+            deck: DECK,
+            slideIndex: current+1,
+            slideTitle: slide.title || slide.text || slide.label || '',
+            question: question,
+            name: name
+          })
+        });
+        statusEl.textContent = 'Sent — thanks!';
+        statusEl.className = 'ask-status ok';
+        setTimeout(close, 1100);
+      }catch(err){
+        statusEl.textContent = "Couldn't send — check your connection and try again.";
+        statusEl.className = 'ask-status err';
+        sendBtn.disabled = false; sendBtn.textContent = 'Send';
+      }
+    }
+    askBtn.addEventListener('click', open);
+    cancelBtn.addEventListener('click', close);
+    sendBtn.addEventListener('click', send);
+    backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) close(); });
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && backdrop.classList.contains('open')) close();
+    });
+  })();
+
+  let startIdx = 0;
+  const m = location.hash.match(/s(\d+)/);
+  if(m){ const n = parseInt(m[1],10)-1; if(n>=0 && n<SLIDES.length) startIdx = n; }
+  activate(startIdx);
+})();
+</script>
+<script>window.SLIDE_POLLS = {};</script>
+<script src="../questions/widgets.js"></script>
+</body>
+</html>
