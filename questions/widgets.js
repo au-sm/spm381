@@ -46,17 +46,37 @@
     });
   }
 
+  // Light-background decks (e.g. a white-theme week) need dark text/controls
+  // instead of this widget's default white-on-dark styling -- detect the
+  // page's actual background luminance at runtime rather than hardcoding
+  // per deck, so every week (past and future, light or dark) gets the
+  // right contrast automatically.
+  var isLightBg = (function(){
+    var bg = getComputedStyle(document.body).backgroundColor;
+    var m = bg.match(/\d+(\.\d+)?/g);
+    if (!m || m.length < 3) return false;
+    var r = +m[0], g = +m[1], b = +m[2];
+    var luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return luminance > 0.6;
+  })();
+  if (isLightBg) document.documentElement.classList.add('widgets-light');
+
   // ---------- inject styles ----------
   var style = document.createElement('style');
   style.textContent =
     '.pulse-wrap{position:fixed;left:50%;transform:translateX(-50%);top:54px;z-index:21;display:flex;align-items:center;gap:6px;pointer-events:none;}' +
     '.pulse-label{pointer-events:none;font:600 10.5px/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-right:2px;user-select:none;}' +
+    '.widgets-light .pulse-label{color:rgba(32,28,22,.55);}' +
     '.pulse-btn{pointer-events:auto;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(12,13,18,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s ease,border-color .15s ease,opacity .3s ease;}' +
+    '.widgets-light .pulse-btn{border-color:rgba(32,28,22,.18);background:rgba(255,255,255,.75);box-shadow:0 2px 10px rgba(32,28,22,.1);}' +
     '.pulse-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.45);}' +
+    '.widgets-light .pulse-btn:hover{border-color:rgba(32,28,22,.4);}' +
     '.pulse-btn:active{transform:translateY(0);}' +
     '.pulse-btn.locked{opacity:.3;cursor:not-allowed;}' +
     '.pulse-btn.locked.sent{opacity:1;cursor:default;box-shadow:0 0 0 2px rgba(255,255,255,.6);}' +
+    '.widgets-light .pulse-btn.locked.sent{box-shadow:0 0 0 2px rgba(32,28,22,.5);}' +
     '.pulse-status{pointer-events:none;font:11px system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.6);margin-left:2px;white-space:nowrap;}' +
+    '.widgets-light .pulse-status{color:rgba(32,28,22,.65);}' +
     '.poll-card{position:fixed;left:50%;bottom:98px;transform:translateX(-50%);z-index:22;width:min(420px,88vw);background:rgba(13,14,19,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px 16px 16px;box-shadow:0 12px 32px rgba(0,0,0,.4);color:#f2f3f5;font:14px/1.4 system-ui,-apple-system,sans-serif;}' +
     '.poll-card.collapsed .poll-q,.poll-card.collapsed .poll-options,.poll-card.collapsed .poll-results,.poll-card.collapsed .poll-status{display:none;}' +
     '.poll-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}' +
