@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-160 0 9351 4744" role="img" aria-label="Dualistic Fan Typologies: Type 1 fans versus Type 2 fans">
+<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a2f27"/><stop offset="1" stop-color="#a3392f"/></linearGradient>
+<linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14110d"/><stop offset="1" stop-color="#3a332a"/></linearGradient></defs>
+<text x="4516" y="290" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="305" fill="#201c16"><tspan fill="#a3392f">❖</tspan> Dualistic Fan Typologies</text>
+<line x1="3266" y1="490" x2="5766" y2="490" stroke="#a3392f" stroke-width="10" opacity=".35"/>
+<rect x="1466" y="1405" width="2849" height="3283" fill="#f3e1de" stroke="#a3392f" stroke-opacity=".35" stroke-width="13"/>
+<rect x="1466" y="656" width="2849" height="749" fill="url(#g1)"/>
+<text x="2890" y="1030" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="330" fill="#ffffff">Type 1 Fans</text>
+<circle cx="1675" cy="1754" r="38" fill="#a3392f"/>
+<text x="1894" y="1754" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Old</text>
+<circle cx="1675" cy="2173" r="38" fill="#a3392f"/>
+<text x="1894" y="2173" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Genuine</text>
+<circle cx="1675" cy="2592" r="38" fill="#a3392f"/>
+<text x="1894" y="2592" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Traditional</text>
+<circle cx="1675" cy="3012" r="38" fill="#a3392f"/>
+<text x="1894" y="3012" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Expressive</text>
+<circle cx="1675" cy="3431" r="38" fill="#a3392f"/>
+<text x="1894" y="3431" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Irrational </text>
+<circle cx="1675" cy="3851" r="38" fill="#a3392f"/>
+<text x="1894" y="3851" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Symbolic</text>
+<circle cx="1675" cy="4270" r="38" fill="#a3392f"/>
+<text x="1894" y="4270" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Die-hard</text>
+<rect x="4713" y="1405" width="2849" height="3283" fill="#ece8e1" stroke="#201c16" stroke-opacity=".35" stroke-width="13"/>
+<rect x="4713" y="656" width="2849" height="749" fill="url(#g2)"/>
+<text x="6138" y="1030" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="330" fill="#ffffff">Type 2 Fans</text>
+<circle cx="4922" cy="1754" r="38" fill="#201c16"/>
+<text x="5141" y="1754" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">New</text>
+<circle cx="4922" cy="2173" r="38" fill="#201c16"/>
+<text x="5141" y="2173" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Corporate</text>
+<circle cx="4922" cy="2592" r="38" fill="#201c16"/>
+<text x="5141" y="2592" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Modern</text>
+<circle cx="4922" cy="3012" r="38" fill="#201c16"/>
+<text x="5141" y="3012" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Submissive</text>
+<circle cx="4922" cy="3431" r="38" fill="#201c16"/>
+<text x="5141" y="3431" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Rational</text>
+<circle cx="4922" cy="3851" r="38" fill="#201c16"/>
+<text x="5141" y="3851" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Civic</text>
+<circle cx="4922" cy="4270" r="38" fill="#201c16"/>
+<text x="5141" y="4270" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Less-loyal</text>
+<text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#a3392f"><tspan x="663" y="1726">Local teams to</tspan><tspan x="663" y="1942">construct a</tspan><tspan x="663" y="2158">sense of</tspan><tspan x="663" y="2374">community</tspan></text>
+<text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#a3392f"><tspan x="663" y="3747">Identifying</tspan><tspan x="663" y="3963">with a team</tspan></text>
+<text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#201c16"><tspan x="8328" y="2112">Entertaining</tspan></text>
+<text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#201c16"><tspan x="8328" y="3761">Identifying</tspan><tspan x="8328" y="3977">with a city</tspan></text>
+</svg>
