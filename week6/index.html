@@ -416,6 +416,891 @@ table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
 .subhead{font-family:var(--font-display,Georgia,serif);font-size:clamp(20px,2vw,28px);font-weight:600;color:var(--ink);margin:-2px 0 0;}
 .slide-inner > .badge-corner{position:static;order:99;align-self:flex-end;margin:18px 4% 0 0;width:clamp(130px,14vw,200px);}
 </style>
+<style id="design-layers">
+/* ==== theme.css ==== */
+/* =====================================================================
+   SPM381 Week 6 — "Matchday Editorial" static visual system (theme.css)
+   Layer AFTER the engine's inline <style>. Static presentation only:
+   no transitions/keyframes here (motion lives in motion.css).
+
+   Fonts — add this to <head> (an @import would be ignored if this file is
+   inlined after other rules):
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+   Hooks for other specialists (static end-states, safe to animate):
+     h1.title-slide::after      Red Rule underline (56x3)
+     .title-hero::after         hero Red Rule (120x6)
+     .pullquote::after          6px vertical oxblood bar
+     .closing-wrap .rule        closing Red Rules
+     .agenda-row border-top     hairlines
+   ===================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+:root{
+  --bg:#ffffff; --bg2:#f8f6f3; --surface:#f6f3ef; --surface2:#efe9e2;
+  --paper:#f6f3ef; --paper-ink:#1d1b20;
+  --ink:#1d1b20; --muted:rgba(29,27,32,.66); --muted2:rgba(29,27,32,.44); --line:rgba(29,27,32,.12);
+  --rust:#9e1b1b; --rust-deep:#6e1010; --rust-soft:rgba(158,27,27,.08);
+  --sage:#1f6f5c; --sage-soft:rgba(31,111,92,.08);
+  --sky:#b5651d;
+  --gold:#9e1b1b;
+  --shadow:0 24px 60px -28px rgba(29,27,32,.28);
+
+  --font-display:'Fraunces',ui-serif,Georgia,'Times New Roman',serif;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-io:cubic-bezier(.65,0,.35,1);
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-feature-settings:"ss01","cv11";}
+::selection{background:var(--rust);color:#fff;}
+
+/* ---------- 2. Display type ---------- */
+h1.disp{font-family:var(--font-display);color:var(--ink);font-optical-sizing:auto;}
+.title-hero{
+  font-weight:300;font-size:clamp(56px,8.4vw,120px);line-height:.98;letter-spacing:-.025em;
+  font-variation-settings:"opsz" 144;
+}
+.title-slide{
+  font-weight:400;font-size:clamp(30px,3.4vw,48px);line-height:1.06;letter-spacing:-.015em;
+  font-variation-settings:"opsz" 96;max-width:min(100%,30em);
+}
+.title-slide.long{font-size:clamp(26px,2.9vw,40px);}
+/* Red Rule under every slide title */
+h1.title-slide::after{
+  content:'';display:block;width:56px;height:3px;margin-top:18px;background:var(--rust);
+  transform-origin:left center;
+}
+
+.kicker{
+  font-family:var(--font-mono);font-weight:500;font-size:11.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--rust);margin:0;gap:12px;
+}
+.kicker::before{width:22px;height:1px;background:var(--rust);}
+.slide-inner > h1.title-slide + .kicker{margin:2px 0 0;}
+
+.subhead{
+  font-family:var(--font-display);font-style:italic;font-weight:600;
+  font-size:clamp(20px,1.9vw,27px);line-height:1.2;color:var(--rust);margin:0;
+  font-variation-settings:"opsz" 36;
+}
+.subtitle{font-family:var(--font-display);font-style:italic;font-weight:300;color:var(--muted);font-size:clamp(18px,1.8vw,24px);}
+
+/* title → body breathing room (≈ --s4 incl. flex gap) */
+.slide-inner > .stack-body,
+.slide-inner > .split-grid,
+.slide-inner > .compare-grid,
+.slide-inner > .agenda-list,
+.slide-inner > .blank-card{margin-top:calc(var(--s4) - 22px);}
+
+/* ---------- 3. Bullets: numbered editorial rows (T3) ---------- */
+ul.bullets{counter-reset:b;gap:0;max-width:min(860px,100%);}
+ul.bullets li{
+  counter-increment:b;
+  font-family:var(--font-body);font-weight:400;font-size:clamp(18px,1.55vw,22px);line-height:1.55;color:var(--ink);
+  padding:14px 0 14px 56px;
+}
+ul.bullets li + li{border-top:1px solid var(--line);}
+ul.bullets li::before{
+  content:counter(b,decimal-leading-zero);
+  position:absolute;left:0;top:14px;width:auto;height:auto;background:none;border-radius:0;transform:none;
+  font-family:var(--font-mono);font-weight:500;font-size:.62em;line-height:2.5;letter-spacing:.06em;color:var(--rust);
+}
+/* questions: amber italic + "?" disc, no number */
+ul.bullets li.q{
+  counter-increment:none;color:var(--sky);font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:clamp(19px,1.7vw,24px);
+}
+ul.bullets li.q::before{
+  content:'?';
+  width:1.6em;height:1.6em;line-height:1.6em;text-align:center;border-radius:50%;
+  font-family:var(--font-mono);font-style:normal;font-size:.62em;letter-spacing:0;
+  color:#fff;background:var(--sky);
+}
+ul.bullets li.q::before{top:calc(14px + .28em);}
+/* a lone statement: no index, short Red Rule marker */
+ul.bullets li:only-child:not(.q){padding-left:40px;}
+ul.bullets li:only-child:not(.q)::before{
+  content:'';top:calc(14px + .74em);width:22px;height:3px;background:var(--rust);font-size:inherit;line-height:0;
+}
+ul.bullets a{color:var(--rust) !important;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;word-break:break-all;}
+ul.bullets a:hover{color:var(--rust-deep) !important;}
+mark.hl-yellow{background:var(--rust-soft);color:var(--rust);}
+
+/* slide 12 — single statement set in Fraunces */
+.slide[data-index="11"] ul.bullets li{
+  font-family:var(--font-display);font-weight:400;font-size:clamp(22px,2.2vw,28px);line-height:1.4;
+  letter-spacing:-.005em;max-width:42ch;
+}
+
+/* slides 14-16 carry their own "(1)/(2)" enumeration in the text, so an
+   01/02 index would contradict it: use the Red Rule marker there instead */
+.slide[data-index="13"] ul.bullets li:not(.q),
+.slide[data-index="14"] ul.bullets li:not(.q),
+.slide[data-index="15"] ul.bullets li:not(.q){padding-left:40px;}
+.slide[data-index="13"] ul.bullets li:not(.q)::before,
+.slide[data-index="14"] ul.bullets li:not(.q)::before,
+.slide[data-index="15"] ul.bullets li:not(.q)::before{
+  content:'';top:calc(14px + .74em);width:22px;height:3px;background:var(--rust);font-size:inherit;line-height:0;
+}
+
+/* ---------- 4. Pull quote (T2) ---------- */
+.pullquote{
+  isolation:isolate;font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(24px,2.7vw,38px);line-height:1.3;color:var(--ink);max-width:30em;
+  margin:0;padding:4px 0 4px 32px;font-variation-settings:"opsz" 72;
+}
+.pullquote::before{
+  content:'\201C';left:18px;top:-.12em;z-index:-1;font-size:3.6em;line-height:1;
+  font-style:normal;font-weight:600;color:var(--rust);opacity:.12;
+}
+.pullquote::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--rust);transform-origin:top center;
+}
+.pullquote + ul.bullets{border-top:1px solid var(--line);padding-top:10px;max-width:70ch;margin-top:6px;}
+/* slide 24 — quote only, larger */
+.slide[data-index="23"] .pullquote{font-size:clamp(28px,3.2vw,44px);line-height:1.25;max-width:26em;}
+.slide[data-index="23"] .stack-body{min-height:44vh;justify-content:center;}
+
+/* ---------- 5. Images ---------- */
+.photo{border-radius:6px;box-shadow:var(--shadow);}
+.photo img{border-radius:6px;}
+.cutline{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted2);margin-top:22px;padding-left:10px;border-left:2px solid var(--rust);
+}
+
+/* T4 split: 7/5 grid, card + offset oxblood frame peeking bottom-right */
+.split-grid{grid-template-columns:7fr 5fr;gap:clamp(32px,5vw,80px);}
+.split-media{padding:0 14px 14px 0;}
+.split-media .photo{
+  box-shadow:8px 8px 0 0 var(--bg),12px 12px 0 0 var(--rust),var(--shadow);
+  overflow:hidden;
+}
+/* PNG figures in split (21, 28) — white exhibit card, no colored mat */
+.split-media .photo.contain:has(img[src$=".png"]){
+  background:#fff;border:1px solid var(--line);padding:20px;
+}
+.split-media .photo.contain:has(img[src$=".png"]) img{border-radius:0;}
+.photo-callout{
+  font-family:var(--font-display);font-style:italic;font-weight:600;color:var(--rust-deep);
+  border:2px solid var(--rust);border-radius:6px;padding:10px 18px;box-shadow:var(--shadow);
+}
+.photo-callout::after{border-radius:0 0 3px 0;}
+
+/* T5 stacked figures: SVG flat; PNG on white exhibit card; FIG. label */
+.stack-body:not(:has(ul,ol,li,blockquote,.quote)) .photo{max-height:64vh;}
+.stack-body:not(:has(ul,ol,li,blockquote,.quote)) .photo img{max-height:64vh;}
+.stack-body:not(:has(ul,ol,li,blockquote,.quote)) .photo img[src$=".svg"]{max-height:64vh;}
+.photo:has(img[src$=".svg"]){box-shadow:none;background:none;border:0;padding:0;border-radius:0;}
+.stack-body .photo.contain:has(img[src$=".png"]){
+  background:#fff;border:1px solid var(--line);padding:20px;box-shadow:var(--shadow);
+  width:fit-content;max-width:100%;margin:0 auto;
+}
+.stack-body .photo.contain:has(img[src$=".png"]) img{border-radius:0;max-height:calc(64vh - 40px);}
+.stack-body > div:has(> .photo.contain){position:relative;}
+.stack-body > div:has(> .photo.contain)::before{
+  content:'Fig.';display:block;margin:0 0 10px;
+  font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);
+}
+.stack-body > div:has(> .photo.contain:has(img[src$=".png"]))::before{width:fit-content;margin:0 auto 10px;}
+
+/* ---------- 6. Compare (T6) ---------- */
+.compare-grid{position:relative;gap:clamp(40px,5vw,72px);margin-top:calc(var(--s4) - 22px);}
+.compare-grid::after{
+  content:'vs';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--line);box-shadow:var(--shadow);
+  font-family:var(--font-display);font-style:italic;font-weight:400;font-size:22px;line-height:1;color:var(--rust);
+  padding-bottom:3px;z-index:2;
+}
+.compare-panel{
+  border-radius:6px;background:var(--surface);border:1px solid var(--line);border-top-width:3px;
+  padding:clamp(24px,3vw,40px);min-height:clamp(220px,34vh,340px);display:flex;flex-direction:column;
+}
+.compare-panel.win{border-color:var(--line);border-top-color:var(--sage);}
+.compare-panel.loss{border-color:var(--line);border-top-color:var(--rust);}
+.compare-head{font-family:var(--font-mono);font-weight:500;font-size:11.5px;letter-spacing:.2em;margin-bottom:auto;padding-bottom:28px;}
+.compare-item .ci-name{font-family:var(--font-display);font-weight:400;font-size:30px;line-height:1.1;letter-spacing:-.01em;}
+.compare-item .ci-full{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;margin-top:8px;}
+.compare-item .ci-detail{font-family:var(--font-body);font-size:18px;line-height:1.5;color:var(--muted);margin-top:14px;max-width:34ch;}
+.slide-inner > .badge-corner{margin:10px 2% 0 0;}
+
+/* ---------- 7. Agenda (T7) ---------- */
+.agenda-list{max-width:900px;}
+.agenda-row{grid-template-columns:110px 1fr auto;gap:24px;padding:18px 0;align-items:center;border-top:1px solid var(--line);}
+.agenda-row:first-child{border-top:1px solid var(--line);}
+.agenda-row:last-child{border-bottom:1px solid var(--line);}
+.agenda-row > div:last-child{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.agenda-n{
+  font-family:var(--font-display);font-weight:300;font-size:64px;line-height:1;letter-spacing:-.02em;
+  color:transparent;-webkit-text-stroke:1px var(--rust);font-variation-settings:"opsz" 144;
+}
+.agenda-label{font-family:var(--font-display);font-weight:400;font-size:30px;line-height:1.15;}
+.agenda-detail{
+  margin:0;font-family:var(--font-mono);font-weight:500;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  text-transform:none;color:var(--rust);border:1px solid rgba(158,27,27,.3);background:var(--rust-soft);border-radius:999px;padding:5px 12px;white-space:nowrap;
+}
+.source{font-family:var(--font-mono);font-size:11px;color:var(--muted2);}
+.source.source-lg{font-family:var(--font-body);font-size:15px;line-height:1.55;color:var(--muted);max-width:900px;}
+.source::before{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);}
+.source a{color:var(--rust);}
+
+/* ---------- 8. Blank fill-in (T8) ---------- */
+.blank-card{
+  background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--rust);border-radius:6px;
+  padding:clamp(24px,3.4vw,44px) clamp(24px,3.6vw,48px);max-width:900px;box-shadow:var(--shadow);
+}
+.blank-card .blank-text{font-family:var(--font-display);font-weight:300;font-size:clamp(21px,2.1vw,28px);line-height:1.7;}
+.blank-fill{
+  min-width:140px;padding:0 .2em;border-bottom:3px solid var(--rust);
+  font-family:var(--font-display);font-style:italic;font-weight:600;color:var(--rust);
+}
+.blank-hint{font-family:var(--font-mono);letter-spacing:.14em;}
+
+/* ---------- 9. Data table (unused here; tokens only) ---------- */
+.data-table-wrap{border-radius:6px;}
+table.data-table th{font-family:var(--font-mono);letter-spacing:.14em;}
+
+/* ---------- 10. Hero (T1) ---------- */
+.slide-inner:has(> .title-hero):not(.closing-wrap){
+  text-align:left !important;align-items:flex-start !important;justify-content:center;
+  padding-left:max(0px, calc(8vw - clamp(28px,6vw,104px)));
+}
+.slide-inner:has(> .title-hero):not(.closing-wrap)::before{
+  content:'SPM 381 \00B7  Week 6';display:block;margin-bottom:28px;
+  font-family:var(--font-mono);font-weight:500;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);
+}
+.slide-inner:has(> .title-hero):not(.closing-wrap) .title-hero{max-width:11ch;}
+.slide-inner:has(> .title-hero):not(.closing-wrap) .title-hero::after{
+  content:'';display:block;width:120px;height:6px;margin-top:32px;background:var(--rust);transform-origin:left center;
+}
+.slide-inner:has(> .title-hero):not(.closing-wrap) .subtitle{margin:24px 0 0 !important;text-align:left;}
+.slide:has(> .slide-inner > .title-hero):not(:has(.closing-wrap)){overflow:hidden;}
+.slide:has(> .slide-inner > .title-hero):not(:has(.closing-wrap))::after{
+  content:'06';position:absolute;right:-6vw;top:50%;transform:translateY(-50%);z-index:-1;pointer-events:none;
+  font-family:var(--font-display);font-weight:300;font-size:38vw;line-height:.8;letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1px var(--line);font-variation-settings:"opsz" 144;
+}
+
+/* ---------- 11. Closing (T9) ---------- */
+.closing-wrap{gap:28px;}
+.closing-wrap .title-hero{font-size:clamp(56px,8.4vw,120px);}
+.closing-wrap .rule{width:120px;height:3px;background:var(--rust);transform-origin:center;}
+.slide:has(> .closing-wrap){overflow:hidden;}
+.slide:has(> .closing-wrap)::before{
+  content:'?';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;
+  font-family:var(--font-display);font-style:italic;font-weight:300;font-size:50vw;line-height:1;
+  color:rgba(29,27,32,.05);
+}
+
+/* ---------- 12. Chrome ---------- */
+.brand,.section-label,.counter,.textlink,.zoom-controls,.hint{font-family:var(--font-mono);}
+.brand{font-size:10.5px;letter-spacing:.2em;color:var(--muted2);}
+.brand b{color:var(--rust);font-weight:500;}
+.section-label{letter-spacing:.16em;color:var(--muted);}
+.counter{color:var(--ink);letter-spacing:.06em;}
+.progress-track{height:1px;background:var(--line);}
+.progress-fill{top:-1px;height:3px;background:var(--rust);}
+.progress-fill::after{right:-1px;top:-3px;width:3px;height:9px;border-radius:0;box-shadow:none;background:var(--rust);}
+.navbtn{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(255,255,255,.9);box-shadow:none;color:var(--ink);
+}
+.navbtn:hover{background:var(--rust);border-color:var(--rust);color:#fff;transform:none;}
+.navbtn:disabled:hover{background:rgba(255,255,255,.9);border-color:var(--line);color:var(--ink);}
+.ask-btn{
+  height:34px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.92);
+  box-shadow:none;font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+}
+.ask-btn:hover{background:var(--rust);border-color:var(--rust);color:#fff;transform:none;}
+.ask-panel{border-radius:6px;border-top:3px solid var(--rust);box-shadow:var(--shadow);}
+.ask-title{font-family:var(--font-display);font-weight:400;font-size:22px;letter-spacing:-.01em;}
+.ask-btn-send{background:var(--rust);border-color:var(--rust);}
+.ask-btn-send,.ask-btn-cancel{border-radius:999px;}
+.notes-panel{border-left:3px solid var(--rust);}
+.notes-panel p{font-family:var(--font-body);font-size:16px;}
+.page-num{font-family:var(--font-display);font-weight:300;color:rgba(29,27,32,.04);}
+
+/* pulse widget — tokens only, DOM untouched */
+html .pulse-wrap .pulse-label{
+  font-family:var(--font-mono);font-weight:500;font-size:10px;letter-spacing:.16em;
+  color:var(--muted);background:rgba(255,255,255,.92);border:1px solid var(--line);padding:6px 10px;border-radius:999px;
+}
+html .pulse-wrap .pulse-btn{border:1px solid var(--line);background:rgba(255,255,255,.92);box-shadow:none;}
+html .pulse-wrap .pulse-btn:hover{border-color:var(--rust);}
+html .pulse-wrap .pulse-status{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);}
+
+/* ---------- 13. Responsive ---------- */
+@media (max-width:880px){
+  .split-grid,.split-grid.reverse{grid-template-columns:1fr;}
+}
+@media (max-width:760px){
+  .compare-grid{gap:44px;}
+  .compare-panel{min-height:0;}
+  .compare-item .ci-name{font-size:24px;}
+  .compare-item .ci-detail{font-size:16px;}
+  .agenda-row{grid-template-columns:64px 1fr;gap:14px;}
+  .agenda-n{font-size:44px;}
+  .agenda-label{font-size:22px;}
+  .agenda-row > div:last-child{flex-direction:column;align-items:flex-start;gap:8px;}
+}
+@media (max-width:520px){
+  ul.bullets li{padding-left:40px;font-size:17px;}
+  ul.bullets li.q{font-size:18px;}
+  .slide[data-index="11"] ul.bullets li{font-size:21px;}
+  .pullquote{padding-left:22px;font-size:22px;}
+  .slide[data-index="23"] .pullquote{font-size:26px;}
+  .title-hero{font-size:clamp(48px,13vw,64px);}
+  .brand,.section-label,#pdfDownload,#notesToggle{display:none;}
+  /* keep the pulse (top-center) and Ask button (top-right) apart, and keep
+     slide content below their ~60px band */
+  .ask-btn{padding:0 10px;font-size:10px;letter-spacing:.04em;}
+  .slide{padding-top:100px;}
+  .stack-body .photo.contain:has(img[src$=".png"]),.split-media .photo.contain:has(img[src$=".png"]){padding:10px;}
+  .split-media .photo{box-shadow:6px 6px 0 0 var(--bg),9px 9px 0 0 var(--rust),var(--shadow);}
+}
+
+/* ---------- 14. Reduced motion: static system needs no change, but keep the
+   decorative rules fully drawn if motion.css sets them to scale(0). ---------- */
+@media (prefers-reduced-motion: reduce){
+  h1.title-slide::after,.title-hero::after,.pullquote::after,.closing-wrap .rule{transform:none !important;}
+}
+/* closed notes drawer must not cast its shadow onto the slide edge */
+.notes-panel:not(.open){box-shadow:none;}
+
+/* ==== components.css ==== */
+/* SPM381 Week 6 — "Matchday Editorial" layout components (pairs with components.js).
+   Layout/structure only. Uses theme tokens with fallbacks; load AFTER theme.css. */
+:root{
+  --cmp-ease: var(--ease-out, cubic-bezier(.16,1,.3,1));
+  --cmp-ease-io: var(--ease-io, cubic-bezier(.65,0,.35,1));
+  --cmp-display: 'Fraunces', var(--font-display, Georgia, serif);
+  --cmp-body: 'Inter', var(--font-body, system-ui, sans-serif);
+  --cmp-mono: 'JetBrains Mono', var(--font-mono, ui-monospace, monospace);
+}
+
+/* ===== T1 Hero ===== */
+.v-hero{overflow:hidden;}
+.v-hero .slide-inner.cmp-hero{align-items:flex-start;justify-content:center;text-align:left;padding-left:8%;z-index:1;}
+.cmp-hero .cmp-hero-kicker{margin:0 0 22px;}
+.cmp-hero h1.title-hero{max-width:14ch;}
+.cmp-hero-rule{width:120px;height:6px;background:var(--rust);margin:28px 0 6px;transform-origin:left center;}
+.cmp-hero-rule.reveal-item{transform:scaleX(0);transition:transform .8s var(--cmp-ease) ,opacity .2s linear;}
+.slide.active .cmp-hero-rule.reveal-item.in{transform:scaleX(1);}
+.cmp-hero .subtitle{margin:12px 0 0 !important;}
+.cmp-hero-num{
+  position:absolute;right:-6vw;top:50%;transform:translateY(-46%);z-index:0;pointer-events:none;user-select:none;
+  font-family:var(--cmp-display);font-weight:300;font-size:38vw;line-height:.8;letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1px var(--line);
+}
+
+/* ===== T2 Quote-stack ===== */
+.pullquote.cmp-quote{padding-left:30px;max-width:900px;}
+.pullquote.cmp-quote::before{left:14px;top:-.22em;font-size:4.2em;opacity:.12;z-index:-1;line-height:1;}
+.cmp-quote-bar{position:absolute;left:0;top:.18em;bottom:.12em;width:6px;background:var(--rust);transform-origin:top center;}
+.cmp-quote-bar.reveal-item{transform:scaleY(0);transition:transform .8s var(--cmp-ease),opacity .2s linear;}
+.slide.active .cmp-quote-bar.reveal-item.in{transform:scaleY(1);}
+.cmp-quote-rule{height:1px;background:var(--line);width:min(100%,70ch);margin:6px 0 2px;}
+ul.bullets.cmp-after-quote{max-width:70ch;}
+.split-text .pullquote.cmp-quote{font-size:clamp(22px,2.3vw,32px);}
+/* quote only (slide 24) */
+.v-quote-solo .slide-inner{justify-content:center;}
+.cmp-quote-solo .stack-body{flex:1;justify-content:center;}
+.cmp-quote-solo .pullquote.cmp-quote{font-size:clamp(28px,3.1vw,44px);line-height:1.28;max-width:30em;}
+
+/* ===== T3 Statement rows ===== */
+ul.bullets.cmp-rows{gap:0;max-width:880px;}
+ul.bullets.cmp-rows li{display:grid;grid-template-columns:44px 1fr;column-gap:14px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line);}
+ul.bullets.cmp-rows li:first-child{border-top-color:transparent;}
+ul.bullets.cmp-rows li::before{display:none;}
+.cmp-row-mark{font-family:var(--cmp-mono);font-weight:500;font-size:13px;letter-spacing:.06em;color:var(--rust);font-style:normal;}
+.cmp-rows--rule .cmp-row-mark{align-self:start;margin-top:.78em;width:18px;height:2px;background:var(--rust);}
+ul.bullets.cmp-rows li.q .cmp-row-mark{
+  display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-top:0;border-radius:50%;
+  background:var(--sky);color:#fff;font-family:var(--cmp-mono);font-size:12px;font-style:normal;align-self:center;
+}
+ul.bullets.cmp-rows li.reveal-item{transform:translateX(-16px);}
+.slide.active ul.bullets.cmp-rows li.reveal-item.in{transform:none;}
+/* rows sitting above a figure (slide 4) keep compact */
+.cmp-figure-body ul.bullets.cmp-rows li{padding:8px 0;}
+
+/* single statement (slide 12) */
+ul.bullets.cmp-statement{max-width:30em;}
+ul.bullets.cmp-statement li{
+  font-family:var(--cmp-display);font-weight:400;font-size:clamp(22px,2.1vw,28px);line-height:1.42;
+  padding:4px 0 4px 28px;border-left:0;
+}
+ul.bullets.cmp-statement li::before{left:0;top:.2em;bottom:.2em;width:4px;height:auto;border-radius:0;transform:none;background:var(--rust);}
+.v-statement .slide-inner{justify-content:center;}
+
+/* ===== T4 Split frame ===== */
+.split-grid.cmp-split{grid-template-columns:7fr 5fr;}
+.split-grid.cmp-split.reverse{grid-template-columns:5fr 7fr;}
+.cmp-frame{position:relative;margin:0 12px 12px 0;}
+.cmp-frame-box{position:relative;isolation:isolate;}
+.cmp-frame-box > .photo{position:relative;z-index:1;border-radius:6px;box-shadow:var(--shadow, 0 24px 60px -28px rgba(29,27,32,.28));background:var(--bg,#fff);overflow:visible;}
+.cmp-frame-box > .photo img{border-radius:6px;}
+.cmp-frame-offset{position:absolute;z-index:0;inset:12px -12px -12px 12px;border:4px solid var(--rust);border-radius:6px;pointer-events:none;}
+.cmp-frame > .cutline{margin-top:22px;}
+.cmp-frame--card .cmp-frame-box > .photo.contain{padding:20px;border:1px solid var(--line);box-shadow:var(--shadow, 0 24px 60px -28px rgba(29,27,32,.28));}
+.photo-callout.cmp-pop.reveal-item{transform:scale(.85);transform-origin:28px 100%;transition:opacity .35s var(--cmp-ease),transform .5s var(--cmp-ease);}
+.slide.active .photo-callout.cmp-pop.reveal-item.in{transform:scale(1);}
+.split-media .cmp-frame-box > .photo:not(.contain){height:min(52vh,480px);overflow:hidden;}
+
+/* ===== T5 Figure plate ===== */
+.cmp-plate{position:relative;background:var(--surface);border-radius:6px;padding:40px clamp(18px,3vw,44px) 24px;display:flex;flex-direction:column;align-items:center;}
+.cmp-fig{position:absolute;top:14px;left:16px;font-family:var(--cmp-mono);font-weight:500;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);}
+.cmp-plate > .photo{box-shadow:none;background:none;width:100%;display:flex;justify-content:center;}
+.cmp-plate--card > .photo{background:#fff;border:1px solid var(--line);border-radius:4px;padding:20px;width:auto;max-width:100%;}
+.cmp-plate--card > .photo img{width:auto;max-width:100%;}
+.cmp-figure-only .cmp-plate > .photo img{max-height:56vh !important;}
+.cmp-figure-only .cmp-plate--card > .photo img{max-height:52vh !important;}
+.cmp-figure-body:not(.cmp-figure-only) .cmp-plate > .photo img{max-height:42vh !important;}
+.cmp-plate > .cutline{align-self:flex-start;}
+
+/* ===== T6 Versus ===== */
+.compare-grid.cmp-versus{grid-template-columns:1fr 64px 1fr;gap:clamp(12px,1.6vw,20px);align-items:stretch;}
+.cmp-versus .compare-panel{background:var(--bg,#fff);border:1px solid var(--line);border-top:3px solid var(--rust);border-radius:6px;padding:26px 28px 30px;box-shadow:var(--shadow, 0 24px 60px -28px rgba(29,27,32,.28));min-height:clamp(170px,24vh,260px);}
+.cmp-versus .compare-panel.win{border-top-color:var(--sage);}
+.cmp-versus .compare-panel.loss{border-top-color:var(--rust);}
+.cmp-versus .compare-item .ci-name{font-family:var(--cmp-display);font-size:clamp(24px,2.3vw,30px);line-height:1.12;}
+.cmp-versus .compare-item .ci-full{margin-top:8px;}
+.cmp-versus .compare-item .ci-detail{font-family:var(--cmp-body);font-size:clamp(16px,1.35vw,18px);line-height:1.55;color:var(--ink);margin-top:14px;}
+.cmp-vs{align-self:center;justify-self:center;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--bg,#fff);border:1px solid var(--line);color:var(--rust);font-family:var(--cmp-display);font-style:italic;font-size:24px;line-height:1;box-shadow:0 8px 24px -14px rgba(29,27,32,.35);}
+.cmp-vs.reveal-item{transform:scale(.7);}
+.slide.active .cmp-vs.reveal-item.in{transform:scale(1);}
+.cmp-versus .compare-panel.cmp-from-left.reveal-item{transform:translateX(-40px);}
+.cmp-versus .compare-panel.cmp-from-right.reveal-item{transform:translateX(40px);}
+.slide.active .cmp-versus .compare-panel.reveal-item.in{transform:none;}
+.v-versus .slide-inner > .badge-corner.cmp-badge-late{margin-top:6px;}
+@media (max-width:760px){
+  .compare-grid.cmp-versus{grid-template-columns:1fr;}
+  .cmp-vs{margin:-6px auto;}
+}
+
+/* ===== T7 Agenda ===== */
+.agenda-list.cmp-agenda{max-width:980px;}
+.cmp-agenda .agenda-row{position:relative;grid-template-columns:96px 1fr;gap:24px;align-items:center;padding:12px 0;border-top-color:transparent !important;}
+.cmp-hair{position:absolute;left:0;right:0;top:0;height:1px;background:var(--line);transform-origin:left center;}
+.cmp-agenda .agenda-row:first-child .cmp-hair{display:none;}
+.cmp-hair.reveal-item{transform:scaleX(0);transition:transform .65s var(--cmp-ease-io),opacity .1s linear;}
+.slide.active .cmp-hair.reveal-item.in{transform:scaleX(1);}
+.cmp-agenda .agenda-n{font-family:var(--cmp-display);font-weight:300;font-size:clamp(44px,4.6vw,64px);line-height:1;color:transparent;-webkit-text-stroke:1.2px var(--rust);letter-spacing:-.02em;}
+.cmp-agenda .agenda-row > div:last-child{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.cmp-agenda .agenda-label{font-size:clamp(22px,2.3vw,30px);}
+.cmp-pill{margin-top:0 !important;font-family:var(--cmp-mono);font-size:11.5px !important;letter-spacing:.08em;text-transform:uppercase;color:var(--rust) !important;border:1px solid var(--line);border-radius:999px;padding:4px 11px;}
+.source.cmp-agenda-source{font-family:var(--cmp-body);font-size:15px !important;line-height:1.55;color:var(--muted);max-width:980px;margin-top:8px;}
+
+/* ===== T8 Blank ===== */
+.blank-card.cmp-blank{background:var(--bg,#fff);border:1px solid var(--line);border-left:6px solid var(--rust);border-radius:6px;padding:32px 36px;max-width:900px;}
+.cmp-blank .blank-text{line-height:1.75;}
+.cmp-blank .blank-fill{position:relative;border-bottom:0;opacity:1;padding:0 6px;}
+.cmp-blank .blank-fill::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--rust);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--cmp-ease-io);transition-delay:calc(var(--cmp-fill-delay,700ms) - 300ms);}
+.cmp-fill-txt{display:inline-block;clip-path:inset(0 100% 0 0);transition:clip-path .5s var(--cmp-ease-io);transition-delay:var(--cmp-fill-delay,700ms);}
+.slide.active .cmp-blank .blank-fill.in::after{transform:scaleX(1);}
+.slide.active .cmp-blank .blank-fill.in .cmp-fill-txt{clip-path:inset(0 0 0 0);}
+
+/* ===== T9 Closing ===== */
+.v-closing{overflow:hidden;}
+.cmp-closing{position:relative;z-index:1;}
+.cmp-closing .rule{width:160px;height:3px;transform:scaleX(0);transform-origin:center;transition:transform .8s var(--cmp-ease),opacity .2s linear;}
+.slide.active .cmp-closing .rule.in{transform:scaleX(1);}
+.cmp-closing-mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;user-select:none;
+  font-family:var(--cmp-display);font-weight:300;font-size:50vw;line-height:1;color:transparent;-webkit-text-stroke:2px rgba(29,27,32,.05);}
+
+/* ===== responsive ===== */
+@media (max-width:880px){
+  .split-grid.cmp-split,.split-grid.cmp-split.reverse{grid-template-columns:1fr;}
+  .v-hero .slide-inner.cmp-hero{padding-left:0;}
+  .cmp-agenda .agenda-row{grid-template-columns:64px 1fr;gap:14px;}
+}
+
+/* ===== reduced motion: final states, no transforms / clips ===== */
+@media (prefers-reduced-motion: reduce){
+  .cmp-hero-rule,.cmp-quote-bar,.cmp-hair,.cmp-vs,.photo-callout.cmp-pop,.cmp-closing .rule,
+  ul.bullets.cmp-rows li,.cmp-versus .compare-panel{transform:none !important;transition:opacity .15s linear !important;}
+  .cmp-fill-txt{clip-path:none !important;transition:none !important;}
+  .cmp-blank .blank-fill::after{transform:none !important;transition:none !important;}
+}
+.reduced .cmp-hero-rule,.reduced .cmp-quote-bar,.reduced .cmp-hair,.reduced .cmp-vs,.reduced .photo-callout.cmp-pop,.reduced .cmp-closing .rule,
+.reduced ul.bullets.cmp-rows li,.reduced .cmp-versus .compare-panel{transform:none !important;}
+.reduced .cmp-fill-txt{clip-path:none !important;transition:none !important;}
+.reduced .cmp-blank .blank-fill::after{transform:none !important;transition:none !important;}
+
+/* ==== motion.css ==== */
+/* ==========================================================================
+   SPM381 Week 6 — "Matchday Editorial" MOTION LAYER
+   Owner: deck-motion-designer. Pairs with motion.js (which adds html.m-on).
+   Integration: <link rel="stylesheet" href="motion.css"> AFTER theme/components
+   CSS; <script src="motion.js" defer></script> AFTER the engine script.
+   Every rule is scoped under html.m-on, so if motion.js is absent the deck
+   falls back to the engine's own reveal transitions.
+
+   Rules:
+   - Initial (hidden) states live ONLY inside keyframes with fill-mode both,
+     so every element ends in its natural, visible state.
+   - Delays: animation-delay = var(--m-base) [slide, 0 or 300ms after a wipe]
+     + var(--md) [per element, set by motion.js].
+   - Decorative geometry (title Red Rule, quote bar, hero rule, hairlines) is
+     wrapped in :where() = zero specificity, so components.css wins if it
+     defines the same pseudo-element. Motion only owns the animation.
+   ========================================================================== */
+
+:root{
+  --m-ease-out: var(--ease-out, cubic-bezier(.16,1,.3,1));
+  --m-ease-io:  var(--ease-io,  cubic-bezier(.65,0,.35,1));
+  --m-wipe: 650ms;
+  --m-title: 800ms;
+  --m-body: 600ms;
+  --m-img: 1000ms;
+}
+
+/* ---------- keyframes (all end visible) ---------- */
+@keyframes m-fade   { from{opacity:0;} to{opacity:1;} }
+@keyframes m-rise   { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:none;} }
+@keyframes m-row    { from{opacity:0;transform:translateX(-16px);} to{opacity:1;transform:none;} }
+@keyframes m-left   { from{opacity:0;transform:translateX(-40px);} to{opacity:1;transform:none;} }
+@keyframes m-right  { from{opacity:0;transform:translateX(40px);} to{opacity:1;transform:none;} }
+@keyframes m-mask   { from{transform:translateY(105%);} to{transform:none;} }
+@keyframes m-kicker { from{opacity:0;letter-spacing:.4em;} to{opacity:1;} }
+@keyframes m-scalex { from{transform:scaleX(0);} to{transform:scaleX(1);} }
+@keyframes m-scaley { from{transform:scaleY(0);} to{transform:scaleY(1);} }
+@keyframes m-clip   { from{clip-path:inset(0 0 100% 0);} to{clip-path:inset(0 0 0 0);} }
+@keyframes m-clipx  { from{clip-path:inset(0 100% 0 0);} to{clip-path:inset(0 0 0 0);} }
+@keyframes m-imgin  { from{opacity:0;transform:scale(1.04);} to{opacity:1;transform:scale(1);} }
+@keyframes m-pop    { 0%{opacity:0;transform:scale(.85);} 100%{opacity:1;transform:scale(1);} }
+@keyframes m-popc   { 0%{opacity:0;transform:translate(-50%,-50%) scale(.6);} 100%{opacity:1;transform:translate(-50%,-50%) scale(1);} }
+@keyframes m-tick   { from{opacity:.2;transform:translateY(6px);} to{opacity:1;transform:none;} }
+@keyframes m-ping   { 0%{box-shadow:0 0 0 0 rgba(158,27,27,.45);} 100%{box-shadow:0 0 0 10px rgba(158,27,27,0);} }
+@keyframes m-wipe   {
+  0%   {clip-path:inset(0 100% 0 0);animation-timing-function:var(--m-ease-io);}
+  46%  {clip-path:inset(0 0 0 0);animation-timing-function:var(--m-ease-io);}
+  100% {clip-path:inset(0 0 0 100%);}
+}
+
+/* ---------- slide container transitions ---------- */
+html.m-on .slide{
+  transform:translateY(16px);
+  transition:opacity 480ms var(--m-ease-out), transform 480ms var(--m-ease-out), visibility 0s linear 480ms;
+}
+html.m-on .slide.active{transform:none;transition-delay:0s;}
+/* outgoing slide: content frozen visible, whole slide fades out */
+html.m-on .slide.m-leaving{
+  transform:none;
+  transition:opacity 400ms var(--m-ease-io), transform 400ms var(--m-ease-io), visibility 0s linear 400ms;
+}
+html.m-on .slide.m-leaving.m-out-x{transform:translateX(-24px);}
+html.m-on .slide.m-leaving .reveal-item,
+html.m-on .slide.m-leaving .blank-fill,
+html.m-on .slide.m-leaving .badge-corner img{opacity:1 !important;transform:none !important;transition:none !important;animation:none !important;}
+html.m-on .slide.m-leaving .photo img{opacity:1 !important;transition:none !important;}
+/* incoming slide after a section wipe: appears while the panel covers */
+html.m-on .slide.active.m-wipe-in{
+  transition:opacity 160ms linear 260ms, transform 0s, visibility 0s;
+}
+html.m-on .slide.m-wipe-in{--m-base:300ms;}
+html.m-on .slide-inner{overflow-x:hidden;}
+
+/* ---------- the Red Rule wipe panel ---------- */
+.wipe{
+  position:fixed;inset:0;z-index:18;pointer-events:none;
+  background:var(--rust,#9e1b1b);
+  clip-path:inset(0 100% 0 0);visibility:hidden;
+}
+.wipe::after{ /* darker leading band for depth */
+  content:'';position:absolute;top:0;bottom:0;left:0;width:10px;background:var(--rust-deep,#6e1010);opacity:.55;
+}
+.wipe.go{visibility:visible;animation:m-wipe var(--m-wipe) both;}
+
+/* ---------- generic entrance for every reveal item ---------- */
+html.m-on .reveal-item{transition:none;}
+html.m-on .slide.active .reveal-item.in{
+  animation:m-rise var(--m-body) var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,0ms));
+}
+
+/* ---------- kicker ---------- */
+html.m-on .slide.active .kicker.reveal-item.in{animation-name:m-kicker;}
+
+/* ---------- slide titles: masked rise + Red Rule underline ---------- */
+.m-mask{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em;}
+.m-mask > .m-rise{display:block;}
+html.m-on .slide.active h1.m-split.reveal-item.in{animation:none;opacity:1;transform:none;}
+html.m-on .slide.active h1.m-split.in .m-rise{
+  animation:m-mask var(--m-title) var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,0ms));
+}
+:where(html.m-on h1.title-slide)::after{
+  content:'';display:block;width:56px;height:3px;margin-top:14px;background:var(--rust);transform-origin:left center;
+}
+html.m-on .slide.active h1.title-slide.in::after{
+  animation:m-scalex 500ms var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,0ms) + 250ms);
+}
+
+/* ---------- hero (T1): words rise 90ms apart, thick rule draws ---------- */
+.m-w{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.1em;margin-bottom:-.1em;}
+.m-w > .m-wi{display:inline-block;}
+html.m-on .slide.active h1.m-words.reveal-item.in{animation:none;opacity:1;transform:none;}
+html.m-on .slide.active h1.m-words.in .m-wi{
+  animation:m-mask var(--m-title) var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--mw,0ms));
+}
+:where(html.m-on [data-m="hero"] h1.title-hero)::after{
+  content:'';display:block;width:120px;height:6px;margin-top:28px;background:var(--rust);transform-origin:left center;
+}
+html.m-on .slide.active[data-m="hero"] h1.title-hero.in::after{
+  animation:m-scalex 700ms var(--m-ease-io) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--mr,600ms));
+}
+
+/* ---------- subhead ---------- */
+html.m-on .slide.active .subhead.reveal-item.in{animation-name:m-fade;animation-duration:500ms;}
+
+/* ---------- pullquote (T2): bar draws top->bottom ---------- */
+:where(html.m-on .pullquote)::after{
+  content:'';position:absolute;left:-22px;top:.15em;bottom:.15em;width:6px;background:var(--rust);transform-origin:top center;
+}
+html.m-on .slide.active .pullquote.in::after{
+  animation:m-scaley 600ms var(--m-ease-io) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,0ms));
+}
+
+/* ---------- bullets (T3 rows): slide from x -16px, 80ms stagger ---------- */
+html.m-on .slide.active ul.bullets li.reveal-item.in{animation-name:m-row;}
+
+/* ---------- images (T4/T5): clip reveal + settle ---------- */
+html.m-on .slide.active .photo.in{
+  animation:m-clip var(--m-img) var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,240ms));
+}
+html.m-on .slide.active .photo.in img{
+  transition:none;
+  animation:m-imgin var(--m-img) var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,240ms));
+}
+html.m-on .slide.active .photo.kb.in img{ /* keep the engine's slow Ken Burns on photos */
+  animation:m-fade 500ms var(--m-ease-out) both, kenburns 15s var(--ease,ease) forwards;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,240ms)), calc(var(--m-base,0ms) + var(--md,240ms));
+}
+html.m-on .slide.active .photo.in .photo-callout{
+  transform-origin:20% 100%;
+  animation:m-pop 450ms var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + 900ms);
+}
+html.m-on .slide.active .photo.in + .cutline{
+  animation:m-fade 500ms var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + 800ms);
+}
+
+/* ---------- compare (T6): cards face each other, vs disc, badge last ---------- */
+html.m-on .slide.active .compare-panel.win.reveal-item.in{animation-name:m-left;animation-duration:700ms;}
+html.m-on .slide.active .compare-panel.loss.reveal-item.in{animation-name:m-right;animation-duration:700ms;}
+html.m-on .slide.active[data-m="compare"] .compare-grid::after{ /* vs disc, if components.css draws one */
+  animation:m-popc 450ms var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + 620ms);
+}
+html.m-on .badge-corner img{transition:none;}
+html.m-on .slide.active .badge-corner.in img{
+  animation:m-fade 500ms var(--m-ease-out) both;
+  animation-delay:calc(var(--m-base,0ms) + 900ms);
+}
+html.m-on .compare-panel{transition:transform .25s var(--m-ease-out), box-shadow .25s var(--m-ease-out);}
+html.m-on .slide.active .compare-panel.in:hover{transform:translateY(-3px);box-shadow:var(--shadow,0 24px 60px -28px rgba(29,27,32,.28));}
+
+/* ---------- agenda (T7): hairline draws, then row text rises ---------- */
+html.m-on .agenda-row{position:relative;border-top-color:transparent;}
+:where(html.m-on .agenda-row)::before{
+  content:'';position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--line);transform-origin:left center;
+}
+:where(html.m-on .agenda-row:first-child)::before{background:transparent;}
+html.m-on .slide.active .agenda-row.in::before{
+  animation:m-scalex 500ms var(--m-ease-io) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,0ms) - 150ms);
+}
+html.m-on .agenda-label{transition:transform .25s var(--m-ease-out);}
+html.m-on .agenda-n{transition:color .25s ease;}
+html.m-on .agenda-row:hover .agenda-label{transform:translateX(6px);}
+
+/* ---------- blank (T8): underline draws, then the fill wipes in ---------- */
+html.m-on .blank-fill{position:relative;border-bottom-color:transparent;transition:none;}
+:where(html.m-on .blank-fill)::after{
+  content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--rust);transform-origin:left center;
+}
+.m-fill-text{display:inline-block;}
+html.m-on .slide.active .blank-fill.in{opacity:1;}
+html.m-on .slide.active .blank-fill.in::after{
+  animation:m-scalex 300ms var(--m-ease-io) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,450ms));
+}
+html.m-on .slide.active .blank-fill.in .m-fill-text{
+  animation:m-clipx 350ms var(--m-ease-io) both;
+  animation-delay:calc(var(--m-base,0ms) + var(--md,450ms) + 150ms);
+}
+
+/* ---------- closing (T9): rules expand outward from centre ---------- */
+html.m-on .slide.active .closing-wrap .rule.reveal-item.in{
+  transform-origin:center;animation-name:m-scalex;animation-duration:600ms;animation-timing-function:var(--m-ease-io);
+}
+
+/* ---------- source lines ---------- */
+html.m-on .slide.active .source.reveal-item.in{animation-name:m-fade;}
+
+/* ---------- chrome: progress, counter, section label ---------- */
+html.m-on .progress-fill{transition:width var(--m-wipe) var(--m-ease-io);}
+html.m-on .progress-fill.m-tick::after{animation:m-ping 600ms ease-out;}
+html.m-on .counter.m-tick,
+html.m-on .page-num.m-tick{animation:m-tick 360ms var(--m-ease-out);}
+html.m-on .section-label.m-tick{animation:m-kicker 500ms var(--m-ease-out);}
+
+/* ---------- hover micro-interactions ---------- */
+html.m-on ul.bullets li a{text-decoration:none;background:linear-gradient(var(--rust),var(--rust)) left bottom/100% 1px no-repeat;transition:background-size .3s var(--m-ease-out);}
+html.m-on ul.bullets li a:hover{background-size:100% 2px;}
+html.m-on .navbtn:not(:disabled):active{transform:scale(.94);}
+
+/* ---------- reduced motion: no wipe, no masks, no clip-paths; 150ms opacity only ---------- */
+@media (prefers-reduced-motion: reduce){
+  .wipe{display:none !important;}
+  html.m-on .slide{transform:none !important;transition:opacity 150ms linear, visibility 0s linear 150ms !important;}
+  html.m-on .slide.active{transition:opacity 150ms linear !important;}
+  html.m-on *, html.m-on *::before, html.m-on *::after{animation:none !important;clip-path:none !important;}
+  html.m-on .slide.active .reveal-item.in{animation:m-fade 150ms linear both !important;}
+  html.m-on .photo img, html.m-on .blank-fill, html.m-on .badge-corner img{opacity:1 !important;transform:none !important;}
+}
+html.reduced .wipe{display:none !important;}
+html.reduced.m-on .slide{transform:none !important;transition:opacity 150ms linear, visibility 0s linear 150ms !important;}
+html.reduced.m-on *, html.reduced.m-on *::before, html.reduced.m-on *::after{animation:none !important;clip-path:none !important;}
+html.reduced.m-on .slide.active .reveal-item.in{animation:m-fade 150ms linear both !important;}
+html.reduced.m-on .photo img, html.reduced.m-on .blank-fill, html.reduced.m-on .badge-corner img{opacity:1 !important;transform:none !important;}
+
+@media print{ .wipe{display:none !important;} }
+
+/* integrator: keep page refs in source case */
+.agenda-detail,.agenda-detail.cmp-pill,.cutline{text-transform:none !important;}
+/* integrator: components.js decor supersedes theme.css pseudo-element duplicates */
+.slide-inner.cmp-hero::before,.cmp-hero .title-hero::after{content:none !important;display:none !important;}
+.slide:has(.cmp-hero-num)::after{content:none !important;}
+.slide:has(.cmp-closing-mark)::before{content:none !important;}
+.stack-body > div:has(.cmp-fig)::before{content:none !important;display:none !important;}
+/* ==== background.css ==== */
+/* ==========================================================================
+   SPM381 Week 6 — "Matchday Editorial" ambient background
+   Owner: deck-background-artist. White-based; every accent <= 6% alpha.
+   Integration: <link rel="stylesheet" href="background.css"> in <head>,
+   <script src="background.js" defer></script> before </body>.
+   The script injects <div class="bga" aria-hidden="true"> as the first child
+   of <body>; it sits at z-index 0 under .deck (z 1) and all chrome (z 15+).
+   The legacy .bg-wash is already display:none (index.html line ~401).
+   ========================================================================== */
+
+:root{
+  --bga-base-top:#ffffff;
+  --bga-base-bot:#fbfaf8;
+  --bga-rust:158,27,27;      /* matches --rust #9e1b1b */
+  --bga-sage:31,111,92;      /* matches --sage #1f6f5c */
+  --bga-amber:181,101,29;    /* matches --sky  #b5651d */
+  --bga-ink:29,27,32;
+  --bga-xfade:1.6s;
+}
+
+.bga{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:linear-gradient(180deg,var(--bga-base-top) 0%,var(--bga-base-top) 38%,var(--bga-base-bot) 100%);
+  contain:strict;
+}
+.bga > *{position:absolute;pointer-events:none;}
+
+/* ---- 1. Drifting soft fields (large radial gradients, transform-only) ---- */
+.bga-field{
+  width:78vmax;height:78vmax;border-radius:50%;
+  will-change:transform;backface-visibility:hidden;
+}
+.bga-field.f1{ /* oxblood, top-left */
+  left:-34vmax;top:-40vmax;
+  background:radial-gradient(closest-side,rgba(var(--bga-rust),.055),rgba(var(--bga-rust),.018) 55%,transparent);
+  animation:bga-drift-a 26s ease-in-out infinite alternate;
+}
+.bga-field.f2{ /* sage, bottom-right */
+  right:-36vmax;bottom:-42vmax;
+  background:radial-gradient(closest-side,rgba(var(--bga-sage),.05),rgba(var(--bga-sage),.016) 55%,transparent);
+  animation:bga-drift-b 30s ease-in-out infinite alternate;
+}
+
+/* ---- 2. Section tint layers (cross-faded by background.js) ---- */
+.bga-tint{
+  inset:0;opacity:0;transition:opacity var(--bga-xfade) cubic-bezier(.65,0,.35,1);
+}
+.bga-tint.on{opacity:1;}
+.bga-tint.t-rust {background:radial-gradient(ellipse 70% 60% at 100% 0%,  rgba(var(--bga-rust),.035),transparent 70%);}
+.bga-tint.t-sage {background:radial-gradient(ellipse 70% 60% at 100% 0%,  rgba(var(--bga-sage),.04), transparent 70%);}
+.bga-tint.t-amber{background:radial-gradient(ellipse 70% 60% at 100% 0%,  rgba(var(--bga-amber),.04),transparent 70%);}
+.bga-tint.t-ink  {background:radial-gradient(ellipse 70% 60% at 100% 0%,  rgba(var(--bga-ink),.025), transparent 70%);}
+
+/* ---- 3. Line motif: pitch-marking hairlines + the ghost "Red Rule" ---- */
+.bga-lines{
+  left:0;right:0;bottom:0;height:46vh;width:140vw;
+  will-change:transform;
+  animation:bga-slide 28s linear infinite alternate;
+  opacity:.9;
+}
+.bga-lines svg{width:100%;height:100%;display:block;}
+.bga-lines line,.bga-lines circle,.bga-lines path{
+  vector-effect:non-scaling-stroke;fill:none;
+  stroke:rgba(var(--bga-ink),.05);stroke-width:1;
+}
+.bga-lines .accent{stroke:rgba(var(--bga-rust),.07);}
+
+/* Red Rule ghost: a short oxblood bar on the left gutter that glides vertically */
+.bga-rule{
+  left:clamp(10px,1.6vw,22px);top:22vh;width:2px;height:12vh;
+  background:linear-gradient(180deg,transparent,rgba(var(--bga-rust),.16) 30%,rgba(var(--bga-rust),.16) 70%,transparent);
+  will-change:transform;
+  animation:bga-rule 18s cubic-bezier(.65,0,.35,1) infinite alternate;
+}
+
+/* Hero / closing: let the soft fields sit a touch closer to center */
+.bga[data-mode="hero"] .bga-field.f1{animation-duration:20s;}
+.bga[data-mode="hero"] .bga-rule{opacity:0;}
+.bga-rule{transition:opacity .8s ease;}
+
+/* ---- keyframes: transform only (compositor-friendly) ---- */
+@keyframes bga-drift-a{
+  0%  {transform:translate3d(0,0,0) scale(1);}
+  50% {transform:translate3d(6vmax,4vmax,0) scale(1.06);}
+  100%{transform:translate3d(10vmax,-2vmax,0) scale(.98);}
+}
+@keyframes bga-drift-b{
+  0%  {transform:translate3d(0,0,0) scale(1);}
+  50% {transform:translate3d(-7vmax,-3vmax,0) scale(1.05);}
+  100%{transform:translate3d(-3vmax,-8vmax,0) scale(1);}
+}
+@keyframes bga-slide{
+  0%  {transform:translate3d(0,0,0);}
+  100%{transform:translate3d(-28vw,0,0);}
+}
+@keyframes bga-rule{
+  0%  {transform:translate3d(0,0,0);}
+  100%{transform:translate3d(0,46vh,0);}
+}
+
+/* ---- Reduced motion: static composition, instant tint swap ---- */
+@media (prefers-reduced-motion: reduce){
+  .bga-field,.bga-lines,.bga-rule{animation:none !important;}
+  .bga-tint{transition:none !important;}
+}
+.reduced .bga-field,.reduced .bga-lines,.reduced .bga-rule{animation:none !important;}
+.reduced .bga-tint{transition:none !important;}
+
+/* Print / PDF export: keep it plain white */
+@media print{ .bga{display:none !important;} }
+
+</style>
 </head>
 <body>
 <div class="bg-wash"></div>
@@ -473,7 +1358,7 @@ table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
 </div>
 
 <script src="../questions/config.js?v=3"></script>
-<script type="application/json" id="slide-data">[{"type": "title", "title": "Theories of Consumer Behavior", "subtitle": "SPM381 Consumer Behavior in Sports"}, {"type": "media", "title": "Definition of Sport Consumer Behavior", "quote": "“The dynamic interaction of affect and cognition, behavior, and the environment by which human beings conduct the exchange aspects of their lives” (American Marketing Association, 2008).", "bullets": ["A textbook definition of consumer behavior is generally, “The study of individuals, groups, or organizations and the processes they use to select, secure, use, and dispose of products, services, experiences, or idea to satisfy needs and the impacts that these processes have on the consumer and society” (Hawkins, Best, & Coney, 2004, p. 7)."]}, {"type": "media", "layout": "split", "title": "Definition of Sport Consumer Behavior cont.", "kicker": "Simple Definition of Consumer Behavior", "quote": "“The study of why people buy.” (p. 51)", "bullets": ["Decision making process"], "images": [{"src": "assets/p03-crying-toddler.png", "w": 300, "h": 350, "caption": "", "callout": "Are you kidding?"}], "notes": "The study of consumer behavior is essentially an attempt to understand what influences a person’s decision to consume a product."}, {"type": "media", "title": "Definition of Sport Consumer Behavior cont.", "kicker": "Factors affecting sport consumption", "bullets": ["Think about what other factors influence your sport consumption?????"], "images": [{"src": "assets/p04-graphic.svg", "w": 620, "h": 440, "fit": "contain", "still": true}], "notes": "Geographical locations & weather"}, {"type": "blank", "title": "Definition of Sport Consumer Behavior cont.", "blankText": "It is important for professional sport leagues and college athletic program to at least maintain a base of sport consumers, and in more cases than not, for organizations to work on increasing their levels of [[BLANK]], [[BLANK]], and [[BLANK]].", "fills": ["Attendance", "Viewership", "Merchandise consumption"]}, {"type": "media", "layout": "split", "title": "Definition of Sport Consumer Behavior cont.", "kicker": "Who are sport consumers?", "bullets": ["[[LINK:https://www.youtube.com/watch?v=mOHkRk00iI8|https://www.youtube.com/watch?v=mOHkRk00iI8]]", "Watch this clip!", "This was hilarious. → but a guy at 1:44 ☹"], "images": [{"src": "assets/p06-sport-fans-clip.png", "w": 500, "h": 258, "caption": ""}]}, {"type": "media", "title": "Who are sport consumers?", "kicker": "Stewart et al. (2003)- this week’s reading", "images": [{"src": "assets/p07-graphic.svg", "w": 862, "h": 329, "fit": "contain", "still": true}]}, {"type": "compare", "title": "Who are sport consumers? cont.", "kicker": "Dualistic Approaches (Boyle & Haynes, 2000)", "badge": {"src": "assets/p08-barclays-premier-league-logo.png"}, "panels": [{"tone": "win", "label": "Traditional Fans", "items": [{"name": "Traditional Fans", "full": "Boyle & Haynes (2000)", "detail": "True supporters with a strong sense of the game’s history and culture"}]}, {"tone": "loss", "label": "Modern Fans", "items": [{"name": "Modern Fans", "full": "Boyle & Haynes (2000)", "detail": "Attracted to the game because of entertaining"}]}]}, {"type": "compare", "title": "Who are sport consumers? cont.", "kicker": "Dualistic Approaches (Nash, 2000)", "panels": [{"tone": "win", "label": "Core Fans", "items": [{"name": "Core Fans", "full": "Nash (2000)", "detail": "Grew up with the game · Built enduring emotional attachments to teams"}]}, {"tone": "loss", "label": "Corporate Fans", "items": [{"name": "Corporate Fans", "full": "Nash (2000)", "detail": "Used the game to consolidate their social and professional network"}]}]}, {"type": "compare", "title": "Who are sport consumers? cont.", "kicker": "Dualistic Approaches (Ferrand & Pages, 1996)", "panels": [{"tone": "win", "label": "Irrational Fans", "items": [{"name": "Irrational Fans", "full": "Ferrand & Pages (1996)", "detail": "Emotional connections with a team"}]}, {"tone": "loss", "label": "Rational Fans", "items": [{"name": "Rational Fans", "full": "Ferrand & Pages (1996)", "detail": "Inclined to use their club and team connection to secure a social or commercial benefits"}]}]}, {"type": "media", "title": "Who are sport consumers? cont.", "images": [{"src": "assets/p11-graphic.svg", "w": 1400, "h": 710, "fit": "contain", "still": true}]}, {"type": "media", "title": "Who are sport consumers? cont.", "kicker": "Multidimensional typologies", "bullets": ["Multidimensional typologies reveal a multiplicity of social and psychological factors that shape the behavior of sport consumers."]}, {"type": "media", "title": "Who are sport consumers? cont.", "kicker": "Multidimensional typologies", "images": [{"src": "assets/p13-multidim-typology.png", "w": 635, "h": 550, "fit": "contain", "still": true}]}, {"type": "media", "title": "Who are sport consumers? cont.", "bullets": ["(1) Collection of information about the consumers that will allow for segmentation", "Commonly…..", "Gender, Age, Years of being a fan, Zip code, Frequency of ticket purchase, Income, etc."], "subhead": "How?"}, {"type": "media", "title": "Understanding of Sport Consumer Behavior", "bullets": ["(2) Collection of information about psychographic variables that are better predictors of actual behavior.", "Customer Relationship Management (CRM)", "One file for each customer- the file includes information about all transactions and interactions a consumer has with the organization (e.g., ticket purchase)."], "subhead": "How?"}, {"type": "media", "title": "Understanding of Sport Consumer Behavior cont.", "bullets": ["(2) Collection of information about psychographic variables that are better predictors of actual behavior.", "(1) What psychological variables do you need to include in your investigation?", "(2) What tool (methods) do you like to adopt? Survey, Interview, phone interview? Etc.", "(3) Sample? Target Population?", "These are part of the questions for this week’s discussion questions."], "subhead": "How?"}, {"type": "media", "title": "How to Study Consumer Behavior", "quote": "“A variety of models and theories have been used to try and explain consumer behavior in general” (p. 60).", "bullets": ["Model??", "Theory??"]}, {"type": "agenda", "title": "How to Study Consumer Behavior cont.", "kicker": "Theories", "items": [{"n": "01", "label": "Identity Theory", "detail": "p. 67"}, {"n": "02", "label": "Social Identity Theory", "detail": "p. 70"}, {"n": "03", "label": "Attitude Theory", "detail": "p. 72"}, {"n": "04", "label": "Theory of Planned Behavior", "detail": "p. 70"}], "source": "To fully understand the concept of these theories, I strongly suggest reviewing the textbook. Textbook Trail, G. T (2018, 3rd edition). Sport Consumer Behavior. Seattle, WA. Chapter 2 Theories of Consumer Behavior p. 51. Identity theory- p.67. Social identity theory- p.70. Theory of Planned Behavior- p.70. Attitude Theory- p.72."}, {"type": "media", "title": "How to Study Consumer Behavior cont.", "kicker": "Theories", "bullets": ["Self is made up of interdependent and independent, mutually reinforcing and conflicting parts (Mead, 1934).", "People have as many identifies as distinct networks of relationship in which they occupy positions and play roles."], "subhead": "Identity Theory"}, {"type": "media", "layout": "split", "title": "How to Study Consumer Behavior cont.", "kicker": "Theories", "bullets": ["Examples of your identities would be a student of Arcadia University, son or daughter of your parents, a fan of Eagles, etc."], "images": [{"src": "assets/p20-packers-kids.jpg", "w": 309, "h": 231}], "subhead": "Identity Theory"}, {"type": "media", "layout": "split", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["Identity standard – believing that a fan should act in a certain way.", "Drinking → you are not… disconnection → choose other social groups."], "images": [{"src": "assets/p21-identity-standard.png", "w": 506, "h": 277, "fit": "contain", "still": true}], "subhead": "Identity Theory"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "quote": "A social identity is a person’s knowledge that he or she belongs to a group (Stets & Burke, 2000, p.225).", "bullets": ["Identification with a collectivity [category-based identities; Black or White, Christian or Muslim]"], "subhead": "Social Identity Theory"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["Both have been used to examine the identity of “fan.”", "Which theory is more appropriate to use? And Why? (p. 67-70, Trail 2018)", "This is part of this week’s discussion questions."], "subhead": "Identity Theory vs. Social Identity Theory"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "quote": "Fans act differently because the identity standard is specific to the individual and varies to the extent that the individual wants it to vary relative to the perceived situational meanings.", "bullets": []}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["Attitudes motivate behavior and they are comprised of both valence and intensity.", "Attitude can be defined as all classes of evaluative responding, cognitive, affective, or behavior.", "Valence of the attitude refers to the positive or negative evaluation of the entity.", "The intensity of attitude refers to the degree of the feeling."], "subhead": "Attitude Theory"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "images": [{"src": "assets/p26-attitude-valence.png", "w": 980, "h": 175, "fit": "contain", "still": true}], "subhead": "Attitude Theory"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "images": [{"src": "assets/p27-attitude-structure.png", "w": 646, "h": 247, "fit": "contain", "still": true}], "subhead": "Attitude Theory"}, {"type": "media", "layout": "split", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["-Subjective norm: cultural thing, socially acceptable, perceived social pressure", "-Perceived behavioral control: perceived ease or difficulty of performing the behavior and its is assumed to reflect past experience as well as anticipated impediments and obstacles."], "images": [{"src": "assets/p28-planned-behavior.png", "w": 669, "h": 325, "fit": "contain", "still": true, "caption": "Azjen (1991)"}], "subhead": "Theory of Planned Behavior (Azjen, 1991)"}, {"type": "closing", "title": "Questions???"}]</script>
+<script type="application/json" id="slide-data">[{"type": "title", "title": "Theories of Consumer Behavior", "subtitle": "SPM381 Consumer Behavior in Sports", "variant": "hero", "heroKicker": "SPM 381 · Week 6", "heroNum": "06"}, {"type": "media", "title": "Definition of Sport Consumer Behavior", "quote": "“The dynamic interaction of affect and cognition, behavior, and the environment by which human beings conduct the exchange aspects of their lives” (American Marketing Association, 2008).", "bullets": ["A textbook definition of consumer behavior is generally, “The study of individuals, groups, or organizations and the processes they use to select, secure, use, and dispose of products, services, experiences, or idea to satisfy needs and the impacts that these processes have on the consumer and society” (Hawkins, Best, & Coney, 2004, p. 7)."], "variant": "quote-stack"}, {"type": "media", "layout": "split", "title": "Definition of Sport Consumer Behavior cont.", "kicker": "Simple Definition of Consumer Behavior", "quote": "“The study of why people buy.” (p. 51)", "bullets": ["Decision making process"], "images": [{"src": "assets/p03-crying-toddler.png", "w": 300, "h": 350, "caption": "", "callout": "Are you kidding?"}], "notes": "The study of consumer behavior is essentially an attempt to understand what influences a person’s decision to consume a product.", "variant": "quote-stack", "media": "frame"}, {"type": "media", "title": "Definition of Sport Consumer Behavior cont.", "kicker": "Factors affecting sport consumption", "bullets": ["Think about what other factors influence your sport consumption?????"], "images": [{"src": "assets/p04-graphic.svg", "w": 620, "h": 440, "fit": "contain", "still": true}], "notes": "Geographical locations & weather", "variant": "rows", "rowMark": "index", "media": "figure", "plate": "flat"}, {"type": "blank", "title": "Definition of Sport Consumer Behavior cont.", "blankText": "It is important for professional sport leagues and college athletic program to at least maintain a base of sport consumers, and in more cases than not, for organizations to work on increasing their levels of [[BLANK]], [[BLANK]], and [[BLANK]].", "fills": ["Attendance", "Viewership", "Merchandise consumption"], "variant": "blank-edge"}, {"type": "media", "layout": "split", "title": "Definition of Sport Consumer Behavior cont.", "kicker": "Who are sport consumers?", "bullets": ["[[LINK:https://www.youtube.com/watch?v=mOHkRk00iI8|https://www.youtube.com/watch?v=mOHkRk00iI8]]", "Watch this clip!", "This was hilarious. → but a guy at 1:44 ☹"], "images": [{"src": "assets/p06-sport-fans-clip.png", "w": 500, "h": 258, "caption": ""}], "variant": "rows", "rowMark": "index", "media": "frame"}, {"type": "media", "title": "Who are sport consumers?", "kicker": "Stewart et al. (2003)- this week’s reading", "images": [{"src": "assets/p07-graphic.svg", "w": 862, "h": 329, "fit": "contain", "still": true}], "media": "figure", "plate": "flat"}, {"type": "compare", "title": "Who are sport consumers? cont.", "kicker": "Dualistic Approaches (Boyle & Haynes, 2000)", "badge": {"src": "assets/p08-barclays-premier-league-logo.png"}, "panels": [{"tone": "win", "label": "Traditional Fans", "items": [{"name": "Traditional Fans", "full": "Boyle & Haynes (2000)", "detail": "True supporters with a strong sense of the game’s history and culture"}]}, {"tone": "loss", "label": "Modern Fans", "items": [{"name": "Modern Fans", "full": "Boyle & Haynes (2000)", "detail": "Attracted to the game because of entertaining"}]}], "variant": "versus"}, {"type": "compare", "title": "Who are sport consumers? cont.", "kicker": "Dualistic Approaches (Nash, 2000)", "panels": [{"tone": "win", "label": "Core Fans", "items": [{"name": "Core Fans", "full": "Nash (2000)", "detail": "Grew up with the game · Built enduring emotional attachments to teams"}]}, {"tone": "loss", "label": "Corporate Fans", "items": [{"name": "Corporate Fans", "full": "Nash (2000)", "detail": "Used the game to consolidate their social and professional network"}]}], "variant": "versus"}, {"type": "compare", "title": "Who are sport consumers? cont.", "kicker": "Dualistic Approaches (Ferrand & Pages, 1996)", "panels": [{"tone": "win", "label": "Irrational Fans", "items": [{"name": "Irrational Fans", "full": "Ferrand & Pages (1996)", "detail": "Emotional connections with a team"}]}, {"tone": "loss", "label": "Rational Fans", "items": [{"name": "Rational Fans", "full": "Ferrand & Pages (1996)", "detail": "Inclined to use their club and team connection to secure a social or commercial benefits"}]}], "variant": "versus"}, {"type": "media", "title": "Who are sport consumers? cont.", "images": [{"src": "assets/p11-graphic.svg", "w": 1400, "h": 710, "fit": "contain", "still": true}], "media": "figure", "plate": "flat"}, {"type": "media", "title": "Who are sport consumers? cont.", "kicker": "Multidimensional typologies", "bullets": ["Multidimensional typologies reveal a multiplicity of social and psychological factors that shape the behavior of sport consumers."], "variant": "statement"}, {"type": "media", "title": "Who are sport consumers? cont.", "kicker": "Multidimensional typologies", "images": [{"src": "assets/p13-multidim-typology.png", "w": 635, "h": 550, "fit": "contain", "still": true}], "media": "figure", "plate": "card"}, {"type": "media", "title": "Who are sport consumers? cont.", "bullets": ["(1) Collection of information about the consumers that will allow for segmentation", "Commonly…..", "Gender, Age, Years of being a fan, Zip code, Frequency of ticket purchase, Income, etc."], "subhead": "How?", "variant": "rows", "rowMark": "rule"}, {"type": "media", "title": "Understanding of Sport Consumer Behavior", "bullets": ["(2) Collection of information about psychographic variables that are better predictors of actual behavior.", "Customer Relationship Management (CRM)", "One file for each customer- the file includes information about all transactions and interactions a consumer has with the organization (e.g., ticket purchase)."], "subhead": "How?", "variant": "rows", "rowMark": "rule"}, {"type": "media", "title": "Understanding of Sport Consumer Behavior cont.", "bullets": ["(2) Collection of information about psychographic variables that are better predictors of actual behavior.", "(1) What psychological variables do you need to include in your investigation?", "(2) What tool (methods) do you like to adopt? Survey, Interview, phone interview? Etc.", "(3) Sample? Target Population?", "These are part of the questions for this week’s discussion questions."], "subhead": "How?", "variant": "rows", "rowMark": "rule"}, {"type": "media", "title": "How to Study Consumer Behavior", "quote": "“A variety of models and theories have been used to try and explain consumer behavior in general” (p. 60).", "bullets": ["Model??", "Theory??"], "variant": "quote-stack"}, {"type": "agenda", "title": "How to Study Consumer Behavior cont.", "kicker": "Theories", "items": [{"n": "01", "label": "Identity Theory", "detail": "p. 67"}, {"n": "02", "label": "Social Identity Theory", "detail": "p. 70"}, {"n": "03", "label": "Attitude Theory", "detail": "p. 72"}, {"n": "04", "label": "Theory of Planned Behavior", "detail": "p. 70"}], "source": "To fully understand the concept of these theories, I strongly suggest reviewing the textbook. Textbook Trail, G. T (2018, 3rd edition). Sport Consumer Behavior. Seattle, WA. Chapter 2 Theories of Consumer Behavior p. 51. Identity theory- p.67. Social identity theory- p.70. Theory of Planned Behavior- p.70. Attitude Theory- p.72.", "variant": "agenda-xl"}, {"type": "media", "title": "How to Study Consumer Behavior cont.", "kicker": "Theories", "bullets": ["Self is made up of interdependent and independent, mutually reinforcing and conflicting parts (Mead, 1934).", "People have as many identifies as distinct networks of relationship in which they occupy positions and play roles."], "subhead": "Identity Theory", "variant": "rows", "rowMark": "index"}, {"type": "media", "layout": "split", "title": "How to Study Consumer Behavior cont.", "kicker": "Theories", "bullets": ["Examples of your identities would be a student of Arcadia University, son or daughter of your parents, a fan of Eagles, etc."], "images": [{"src": "assets/p20-packers-kids.jpg", "w": 309, "h": 231}], "subhead": "Identity Theory", "variant": "rows", "rowMark": "index", "media": "frame"}, {"type": "media", "layout": "split", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["Identity standard – believing that a fan should act in a certain way.", "Drinking → you are not… disconnection → choose other social groups."], "images": [{"src": "assets/p21-identity-standard.png", "w": 506, "h": 277, "fit": "contain", "still": true}], "subhead": "Identity Theory", "variant": "rows", "rowMark": "index", "media": "frame", "plate": "card"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "quote": "A social identity is a person’s knowledge that he or she belongs to a group (Stets & Burke, 2000, p.225).", "bullets": ["Identification with a collectivity [category-based identities; Black or White, Christian or Muslim]"], "subhead": "Social Identity Theory", "variant": "quote-stack"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["Both have been used to examine the identity of “fan.”", "Which theory is more appropriate to use? And Why? (p. 67-70, Trail 2018)", "This is part of this week’s discussion questions."], "subhead": "Identity Theory vs. Social Identity Theory", "variant": "rows", "rowMark": "index"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "quote": "Fans act differently because the identity standard is specific to the individual and varies to the extent that the individual wants it to vary relative to the perceived situational meanings.", "bullets": [], "variant": "quote-solo"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["Attitudes motivate behavior and they are comprised of both valence and intensity.", "Attitude can be defined as all classes of evaluative responding, cognitive, affective, or behavior.", "Valence of the attitude refers to the positive or negative evaluation of the entity.", "The intensity of attitude refers to the degree of the feeling."], "subhead": "Attitude Theory", "variant": "rows", "rowMark": "index"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "images": [{"src": "assets/p26-attitude-valence.png", "w": 980, "h": 175, "fit": "contain", "still": true}], "subhead": "Attitude Theory", "media": "figure", "plate": "card"}, {"type": "media", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "images": [{"src": "assets/p27-attitude-structure.png", "w": 646, "h": 247, "fit": "contain", "still": true}], "subhead": "Attitude Theory", "media": "figure", "plate": "card"}, {"type": "media", "layout": "split", "kicker": "Theories", "title": "How to Study Consumer Behavior cont.", "bullets": ["-Subjective norm: cultural thing, socially acceptable, perceived social pressure", "-Perceived behavioral control: perceived ease or difficulty of performing the behavior and its is assumed to reflect past experience as well as anticipated impediments and obstacles."], "images": [{"src": "assets/p28-planned-behavior.png", "w": 669, "h": 325, "fit": "contain", "still": true, "caption": "Azjen (1991)"}], "subhead": "Theory of Planned Behavior (Azjen, 1991)", "variant": "rows", "rowMark": "rule", "media": "frame", "plate": "card"}, {"type": "closing", "title": "Questions???", "variant": "closing", "closingMark": "?"}]</script>
 <script>
 (function(){
   const SLIDES = JSON.parse(document.getElementById('slide-data').textContent);
@@ -497,14 +1382,14 @@ table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
 
   const SECTIONS = [
     {from:0,to:0,label:'Opening'},
-    {from:1,to:4,label:'Defining Sport Consumer Behavior'},
-    {from:5,to:13,label:'Who Are Sport Consumers?'},
-    {from:14,to:16,label:'Understanding Consumer Behavior'},
-    {from:17,to:17,label:'Models & Theories'},
-    {from:18,to:22,label:'Identity & Social Identity Theory'},
-    {from:23,to:25,label:'Attitude Theory'},
-    {from:26,to:26,label:'Theory of Planned Behavior'},
-    {from:27,to:27,label:'Closing'}
+    {from:1,to:5,label:'Defining Sport Consumer Behavior'},
+    {from:6,to:13,label:'Who Are Sport Consumers?'},
+    {from:14,to:15,label:'Understanding Consumer Behavior'},
+    {from:16,to:17,label:'Models & Theories'},
+    {from:18,to:23,label:'Identity & Social Identity Theory'},
+    {from:24,to:26,label:'Attitude Theory'},
+    {from:27,to:27,label:'Theory of Planned Behavior'},
+    {from:28,to:28,label:'Closing'}
   ];
   function sectionFor(i){ for(const s of SECTIONS){ if(i>=s.from && i<=s.to) return s.label; } return ''; }
 
@@ -1006,6 +1891,578 @@ table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
   if(m){ const n = parseInt(m[1],10)-1; if(n>=0 && n<SLIDES.length) startIdx = n; }
   activate(startIdx);
 })();
+</script>
+<script>/* ==== components.js ==== */
+/* SPM381 Week 6 — "Matchday Editorial" layout components.
+ * Post-render enhancer: runs AFTER build() has rendered every <section.slide>.
+ * Reads optional presentation fields (variant / media / plate / rowMark / heroKicker /
+ * heroNum / closingMark) from each slide object in #slide-data, or from
+ * window.DECK_LAYOUTS (a {index: fields} map) if the integrator prefers not to touch the JSON.
+ * It only MOVES existing text nodes into new wrappers; it never retypes, deletes or reorders
+ * content. Added nodes are decorative (aria-hidden) chrome: numerals, rules, plates, "vs" disc.
+ * Load with: <script src="components.js"><\/script> placed after the deck's main script.
+ */
+(function(){
+  'use strict';
+  var dataEl = document.getElementById('slide-data');
+  if(!dataEl) return;
+  var SLIDES;
+  try{ SLIDES = JSON.parse(dataEl.textContent); }catch(e){ return; }
+  var EXTRA = window.DECK_LAYOUTS || {};
+
+  function mk(tag, cls, text){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text != null) e.textContent = text;
+    return e;
+  }
+  function deco(tag, cls, text){ var e = mk(tag, cls, text); e.setAttribute('aria-hidden','true'); return e; }
+  function reveal(node, delay){ node.classList.add('reveal-item'); node.style.transitionDelay = (delay||0)+'ms'; return node; }
+  function pad(n){ return (n<10?'0':'')+n; }
+  /* move every child of `from` into a new wrapper, keep wrapper inside `from` */
+  function wrapChildren(from, cls){
+    var w = mk('span', cls);
+    while(from.firstChild) w.appendChild(from.firstChild);
+    from.appendChild(w);
+    return w;
+  }
+  function fieldsFor(i){
+    var s = SLIDES[i] || {}, x = EXTRA[i] || EXTRA[String(i)] || {}, out = {};
+    ['variant','media','plate','rowMark','heroKicker','heroNum','closingMark'].forEach(function(k){
+      if(x[k] != null) out[k] = x[k]; else if(s[k] != null) out[k] = s[k];
+    });
+    return out;
+  }
+
+  /* ---------- T1 hero ---------- */
+  function hero(sec, inner, f){
+    ['textAlign','alignItems','justifyContent'].forEach(function(p){ inner.style[p]=''; });
+    inner.classList.add('cmp-hero');
+    var h = inner.querySelector('h1.title-hero');
+    if(f.heroKicker && !inner.querySelector('.kicker')){
+      var k = deco('p','kicker cmp-hero-kicker', f.heroKicker);
+      reveal(k, 0);
+      inner.insertBefore(k, inner.firstChild);
+    }
+    if(h){
+      var rule = deco('div','cmp-hero-rule'); reveal(rule, 420);
+      h.after(rule);
+    }
+    var sub = inner.querySelector('.subtitle');
+    if(sub) sub.style.margin = '';
+    if(f.heroNum){ sec.appendChild(deco('div','cmp-hero-num', f.heroNum)); }
+  }
+
+  /* ---------- T3 numbered rows / T3 statement ---------- */
+  function rows(inner, f){
+    var ul = inner.querySelector('ul.bullets');
+    if(!ul) return;
+    ul.classList.add('cmp-rows', f.rowMark === 'rule' ? 'cmp-rows--rule' : 'cmp-rows--index');
+    Array.prototype.forEach.call(ul.children, function(li, i){
+      wrapChildren(li, 'cmp-row-txt');
+      var mark = deco('span','cmp-row-mark', f.rowMark === 'rule' ? '' : pad(i+1));
+      if(li.classList.contains('q')) mark.textContent = '?';
+      li.insertBefore(mark, li.firstChild);
+    });
+  }
+  function statement(inner){
+    var ul = inner.querySelector('ul.bullets');
+    if(ul) ul.classList.add('cmp-statement');
+  }
+
+  /* ---------- T2 quote-stack / quote-solo ---------- */
+  function quoteStack(inner, solo){
+    var pq = inner.querySelector('.pullquote');
+    if(!pq) return;
+    pq.classList.add('cmp-quote');
+    var bar = deco('span','cmp-quote-bar'); reveal(bar, 160);
+    pq.insertBefore(bar, pq.firstChild);
+    var ul = pq.parentNode.querySelector(':scope > ul.bullets');
+    if(ul && !solo){
+      var hr = deco('div','cmp-quote-rule'); reveal(hr, 260);
+      pq.after(hr);
+      ul.classList.add('cmp-after-quote');
+    }
+    if(solo) inner.classList.add('cmp-quote-solo');
+  }
+
+  /* ---------- T4 split frame ---------- */
+  function frame(inner, f){
+    var grid = inner.querySelector('.split-grid');
+    if(!grid) return;
+    grid.classList.add('cmp-split');
+    var photo = grid.querySelector('.split-media .photo');
+    if(!photo) return;
+    var holder = photo.parentNode; /* outer div from buildPhoto */
+    holder.classList.add('cmp-frame');
+    if(f.plate === 'card') holder.classList.add('cmp-frame--card');
+    var box = mk('div','cmp-frame-box');
+    photo.before(box); box.appendChild(photo);          /* move, not copy */
+    box.appendChild(deco('span','cmp-frame-offset'));
+    var call = photo.querySelector('.photo-callout');
+    if(call){ call.classList.add('cmp-pop'); reveal(call, 900); }
+  }
+
+  /* ---------- T5 figure plate ---------- */
+  function figure(inner, f){
+    var body = inner.querySelector('.stack-body');
+    if(!body) return;
+    var photo = body.querySelector('.photo');
+    if(!photo) return;
+    var holder = photo.parentNode;
+    holder.classList.add('cmp-plate', f.plate === 'card' ? 'cmp-plate--card' : 'cmp-plate--flat');
+    holder.insertBefore(deco('span','cmp-fig','Fig.'), holder.firstChild);
+    body.classList.add('cmp-figure-body');
+    if(!body.querySelector('ul,.pullquote')) body.classList.add('cmp-figure-only');
+  }
+
+  /* ---------- T6 versus ---------- */
+  function versus(sec, inner){
+    var grid = inner.querySelector('.compare-grid');
+    if(!grid) return;
+    grid.classList.add('cmp-versus');
+    var panels = grid.querySelectorAll(':scope > .compare-panel');
+    if(panels.length === 2){
+      panels[0].classList.add('cmp-from-left');
+      panels[1].classList.add('cmp-from-right');
+      var vs = deco('div','cmp-vs','vs'); reveal(vs, 520);
+      panels[0].after(vs);
+    }
+    var badge = inner.querySelector(':scope > .badge-corner');
+    if(badge){ badge.classList.add('cmp-badge-late'); badge.style.transitionDelay = '900ms'; }
+  }
+
+  /* ---------- T7 agenda ---------- */
+  function agenda(inner){
+    var list = inner.querySelector('.agenda-list');
+    if(!list) return;
+    list.classList.add('cmp-agenda');
+    Array.prototype.forEach.call(list.querySelectorAll('.agenda-row'), function(row, i){
+      var hair = deco('span','cmp-hair'); reveal(hair, 140 + i*140);
+      row.insertBefore(hair, row.firstChild);
+      var d = row.querySelector('.agenda-detail'); if(d) d.classList.add('cmp-pill');
+    });
+    var src = inner.querySelector(':scope > .source'); if(src) src.classList.add('cmp-agenda-source');
+  }
+
+  /* ---------- T8 blank ---------- */
+  function blankEdge(inner){
+    var card = inner.querySelector('.blank-card');
+    if(!card) return;
+    card.classList.add('cmp-blank');
+    Array.prototype.forEach.call(card.querySelectorAll('.blank-fill'), function(fill, i){
+      wrapChildren(fill, 'cmp-fill-txt');
+      fill.style.setProperty('--cmp-fill-delay', (700 + i*400) + 'ms');
+    });
+  }
+
+  /* ---------- T9 closing ---------- */
+  function closing(sec, inner, f){
+    inner.classList.add('cmp-closing');
+    if(f.closingMark) sec.appendChild(deco('div','cmp-closing-mark', f.closingMark));
+  }
+
+  function enhance(sec){
+    if(sec.dataset.cmp) return;
+    var i = +sec.dataset.index, f = fieldsFor(i);
+    if(!f.variant && !f.media) return;
+    var inner = sec.querySelector('.slide-inner');
+    if(!inner) return;
+    sec.dataset.cmp = '1';
+    if(f.variant) sec.classList.add('v-' + f.variant);
+    switch(f.variant){
+      case 'hero': hero(sec, inner, f); break;
+      case 'rows': rows(inner, f); break;
+      case 'statement': statement(inner); break;
+      case 'quote-stack': quoteStack(inner, false); break;
+      case 'quote-solo': quoteStack(inner, true); break;
+      case 'versus': versus(sec, inner); break;
+      case 'agenda-xl': agenda(inner); break;
+      case 'blank-edge': blankEdge(inner); break;
+      case 'closing': closing(sec, inner, f); break;
+    }
+    if(f.media === 'frame') frame(inner, f);
+    if(f.media === 'figure') figure(inner, f);
+    /* slide already active (initial load): show the new reveal items too */
+    if(sec.classList.contains('active')){
+      requestAnimationFrame(function(){
+        sec.querySelectorAll('.reveal-item').forEach(function(r){ r.classList.add('in'); });
+      });
+    }
+  }
+
+  function run(){ document.querySelectorAll('#deck > section.slide').forEach(enhance); }
+  run();
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  window.DeckComponents = { run: run };
+})();
+
+</script>
+<script>/* ==== motion.js ==== */
+/* SPM381 Week 6 — "Matchday Editorial" motion layer (deck-motion-designer).
+   Load AFTER the engine script. Never changes text content: titles are only
+   wrapped in mask spans (textContent stays identical). Hooks:
+   - MutationObserver on .slide class changes (active added/removed)
+   - #sectionLabel text (read in the same tick) to decide wipe vs cross-fade
+   - #counter / #pageNum / #sectionLabel / #progressFill get a .m-tick pulse */
+(function(){
+  'use strict';
+  var deck = document.getElementById('deck');
+  if(!deck) return;
+  var root = document.documentElement;
+  var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function reduced(){ return (mq && mq.matches) || root.classList.contains('reduced'); }
+
+  /* ---------- helpers ---------- */
+  function setMd(el, ms){ if(el) el.style.setProperty('--md', Math.round(ms)+'ms'); }
+  function q(sel, ctx){ return Array.prototype.slice.call((ctx||document).querySelectorAll(sel)); }
+
+  // Wrap an element's child nodes in mask spans without changing textContent.
+  function maskTitle(h){
+    if(h.classList.contains('m-split')) return;
+    var mask = document.createElement('span'); mask.className = 'm-mask';
+    var rise = document.createElement('span'); rise.className = 'm-rise';
+    while(h.firstChild) rise.appendChild(h.firstChild);
+    mask.appendChild(rise); h.appendChild(mask);
+    h.classList.add('m-split');
+  }
+  function maskWords(h, startMs, stepMs){
+    if(h.classList.contains('m-words')) return 0;
+    var text = h.textContent;
+    if(h.children.length) return 0; // only plain-text titles
+    var parts = text.split(/(\s+)/), n = 0;
+    h.textContent = '';
+    parts.forEach(function(p){
+      if(!p) return;
+      if(/^\s+$/.test(p)){ h.appendChild(document.createTextNode(p)); return; }
+      var w = document.createElement('span'); w.className = 'm-w';
+      var wi = document.createElement('span'); wi.className = 'm-wi';
+      wi.textContent = p;
+      wi.style.setProperty('--mw', (startMs + n*stepMs)+'ms');
+      w.appendChild(wi); h.appendChild(w); n++;
+    });
+    if(h.textContent !== text){ h.textContent = text; return 0; } // safety: never alter text
+    h.classList.add('m-words');
+    return n;
+  }
+  function wrapFill(f){
+    if(f.querySelector('.m-fill-text')) return;
+    var s = document.createElement('span'); s.className = 'm-fill-text';
+    while(f.firstChild) s.appendChild(f.firstChild);
+    f.appendChild(s);
+  }
+
+  /* ---------- per-slide choreography (delays in ms, before --m-base) ---------- */
+  function treatment(s){
+    if(s.querySelector('h1.title-hero') && s.querySelector('.closing-wrap')) return 'closing';
+    if(s.querySelector('h1.title-hero')) return 'hero';
+    if(s.querySelector('.compare-grid')) return 'compare';
+    if(s.querySelector('.agenda-list')) return 'agenda';
+    if(s.querySelector('.blank-card')) return 'blank';
+    if(s.querySelector('.split-grid')) return 'split';
+    if(s.querySelector('.pullquote')) return 'quote';
+    if(s.querySelector('.photo')) return 'figure';
+    return 'bullets';
+  }
+
+  function choreograph(s){
+    if(s.dataset.mReady) return;
+    s.dataset.mReady = '1';
+    var t = treatment(s);
+    s.setAttribute('data-m', t);
+    var allowMask = !reduced();
+
+    if(t === 'hero'){
+      var h = s.querySelector('h1.title-hero');
+      var n = allowMask ? maskWords(h, 120, 90) : 0;
+      h.style.setProperty('--mr', (120 + n*90 + 150)+'ms');
+      setMd(s.querySelector('.kicker'), 0);
+      setMd(s.querySelector('.subtitle'), 260 + n*90);
+      setMd(s.querySelector('.meta-badge'), 380 + n*90);
+      return;
+    }
+    if(t === 'closing'){
+      var hc = s.querySelector('h1.title-hero');
+      if(allowMask) maskWords(hc, 80, 90);
+      var rules = q('.rule', s);
+      rules.forEach(function(r){ setMd(r, 300); });
+      setMd(s.querySelector('.subtitle'), 420);
+      return;
+    }
+
+    // shared header: kicker -> title (+rule) -> subhead
+    setMd(s.querySelector('.kicker'), 0);
+    var title = s.querySelector('h1.title-slide');
+    if(title){ if(allowMask) maskTitle(title); setMd(title, 60); }
+    var sub = s.querySelector('.subhead'); setMd(sub, 180);
+
+    var cursor = 300;
+    var pq = s.querySelector('.pullquote');
+    if(pq){ setMd(pq, cursor - 40); cursor += 140; }
+
+    q('ul.bullets', s).forEach(function(ul){
+      q(':scope > li', ul).forEach(function(li, i){ setMd(li, cursor + Math.min(i, 6)*80); });
+    });
+
+    if(t === 'compare'){
+      q('.compare-panel', s).forEach(function(p, i){ setMd(p, 280 + i*140); });
+    }
+    if(t === 'agenda'){
+      q('.agenda-row', s).forEach(function(r, i){ setMd(r, 200 + i*140 + 150); });
+      setMd(s.querySelector('.source'), 900);
+      return;
+    }
+    if(t === 'blank'){
+      setMd(s.querySelector('.blank-card'), 160);
+      q('.blank-fill', s).forEach(function(f, i){ wrapFill(f); setMd(f, 450 + i*280); });
+      setMd(s.querySelector('.blank-hint'), 1000);
+      return;
+    }
+    q('.photo', s).forEach(function(p){ setMd(p, t === 'split' ? 260 : (s.querySelector('ul.bullets li, .pullquote') ? 360 : 200)); });
+    q('.source', s).forEach(function(x){ setMd(x, 800); });
+  }
+
+  /* ---------- wipe panel ---------- */
+  var wipe = document.querySelector('.wipe');
+  if(!wipe){ wipe = document.createElement('div'); wipe.className = 'wipe'; wipe.setAttribute('aria-hidden','true'); document.body.appendChild(wipe); }
+  var wipeTimer = 0;
+  function runWipe(){
+    wipe.classList.remove('go'); void wipe.offsetWidth; wipe.classList.add('go');
+    clearTimeout(wipeTimer);
+    wipeTimer = setTimeout(function(){ wipe.classList.remove('go'); }, 700);
+  }
+
+  /* ---------- chrome ticks ---------- */
+  function tick(el){ if(!el) return; el.classList.remove('m-tick'); void el.offsetWidth; el.classList.add('m-tick'); }
+  var counter = document.getElementById('counter');
+  var pageNum = document.getElementById('pageNum');
+  var sectionLabel = document.getElementById('sectionLabel');
+  var progress = document.getElementById('progressFill');
+
+  /* ---------- transitions ---------- */
+  var slides = q('.slide', deck);
+  slides.forEach(choreograph);
+  var lastSection = sectionLabel ? sectionLabel.textContent : '';
+  var leaveTimers = new WeakMap();
+
+  function onChange(entering, leaving){
+    var sec = sectionLabel ? sectionLabel.textContent : '';
+    var sectionChange = sec !== lastSection;
+    var doWipe = sectionChange && !reduced() && leaving.length > 0;
+    if(sectionChange) tick(sectionLabel);
+    lastSection = sec;
+
+    leaving.forEach(function(s){
+      clearTimeout(leaveTimers.get(s));
+      s.classList.add('m-leaving');
+      s.classList.toggle('m-out-x', doWipe);
+      s.classList.remove('m-wipe-in');
+      leaveTimers.set(s, setTimeout(function(){ s.classList.remove('m-leaving','m-out-x'); }, 460));
+    });
+    if(entering){
+      clearTimeout(leaveTimers.get(entering));
+      entering.classList.remove('m-leaving','m-out-x');
+      choreograph(entering);
+      entering.classList.toggle('m-wipe-in', doWipe);
+      if(doWipe) runWipe();
+      tick(counter); tick(pageNum); tick(progress);
+    }
+  }
+
+  var mo = new MutationObserver(function(recs){
+    var entering = null, leaving = [];
+    recs.forEach(function(r){
+      var el = r.target;
+      if(!el.classList || !el.classList.contains('slide')) return;
+      var was = /(^|\s)active(\s|$)/.test(r.oldValue || '');
+      var is = el.classList.contains('active');
+      if(is && !was) entering = el;
+      else if(was && !is && leaving.indexOf(el) < 0) leaving.push(el);
+    });
+    if(entering || leaving.length) onChange(entering, leaving);
+  });
+  mo.observe(deck, {subtree:true, attributes:true, attributeFilter:['class'], attributeOldValue:true});
+
+  root.classList.add('m-on');
+})();
+
+</script>
+<script>/* ==== background.js ==== */
+/* SPM381 Week 6 — ambient background layer (deck-background-artist).
+   Injects .bga under the deck and cross-fades a per-section tint whenever
+   the active slide changes. Reads only the DOM; never touches slide content.
+   Section is taken from #sectionLabel text (so it stays right after the
+   integrator fixes the SECTIONS offset); falls back to slide index. */
+(function(){
+  'use strict';
+  var TINTS = ['rust','sage','amber','ink'];
+  var SECTION_TINT = {
+    'Opening':'rust',
+    'Defining Sport Consumer Behavior':'rust',
+    'Who Are Sport Consumers?':'sage',
+    'Understanding Consumer Behavior':'amber',
+    'Models & Theories':'ink',
+    'Identity & Social Identity Theory':'rust',
+    'Attitude Theory':'sage',
+    'Theory of Planned Behavior':'amber',
+    'Closing':'rust'
+  };
+  var LINES_SVG =
+    '<svg viewBox="0 0 1400 460" preserveAspectRatio="none" aria-hidden="true">' +
+      '<line x1="0" y1="430" x2="1400" y2="430"/>' +
+      '<line x1="0" y1="380" x2="1400" y2="380"/>' +
+      '<line x1="700" y1="300" x2="700" y2="460"/>' +
+      '<circle cx="700" cy="460" r="120"/>' +
+      '<path d="M120 460 L120 330 L330 330 L330 460"/>' +
+      '<path d="M1070 460 L1070 330 L1280 330 L1280 460"/>' +
+      '<line class="accent" x1="0" y1="405" x2="1400" y2="405"/>' +
+    '</svg>';
+
+  function hash(s){ var h=0; for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; } return Math.abs(h); }
+
+  function init(){
+    if(document.querySelector('.bga')) return;
+    var root = document.createElement('div');
+    root.className = 'bga';
+    root.setAttribute('aria-hidden','true');
+    var html = '<div class="bga-field f1"></div><div class="bga-field f2"></div>';
+    TINTS.forEach(function(t){ html += '<div class="bga-tint t-'+t+'"></div>'; });
+    html += '<div class="bga-lines">'+LINES_SVG+'</div><div class="bga-rule"></div>';
+    root.innerHTML = html;
+    document.body.insertBefore(root, document.body.firstChild);
+
+    var deck = document.getElementById('deck') || document.querySelector('.deck');
+    if(!deck) return;
+    var label = document.getElementById('sectionLabel');
+    var tintEls = {};
+    TINTS.forEach(function(t){ tintEls[t] = root.querySelector('.t-'+t); });
+    var lastKey = null;
+
+    function update(){
+      var slides = deck.querySelectorAll('.slide');
+      var active = deck.querySelector('.slide.active');
+      if(!active) return;
+      var idx = Array.prototype.indexOf.call(slides, active);
+      var sec = label ? (label.textContent || '').trim() : '';
+      var mode = (idx === 0 || idx === slides.length-1) ? 'hero' : 'body';
+      var tint = SECTION_TINT[sec] || (mode === 'hero' ? 'rust' : TINTS[(sec ? hash(sec) : Math.floor(idx/5)) % TINTS.length]);
+      var key = tint+'|'+mode;
+      if(key === lastKey) return;
+      lastKey = key;
+      root.setAttribute('data-mode', mode);
+      root.setAttribute('data-tint', tint);
+      TINTS.forEach(function(t){ tintEls[t].classList.toggle('on', t === tint); });
+    }
+
+    var queued = false;
+    function schedule(){ if(queued) return; queued = true; requestAnimationFrame(function(){ queued = false; update(); }); }
+    new MutationObserver(schedule).observe(deck, {subtree:true, attributes:true, attributeFilter:['class']});
+    if(label) new MutationObserver(schedule).observe(label, {childList:true, characterData:true, subtree:true});
+    update();
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+<script>/* ==== svg-inline.js ==== */
+/* svg-inline.js — deck-svg-animator output for SPM381 Week 6.
+ * Overlays each <img src=".../pNN-graphic.svg"> in the deck with an inline, animated copy
+ * (from design/svg/*.svg, embedded below so it also works over file:// with no fetch),
+ * and toggles .play on each SVG when its .slide becomes .active (removed on exit so it replays).
+ * Load AFTER the deck's main script (slides must already be built). No dependencies.
+ * End state is identical to the original artwork; without .play nothing is hidden.
+ */
+(function(){
+  'use strict';
+  var SVGS = {
+ "p04": "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"anim-p04\" viewBox=\"107.2 -59.2 5560.7 3948.4\" width=\"5561\" height=\"3948\" role=\"img\" aria-label=\"Factors affecting sport consumption: Thoughts, Feelings and Other people each point to Sport Consumption\">\n<style>\n.anim-p04{text-rendering:auto;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto;letter-spacing:normal;word-spacing:normal;font-kerning:auto;font-variant:normal;font-feature-settings:normal;}\n.anim-p04 .a-pop,.anim-p04 .a-grow-r,.anim-p04 .a-lbl{transform-box:fill-box;}\n.anim-p04 .a-pop{transform-origin:50% 50%;}\n.anim-p04 .a-grow-r{transform-origin:100% 50%;}\n.anim-p04.play .a-pop{animation:p04-pop 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p04.play .a-grow-r{animation:p04-grow 650ms cubic-bezier(.65,0,.35,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p04.play .a-lbl{animation:p04-lbl 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n@keyframes p04-pop{from{opacity:0;transform:scale(.86);}to{opacity:1;transform:scale(1);}}\n@keyframes p04-grow{from{opacity:0;transform:scaleX(0);}30%{opacity:1;}to{opacity:1;transform:scaleX(1);}}\n@keyframes p04-lbl{from{opacity:0;transform:translateY(60px);}to{opacity:1;transform:translateY(0);}}\n@keyframes p04-fade{from{opacity:0;}to{opacity:1;}}\n@media (prefers-reduced-motion: reduce){\n.anim-p04.play .a-pop,.anim-p04.play .a-grow-r,.anim-p04.play .a-lbl{animation:p04-fade 150ms linear backwards;animation-delay:0ms;}\n}\n</style>\n<defs><filter id=\"p04-sh\" x=\"-10%\" y=\"-10%\" width=\"120%\" height=\"130%\"><feDropShadow dx=\"0\" dy=\"10\" stdDeviation=\"12\" flood-color=\"#201c16\" flood-opacity=\"0.18\"/></filter></defs>\n<g transform=\"rotate(215.0 1549.1 2046.5)\"><g class=\"a-grow-r\" style=\"--d:520ms\"><path d=\"M842.8,2046.5 L1083.7,1805.5 L1083.7,1901.9 L2255.4,1901.9 L2255.4,2191.1 L1083.7,2191.1 L1083.7,2287.5 Z\" fill=\"#e9cdc8\"/></g></g>\n<g transform=\"rotate(270.0 2887.6 1349.7)\"><g class=\"a-grow-r\" style=\"--d:600ms\"><path d=\"M2181.3,1349.7 L2422.3,1108.7 L2422.3,1205.1 L3593.9,1205.1 L3593.9,1494.3 L2422.3,1494.3 L2422.3,1590.7 Z\" fill=\"#e9cdc8\"/></g></g>\n<g transform=\"rotate(325.0 4226.1 2046.5)\"><g class=\"a-grow-r\" style=\"--d:680ms\"><path d=\"M3519.8,2046.5 L3760.8,1805.5 L3760.8,1901.9 L4932.4,1901.9 L4932.4,2191.1 L3760.8,2191.1 L3760.8,2287.5 Z\" fill=\"#e9cdc8\"/></g></g>\n<g class=\"a-pop\" style=\"--d:820ms\"><circle cx=\"2887.6\" cy=\"2983.7\" r=\"845.5\" fill=\"#a3392f\" filter=\"url(#p04-sh)\"/></g>\n<g class=\"a-lbl\" style=\"--d:960ms\"><text font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"215\" font-weight=\"700\" fill=\"#ffffff\" text-anchor=\"middle\" dominant-baseline=\"central\">\n<tspan x=\"2887.6\" y=\"2863.3\">Sport</tspan>\n<tspan x=\"2887.6\" y=\"3104.1\">Consumption</tspan>\n</text></g>\n<g class=\"a-pop\" style=\"--d:0ms\"><rect x=\"167.2\" y=\"998.8\" width=\"1606.5\" height=\"1285.2\" rx=\"128.5\" fill=\"#201c16\" filter=\"url(#p04-sh)\"/></g>\n<g class=\"a-lbl\" style=\"--d:140ms\"><text font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"270\" font-weight=\"400\" fill=\"#ffffff\" text-anchor=\"middle\" dominant-baseline=\"central\">\n<tspan x=\"970.5\" y=\"1641.4\">Thoughts</tspan>\n</text></g>\n<g class=\"a-pop\" style=\"--d:140ms\"><rect x=\"2084.3\" y=\"0.8\" width=\"1606.5\" height=\"1285.2\" rx=\"128.5\" fill=\"#201c16\" filter=\"url(#p04-sh)\"/></g>\n<g class=\"a-lbl\" style=\"--d:280ms\"><text font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"270\" font-weight=\"400\" fill=\"#ffffff\" text-anchor=\"middle\" dominant-baseline=\"central\">\n<tspan x=\"2887.6\" y=\"643.4\">Feelings</tspan>\n</text></g>\n<g class=\"a-pop\" style=\"--d:280ms\"><rect x=\"4001.4\" y=\"998.8\" width=\"1606.5\" height=\"1285.2\" rx=\"128.5\" fill=\"#201c16\" filter=\"url(#p04-sh)\"/></g>\n<g class=\"a-lbl\" style=\"--d:420ms\"><text font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"270\" font-weight=\"400\" fill=\"#ffffff\" text-anchor=\"middle\" dominant-baseline=\"central\">\n<tspan x=\"4804.7\" y=\"1490.2\">Other</tspan>\n<tspan x=\"4804.7\" y=\"1792.6\">people</tspan>\n</text></g>\n</svg>\n",
+ "p07": "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"anim-p07\" viewBox=\"204.0 298.2 862.3 329.2\" width=\"862\" height=\"329\" role=\"img\" aria-label=\"Not all consumers are equally passionate; neither are they all resistant to change; some attend regularly, others only on special occasions. Arrow pointing to: Challenges of narrowing a set of homogeneous traits.\">\n<style>\n.anim-p07{text-rendering:auto;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto;letter-spacing:normal;word-spacing:normal;font-kerning:auto;font-variant:normal;font-feature-settings:normal;}\n.anim-p07 .a-pop,.anim-p07 .a-card,.anim-p07 .a-grow-l,.anim-p07 .a-row,.anim-p07 .a-lbl{transform-box:fill-box;}\n.anim-p07 .a-pop,.anim-p07 .a-card{transform-origin:50% 50%;}\n.anim-p07 .a-grow-l{transform-origin:0% 50%;}\n.anim-p07.play .a-pop{animation:p07-pop 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p07.play .a-card{animation:p07-card 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p07.play .a-row{animation:p07-row 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p07.play .a-grow-l{animation:p07-grow 650ms cubic-bezier(.65,0,.35,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p07.play .a-lbl{animation:p07-lbl 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n@keyframes p07-pop{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}\n@keyframes p07-card{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}\n@keyframes p07-row{from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:translateX(0);}}\n@keyframes p07-grow{from{opacity:0;transform:scaleX(0);}30%{opacity:1;}to{opacity:1;transform:scaleX(1);}}\n@keyframes p07-lbl{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}\n@keyframes p07-fade{from{opacity:0;}to{opacity:1;}}\n@media (prefers-reduced-motion: reduce){\n.anim-p07.play .a-pop,.anim-p07.play .a-card,.anim-p07.play .a-row,.anim-p07.play .a-grow-l,.anim-p07.play .a-lbl{animation:p07-fade 150ms linear backwards;animation-delay:0ms;}\n}\n</style>\n<defs><filter id=\"p07-sh\" x=\"-10%\" y=\"-20%\" width=\"120%\" height=\"150%\"><feDropShadow dx=\"0\" dy=\"3\" stdDeviation=\"3\" flood-color=\"#201c16\" flood-opacity=\"0.22\"/></filter></defs>\n<g class=\"a-pop\" style=\"--d:0ms\"><rect x=\"258.1\" y=\"330.5\" width=\"13\" height=\"13\" fill=\"#a3392f\"/>\n<rect x=\"256.1\" y=\"328.5\" width=\"13\" height=\"13\" fill=\"#ffffff\" stroke=\"#a3392f\" stroke-width=\"2\"/></g>\n<g class=\"a-row\" style=\"--d:80ms\"><text x=\"285.1\" y=\"335.0\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"24.0\" font-weight=\"700\" fill=\"#201c16\" dominant-baseline=\"middle\">Not all consumers are equally passionate.</text></g>\n<g class=\"a-pop\" style=\"--d:140ms\"><rect x=\"258.1\" y=\"362.5\" width=\"13\" height=\"13\" fill=\"#a3392f\"/>\n<rect x=\"256.1\" y=\"360.5\" width=\"13\" height=\"13\" fill=\"#ffffff\" stroke=\"#a3392f\" stroke-width=\"2\"/></g>\n<g class=\"a-row\" style=\"--d:220ms\"><text x=\"285.1\" y=\"367.0\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"24.0\" font-weight=\"700\" fill=\"#201c16\" dominant-baseline=\"middle\">Neither are they all resistant to change (i.e.,</text>\n<text x=\"285.1\" y=\"399.0\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"24.0\" font-weight=\"700\" fill=\"#201c16\" dominant-baseline=\"middle\">loyalty) that threatens team values and practices.</text></g>\n<g class=\"a-pop\" style=\"--d:280ms\"><rect x=\"258.1\" y=\"426.5\" width=\"13\" height=\"13\" fill=\"#a3392f\"/>\n<rect x=\"256.1\" y=\"424.5\" width=\"13\" height=\"13\" fill=\"#ffffff\" stroke=\"#a3392f\" stroke-width=\"2\"/></g>\n<g class=\"a-row\" style=\"--d:360ms\"><text x=\"285.1\" y=\"431.0\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"24.0\" font-weight=\"700\" fill=\"#201c16\" dominant-baseline=\"middle\">Some attend games on a regular basis, while</text>\n<text x=\"285.1\" y=\"463.0\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"24.0\" font-weight=\"700\" fill=\"#201c16\" dominant-baseline=\"middle\">others attend only on special occasions.</text></g>\n<g class=\"a-grow-l\" style=\"--d:620ms\"><path d=\"M220.0,567.3 L377.2,567.3 L377.2,552.6 L406.6,582.0 L377.2,611.4 L377.2,596.7 L220.0,596.7 Z\" fill=\"#a3392f\" filter=\"url(#p07-sh)\"/></g>\n<g class=\"a-card\" style=\"--d:860ms\"><rect x=\"429.5\" y=\"538.3\" width=\"620.8\" height=\"73.1\" fill=\"#201c16\" filter=\"url(#p07-sh)\"/></g>\n<g class=\"a-lbl\" style=\"--d:1000ms\"><text font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"24.0\" font-weight=\"700\" fill=\"#ffffff\" text-anchor=\"middle\" dominant-baseline=\"middle\"><tspan x=\"739.9\" y=\"559.4\">Challenges of narrowing a set of</tspan><tspan x=\"739.9\" y=\"591.4\">homogeneous traits.</tspan></text></g>\n</svg>\n",
+ "p11": "<svg class=\"anim-p11\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-160 0 9351 4744\" role=\"img\" aria-label=\"Dualistic Fan Typologies: Type 1 fans versus Type 2 fans\">\n<style>\n.anim-p11{text-rendering:auto;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto;letter-spacing:normal;word-spacing:normal;font-kerning:auto;font-variant:normal;font-feature-settings:normal;}\n.anim-p11 .a-fade,.anim-p11 .a-cardL,.anim-p11 .a-cardR,.anim-p11 .a-row,.anim-p11 .a-lbl{transform-box:fill-box;transform-origin:50% 50%;}\n.anim-p11.play .a-fade{animation:p11-lbl 800ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p11.play .a-draw{stroke-dasharray:1;animation:p11-draw 650ms cubic-bezier(.65,0,.35,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p11.play .a-cardL{animation:p11-cardL 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p11.play .a-cardR{animation:p11-cardR 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p11.play .a-row{animation:p11-row 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n.anim-p11.play .a-lbl{animation:p11-lbl 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}\n@keyframes p11-draw{from{stroke-dashoffset:1;}to{stroke-dashoffset:0;}}\n@keyframes p11-cardL{from{opacity:0;transform:translateX(-270px);}to{opacity:1;transform:translateX(0);}}\n@keyframes p11-cardR{from{opacity:0;transform:translateX(270px);}to{opacity:1;transform:translateX(0);}}\n@keyframes p11-row{from{opacity:0;transform:translateX(-110px);}to{opacity:1;transform:translateX(0);}}\n@keyframes p11-lbl{from{opacity:0;transform:translateY(110px);}to{opacity:1;transform:translateY(0);}}\n@keyframes p11-fade{from{opacity:0;}to{opacity:1;}}\n@media (prefers-reduced-motion: reduce){\n.anim-p11.play .a-fade,.anim-p11.play .a-cardL,.anim-p11.play .a-cardR,.anim-p11.play .a-row,.anim-p11.play .a-lbl{animation:p11-fade 150ms linear backwards;animation-delay:0ms;}\n.anim-p11.play .a-draw{animation:none;stroke-dasharray:none;}\n}\n</style>\n<defs><linearGradient id=\"p11-g1\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#8a2f27\"/><stop offset=\"1\" stop-color=\"#a3392f\"/></linearGradient>\n<linearGradient id=\"p11-g2\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#14110d\"/><stop offset=\"1\" stop-color=\"#3a332a\"/></linearGradient></defs>\n<g class=\"a-fade\" style=\"--d:0ms\"><text x=\"4516\" y=\"290\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"305\" fill=\"#201c16\"><tspan fill=\"#a3392f\">❖</tspan> Dualistic Fan Typologies</text></g>\n<line class=\"a-draw\" style=\"--d:150ms\" pathLength=\"1\" x1=\"3266\" y1=\"490\" x2=\"5766\" y2=\"490\" stroke=\"#a3392f\" stroke-width=\"10\" opacity=\".35\"/>\n<g class=\"a-cardL\" style=\"--d:280ms\"><rect x=\"1466\" y=\"1405\" width=\"2849\" height=\"3283\" fill=\"#f3e1de\" stroke=\"#a3392f\" stroke-opacity=\".35\" stroke-width=\"13\"/>\n<rect x=\"1466\" y=\"656\" width=\"2849\" height=\"749\" fill=\"url(#p11-g1)\"/>\n<text x=\"2890\" y=\"1030\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"330\" fill=\"#ffffff\">Type 1 Fans</text></g>\n<g class=\"a-row\" style=\"--d:600ms\"><circle cx=\"1675\" cy=\"1754\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"1754\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Old</text></g>\n<g class=\"a-row\" style=\"--d:680ms\"><circle cx=\"1675\" cy=\"2173\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"2173\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Genuine</text></g>\n<g class=\"a-row\" style=\"--d:760ms\"><circle cx=\"1675\" cy=\"2592\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"2592\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Traditional</text></g>\n<g class=\"a-row\" style=\"--d:840ms\"><circle cx=\"1675\" cy=\"3012\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"3012\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Expressive</text></g>\n<g class=\"a-row\" style=\"--d:920ms\"><circle cx=\"1675\" cy=\"3431\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"3431\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Irrational </text></g>\n<g class=\"a-row\" style=\"--d:1000ms\"><circle cx=\"1675\" cy=\"3851\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"3851\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Symbolic</text></g>\n<g class=\"a-row\" style=\"--d:1080ms\"><circle cx=\"1675\" cy=\"4270\" r=\"38\" fill=\"#a3392f\"/>\n<text x=\"1894\" y=\"4270\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Die-hard</text></g>\n<g class=\"a-cardR\" style=\"--d:420ms\"><rect x=\"4713\" y=\"1405\" width=\"2849\" height=\"3283\" fill=\"#ece8e1\" stroke=\"#201c16\" stroke-opacity=\".35\" stroke-width=\"13\"/>\n<rect x=\"4713\" y=\"656\" width=\"2849\" height=\"749\" fill=\"url(#p11-g2)\"/>\n<text x=\"6138\" y=\"1030\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"330\" fill=\"#ffffff\">Type 2 Fans</text></g>\n<g class=\"a-row\" style=\"--d:640ms\"><circle cx=\"4922\" cy=\"1754\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"1754\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">New</text></g>\n<g class=\"a-row\" style=\"--d:720ms\"><circle cx=\"4922\" cy=\"2173\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"2173\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Corporate</text></g>\n<g class=\"a-row\" style=\"--d:800ms\"><circle cx=\"4922\" cy=\"2592\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"2592\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Modern</text></g>\n<g class=\"a-row\" style=\"--d:880ms\"><circle cx=\"4922\" cy=\"3012\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"3012\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Submissive</text></g>\n<g class=\"a-row\" style=\"--d:960ms\"><circle cx=\"4922\" cy=\"3431\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"3431\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Rational</text></g>\n<g class=\"a-row\" style=\"--d:1040ms\"><circle cx=\"4922\" cy=\"3851\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"3851\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Civic</text></g>\n<g class=\"a-row\" style=\"--d:1120ms\"><circle cx=\"4922\" cy=\"4270\" r=\"38\" fill=\"#201c16\"/>\n<text x=\"5141\" y=\"4270\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-size=\"310\" fill=\"#201c16\">Less-loyal</text></g>\n<g class=\"a-lbl\" style=\"--d:900ms\"><text text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"180\" fill=\"#a3392f\"><tspan x=\"663\" y=\"1726\">Local teams to</tspan><tspan x=\"663\" y=\"1942\">construct a</tspan><tspan x=\"663\" y=\"2158\">sense of</tspan><tspan x=\"663\" y=\"2374\">community</tspan></text></g>\n<g class=\"a-lbl\" style=\"--d:960ms\"><text text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"180\" fill=\"#a3392f\"><tspan x=\"663\" y=\"3747\">Identifying</tspan><tspan x=\"663\" y=\"3963\">with a team</tspan></text></g>\n<g class=\"a-lbl\" style=\"--d:1020ms\"><text text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"180\" fill=\"#201c16\"><tspan x=\"8328\" y=\"2112\">Entertaining</tspan></text></g>\n<g class=\"a-lbl\" style=\"--d:1080ms\"><text text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"Georgia, 'Times New Roman', serif\" font-weight=\"700\" font-size=\"180\" fill=\"#201c16\"><tspan x=\"8328\" y=\"3761\">Identifying</tspan><tspan x=\"8328\" y=\"3977\">with a city</tspan></text></g>\n</svg>\n"
+};
+  var RE = /(?:^|\/)(p\d+)-graphic\.svg(?:[?#].*)?$/;
+
+  /* The original <img> stays in the DOM as an invisible layout sizer, so every deck CSS rule
+   * (max-height, width, object-fit:contain) keeps governing the box. The SVG is laid exactly
+   * over the img's box; preserveAspectRatio "meet" == object-fit:contain, so it renders identically. */
+  var ro = ('ResizeObserver' in window) ? new ResizeObserver(function(es){ es.forEach(function(e){ place(e.target); }); }) : null;
+  function place(img){
+    var svg = img.__inlineSvg; if(!svg) return;
+    svg.style.left = img.offsetLeft+'px';
+    svg.style.top = img.offsetTop+'px';
+    svg.style.width = img.offsetWidth+'px';
+    svg.style.height = img.offsetHeight+'px';
+  }
+  function inlineAll(root){
+    var imgs = (root||document).querySelectorAll('img[src$="-graphic.svg"]');
+    Array.prototype.forEach.call(imgs, function(img){
+      if(img.__inlineSvg) return;
+      var m = (img.getAttribute('src')||'').match(RE);
+      if(!m || !SVGS[m[1]]) return;
+      var tmp = document.createElement('div');
+      tmp.innerHTML = SVGS[m[1]].trim();
+      var svg = tmp.querySelector('svg');
+      if(!svg) return;
+      svg.removeAttribute('width'); svg.removeAttribute('height');
+      svg.classList.add('inline-graphic');
+      svg.setAttribute('data-src', img.getAttribute('src'));
+      svg.style.position = 'absolute';
+      svg.style.display = 'block';
+      svg.style.pointerEvents = 'none';
+      var host = img.parentNode;
+      if(getComputedStyle(host).position === 'static') host.style.position = 'relative';
+      img.style.visibility = 'hidden';
+      img.setAttribute('aria-hidden','true');
+      img.__inlineSvg = svg;
+      img.insertAdjacentElement('afterend', svg);
+      if(img.complete) place(img); else img.addEventListener('load', function(){ place(img); });
+      if(ro) ro.observe(img); else window.addEventListener('resize', function(){ place(img); });
+    });
+  }
+
+  function sync(slide){
+    var on = slide.classList.contains('active');
+    var svgs = slide.querySelectorAll('svg.inline-graphic');
+    Array.prototype.forEach.call(svgs, function(svg){
+      if(on){
+        if(svg.classList.contains('play')) return;
+        var im = svg.previousElementSibling; if(im && im.__inlineSvg===svg) place(im);
+        svg.classList.remove('play');
+        void svg.getBoundingClientRect(); /* restart animations */
+        svg.classList.add('play');
+      } else {
+        svg.classList.remove('play');
+      }
+    });
+  }
+
+  function init(){
+    inlineAll(document);
+    var slides = document.querySelectorAll('.slide');
+    var mo = new MutationObserver(function(recs){
+      recs.forEach(function(r){ if(r.target.classList && r.target.classList.contains('slide')) sync(r.target); });
+    });
+    Array.prototype.forEach.call(slides, function(s){
+      if(s.querySelector('svg.inline-graphic')){
+        mo.observe(s, {attributes:true, attributeFilter:['class']});
+        sync(s);
+      }
+    });
+  }
+
+  var ANIM_BASE = 'assets/anim/';
+  function load(){
+    if(location.protocol === 'file:' || !window.fetch) return init();
+    Promise.all(Object.keys(SVGS).map(function(k){
+      return fetch(ANIM_BASE + k + '-graphic.svg').then(function(r){ if(r.ok) return r.text(); })
+        .then(function(t){ if(t && t.indexOf('<svg')>-1) SVGS[k]=t; }).catch(function(){});
+    })).then(init, init);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load);
+  else load();
+})();
+
 </script>
 <script>window.SLIDE_POLLS = {};</script>
 <script src="../questions/widgets.js?v=3"></script>

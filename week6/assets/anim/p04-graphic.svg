@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="anim-p04" viewBox="107.2 -59.2 5560.7 3948.4" width="5561" height="3948" role="img" aria-label="Factors affecting sport consumption: Thoughts, Feelings and Other people each point to Sport Consumption">
+<style>
+.anim-p04{text-rendering:auto;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto;letter-spacing:normal;word-spacing:normal;font-kerning:auto;font-variant:normal;font-feature-settings:normal;}
+.anim-p04 .a-pop,.anim-p04 .a-grow-r,.anim-p04 .a-lbl{transform-box:fill-box;}
+.anim-p04 .a-pop{transform-origin:50% 50%;}
+.anim-p04 .a-grow-r{transform-origin:100% 50%;}
+.anim-p04.play .a-pop{animation:p04-pop 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p04.play .a-grow-r{animation:p04-grow 650ms cubic-bezier(.65,0,.35,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p04.play .a-lbl{animation:p04-lbl 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+@keyframes p04-pop{from{opacity:0;transform:scale(.86);}to{opacity:1;transform:scale(1);}}
+@keyframes p04-grow{from{opacity:0;transform:scaleX(0);}30%{opacity:1;}to{opacity:1;transform:scaleX(1);}}
+@keyframes p04-lbl{from{opacity:0;transform:translateY(60px);}to{opacity:1;transform:translateY(0);}}
+@keyframes p04-fade{from{opacity:0;}to{opacity:1;}}
+@media (prefers-reduced-motion: reduce){
+.anim-p04.play .a-pop,.anim-p04.play .a-grow-r,.anim-p04.play .a-lbl{animation:p04-fade 150ms linear backwards;animation-delay:0ms;}
+}
+</style>
+<defs><filter id="p04-sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#201c16" flood-opacity="0.18"/></filter></defs>
+<g transform="rotate(215.0 1549.1 2046.5)"><g class="a-grow-r" style="--d:520ms"><path d="M842.8,2046.5 L1083.7,1805.5 L1083.7,1901.9 L2255.4,1901.9 L2255.4,2191.1 L1083.7,2191.1 L1083.7,2287.5 Z" fill="#e9cdc8"/></g></g>
+<g transform="rotate(270.0 2887.6 1349.7)"><g class="a-grow-r" style="--d:600ms"><path d="M2181.3,1349.7 L2422.3,1108.7 L2422.3,1205.1 L3593.9,1205.1 L3593.9,1494.3 L2422.3,1494.3 L2422.3,1590.7 Z" fill="#e9cdc8"/></g></g>
+<g transform="rotate(325.0 4226.1 2046.5)"><g class="a-grow-r" style="--d:680ms"><path d="M3519.8,2046.5 L3760.8,1805.5 L3760.8,1901.9 L4932.4,1901.9 L4932.4,2191.1 L3760.8,2191.1 L3760.8,2287.5 Z" fill="#e9cdc8"/></g></g>
+<g class="a-pop" style="--d:820ms"><circle cx="2887.6" cy="2983.7" r="845.5" fill="#a3392f" filter="url(#p04-sh)"/></g>
+<g class="a-lbl" style="--d:960ms"><text font-family="Georgia, 'Times New Roman', serif" font-size="215" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">
+<tspan x="2887.6" y="2863.3">Sport</tspan>
+<tspan x="2887.6" y="3104.1">Consumption</tspan>
+</text></g>
+<g class="a-pop" style="--d:0ms"><rect x="167.2" y="998.8" width="1606.5" height="1285.2" rx="128.5" fill="#201c16" filter="url(#p04-sh)"/></g>
+<g class="a-lbl" style="--d:140ms"><text font-family="Georgia, 'Times New Roman', serif" font-size="270" font-weight="400" fill="#ffffff" text-anchor="middle" dominant-baseline="central">
+<tspan x="970.5" y="1641.4">Thoughts</tspan>
+</text></g>
+<g class="a-pop" style="--d:140ms"><rect x="2084.3" y="0.8" width="1606.5" height="1285.2" rx="128.5" fill="#201c16" filter="url(#p04-sh)"/></g>
+<g class="a-lbl" style="--d:280ms"><text font-family="Georgia, 'Times New Roman', serif" font-size="270" font-weight="400" fill="#ffffff" text-anchor="middle" dominant-baseline="central">
+<tspan x="2887.6" y="643.4">Feelings</tspan>
+</text></g>
+<g class="a-pop" style="--d:280ms"><rect x="4001.4" y="998.8" width="1606.5" height="1285.2" rx="128.5" fill="#201c16" filter="url(#p04-sh)"/></g>
+<g class="a-lbl" style="--d:420ms"><text font-family="Georgia, 'Times New Roman', serif" font-size="270" font-weight="400" fill="#ffffff" text-anchor="middle" dominant-baseline="central">
+<tspan x="4804.7" y="1490.2">Other</tspan>
+<tspan x="4804.7" y="1792.6">people</tspan>
+</text></g>
+</svg>

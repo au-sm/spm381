@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="anim-p07" viewBox="204.0 298.2 862.3 329.2" width="862" height="329" role="img" aria-label="Not all consumers are equally passionate; neither are they all resistant to change; some attend regularly, others only on special occasions. Arrow pointing to: Challenges of narrowing a set of homogeneous traits.">
+<style>
+.anim-p07{text-rendering:auto;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto;letter-spacing:normal;word-spacing:normal;font-kerning:auto;font-variant:normal;font-feature-settings:normal;}
+.anim-p07 .a-pop,.anim-p07 .a-card,.anim-p07 .a-grow-l,.anim-p07 .a-row,.anim-p07 .a-lbl{transform-box:fill-box;}
+.anim-p07 .a-pop,.anim-p07 .a-card{transform-origin:50% 50%;}
+.anim-p07 .a-grow-l{transform-origin:0% 50%;}
+.anim-p07.play .a-pop{animation:p07-pop 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p07.play .a-card{animation:p07-card 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p07.play .a-row{animation:p07-row 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p07.play .a-grow-l{animation:p07-grow 650ms cubic-bezier(.65,0,.35,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p07.play .a-lbl{animation:p07-lbl 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+@keyframes p07-pop{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+@keyframes p07-card{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+@keyframes p07-row{from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:translateX(0);}}
+@keyframes p07-grow{from{opacity:0;transform:scaleX(0);}30%{opacity:1;}to{opacity:1;transform:scaleX(1);}}
+@keyframes p07-lbl{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes p07-fade{from{opacity:0;}to{opacity:1;}}
+@media (prefers-reduced-motion: reduce){
+.anim-p07.play .a-pop,.anim-p07.play .a-card,.anim-p07.play .a-row,.anim-p07.play .a-grow-l,.anim-p07.play .a-lbl{animation:p07-fade 150ms linear backwards;animation-delay:0ms;}
+}
+</style>
+<defs><filter id="p07-sh" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#201c16" flood-opacity="0.22"/></filter></defs>
+<g class="a-pop" style="--d:0ms"><rect x="258.1" y="330.5" width="13" height="13" fill="#a3392f"/>
+<rect x="256.1" y="328.5" width="13" height="13" fill="#ffffff" stroke="#a3392f" stroke-width="2"/></g>
+<g class="a-row" style="--d:80ms"><text x="285.1" y="335.0" font-family="Georgia, 'Times New Roman', serif" font-size="24.0" font-weight="700" fill="#201c16" dominant-baseline="middle">Not all consumers are equally passionate.</text></g>
+<g class="a-pop" style="--d:140ms"><rect x="258.1" y="362.5" width="13" height="13" fill="#a3392f"/>
+<rect x="256.1" y="360.5" width="13" height="13" fill="#ffffff" stroke="#a3392f" stroke-width="2"/></g>
+<g class="a-row" style="--d:220ms"><text x="285.1" y="367.0" font-family="Georgia, 'Times New Roman', serif" font-size="24.0" font-weight="700" fill="#201c16" dominant-baseline="middle">Neither are they all resistant to change (i.e.,</text>
+<text x="285.1" y="399.0" font-family="Georgia, 'Times New Roman', serif" font-size="24.0" font-weight="700" fill="#201c16" dominant-baseline="middle">loyalty) that threatens team values and practices.</text></g>
+<g class="a-pop" style="--d:280ms"><rect x="258.1" y="426.5" width="13" height="13" fill="#a3392f"/>
+<rect x="256.1" y="424.5" width="13" height="13" fill="#ffffff" stroke="#a3392f" stroke-width="2"/></g>
+<g class="a-row" style="--d:360ms"><text x="285.1" y="431.0" font-family="Georgia, 'Times New Roman', serif" font-size="24.0" font-weight="700" fill="#201c16" dominant-baseline="middle">Some attend games on a regular basis, while</text>
+<text x="285.1" y="463.0" font-family="Georgia, 'Times New Roman', serif" font-size="24.0" font-weight="700" fill="#201c16" dominant-baseline="middle">others attend only on special occasions.</text></g>
+<g class="a-grow-l" style="--d:620ms"><path d="M220.0,567.3 L377.2,567.3 L377.2,552.6 L406.6,582.0 L377.2,611.4 L377.2,596.7 L220.0,596.7 Z" fill="#a3392f" filter="url(#p07-sh)"/></g>
+<g class="a-card" style="--d:860ms"><rect x="429.5" y="538.3" width="620.8" height="73.1" fill="#201c16" filter="url(#p07-sh)"/></g>
+<g class="a-lbl" style="--d:1000ms"><text font-family="Georgia, 'Times New Roman', serif" font-size="24.0" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="middle"><tspan x="739.9" y="559.4">Challenges of narrowing a set of</tspan><tspan x="739.9" y="591.4">homogeneous traits.</tspan></text></g>
+</svg>

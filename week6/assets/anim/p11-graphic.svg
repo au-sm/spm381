@@ -1,0 +1,64 @@
+<svg class="anim-p11" xmlns="http://www.w3.org/2000/svg" viewBox="-160 0 9351 4744" role="img" aria-label="Dualistic Fan Typologies: Type 1 fans versus Type 2 fans">
+<style>
+.anim-p11{text-rendering:auto;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto;letter-spacing:normal;word-spacing:normal;font-kerning:auto;font-variant:normal;font-feature-settings:normal;}
+.anim-p11 .a-fade,.anim-p11 .a-cardL,.anim-p11 .a-cardR,.anim-p11 .a-row,.anim-p11 .a-lbl{transform-box:fill-box;transform-origin:50% 50%;}
+.anim-p11.play .a-fade{animation:p11-lbl 800ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p11.play .a-draw{stroke-dasharray:1;animation:p11-draw 650ms cubic-bezier(.65,0,.35,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p11.play .a-cardL{animation:p11-cardL 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p11.play .a-cardR{animation:p11-cardR 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p11.play .a-row{animation:p11-row 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+.anim-p11.play .a-lbl{animation:p11-lbl 600ms cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(250ms + var(--d,0ms));}
+@keyframes p11-draw{from{stroke-dashoffset:1;}to{stroke-dashoffset:0;}}
+@keyframes p11-cardL{from{opacity:0;transform:translateX(-270px);}to{opacity:1;transform:translateX(0);}}
+@keyframes p11-cardR{from{opacity:0;transform:translateX(270px);}to{opacity:1;transform:translateX(0);}}
+@keyframes p11-row{from{opacity:0;transform:translateX(-110px);}to{opacity:1;transform:translateX(0);}}
+@keyframes p11-lbl{from{opacity:0;transform:translateY(110px);}to{opacity:1;transform:translateY(0);}}
+@keyframes p11-fade{from{opacity:0;}to{opacity:1;}}
+@media (prefers-reduced-motion: reduce){
+.anim-p11.play .a-fade,.anim-p11.play .a-cardL,.anim-p11.play .a-cardR,.anim-p11.play .a-row,.anim-p11.play .a-lbl{animation:p11-fade 150ms linear backwards;animation-delay:0ms;}
+.anim-p11.play .a-draw{animation:none;stroke-dasharray:none;}
+}
+</style>
+<defs><linearGradient id="p11-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a2f27"/><stop offset="1" stop-color="#a3392f"/></linearGradient>
+<linearGradient id="p11-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14110d"/><stop offset="1" stop-color="#3a332a"/></linearGradient></defs>
+<g class="a-fade" style="--d:0ms"><text x="4516" y="290" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="305" fill="#201c16"><tspan fill="#a3392f">❖</tspan> Dualistic Fan Typologies</text></g>
+<line class="a-draw" style="--d:150ms" pathLength="1" x1="3266" y1="490" x2="5766" y2="490" stroke="#a3392f" stroke-width="10" opacity=".35"/>
+<g class="a-cardL" style="--d:280ms"><rect x="1466" y="1405" width="2849" height="3283" fill="#f3e1de" stroke="#a3392f" stroke-opacity=".35" stroke-width="13"/>
+<rect x="1466" y="656" width="2849" height="749" fill="url(#p11-g1)"/>
+<text x="2890" y="1030" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="330" fill="#ffffff">Type 1 Fans</text></g>
+<g class="a-row" style="--d:600ms"><circle cx="1675" cy="1754" r="38" fill="#a3392f"/>
+<text x="1894" y="1754" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Old</text></g>
+<g class="a-row" style="--d:680ms"><circle cx="1675" cy="2173" r="38" fill="#a3392f"/>
+<text x="1894" y="2173" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Genuine</text></g>
+<g class="a-row" style="--d:760ms"><circle cx="1675" cy="2592" r="38" fill="#a3392f"/>
+<text x="1894" y="2592" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Traditional</text></g>
+<g class="a-row" style="--d:840ms"><circle cx="1675" cy="3012" r="38" fill="#a3392f"/>
+<text x="1894" y="3012" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Expressive</text></g>
+<g class="a-row" style="--d:920ms"><circle cx="1675" cy="3431" r="38" fill="#a3392f"/>
+<text x="1894" y="3431" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Irrational </text></g>
+<g class="a-row" style="--d:1000ms"><circle cx="1675" cy="3851" r="38" fill="#a3392f"/>
+<text x="1894" y="3851" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Symbolic</text></g>
+<g class="a-row" style="--d:1080ms"><circle cx="1675" cy="4270" r="38" fill="#a3392f"/>
+<text x="1894" y="4270" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Die-hard</text></g>
+<g class="a-cardR" style="--d:420ms"><rect x="4713" y="1405" width="2849" height="3283" fill="#ece8e1" stroke="#201c16" stroke-opacity=".35" stroke-width="13"/>
+<rect x="4713" y="656" width="2849" height="749" fill="url(#p11-g2)"/>
+<text x="6138" y="1030" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="330" fill="#ffffff">Type 2 Fans</text></g>
+<g class="a-row" style="--d:640ms"><circle cx="4922" cy="1754" r="38" fill="#201c16"/>
+<text x="5141" y="1754" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">New</text></g>
+<g class="a-row" style="--d:720ms"><circle cx="4922" cy="2173" r="38" fill="#201c16"/>
+<text x="5141" y="2173" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Corporate</text></g>
+<g class="a-row" style="--d:800ms"><circle cx="4922" cy="2592" r="38" fill="#201c16"/>
+<text x="5141" y="2592" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Modern</text></g>
+<g class="a-row" style="--d:880ms"><circle cx="4922" cy="3012" r="38" fill="#201c16"/>
+<text x="5141" y="3012" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Submissive</text></g>
+<g class="a-row" style="--d:960ms"><circle cx="4922" cy="3431" r="38" fill="#201c16"/>
+<text x="5141" y="3431" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Rational</text></g>
+<g class="a-row" style="--d:1040ms"><circle cx="4922" cy="3851" r="38" fill="#201c16"/>
+<text x="5141" y="3851" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Civic</text></g>
+<g class="a-row" style="--d:1120ms"><circle cx="4922" cy="4270" r="38" fill="#201c16"/>
+<text x="5141" y="4270" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-size="310" fill="#201c16">Less-loyal</text></g>
+<g class="a-lbl" style="--d:900ms"><text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#a3392f"><tspan x="663" y="1726">Local teams to</tspan><tspan x="663" y="1942">construct a</tspan><tspan x="663" y="2158">sense of</tspan><tspan x="663" y="2374">community</tspan></text></g>
+<g class="a-lbl" style="--d:960ms"><text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#a3392f"><tspan x="663" y="3747">Identifying</tspan><tspan x="663" y="3963">with a team</tspan></text></g>
+<g class="a-lbl" style="--d:1020ms"><text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#201c16"><tspan x="8328" y="2112">Entertaining</tspan></text></g>
+<g class="a-lbl" style="--d:1080ms"><text text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#201c16"><tspan x="8328" y="3761">Identifying</tspan><tspan x="8328" y="3977">with a city</tspan></text></g>
+</svg>
