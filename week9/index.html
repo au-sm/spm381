@@ -1,0 +1,1590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPM 381 &middot; Week 9 &mdash; Sport Consumer Motivation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#110d1c">
+<style>
+
+:root{
+  --bg:#0d1310; --bg2:#121a16; --surface:#17211c; --surface2:#1e2a24;
+  --paper:#17211c; --paper-ink:#f1ece0;
+  --ink:#f1ece0; --muted:rgba(241,236,224,.68); --muted2:rgba(241,236,224,.44); --line:rgba(241,236,224,.12);
+  --rust:#e0503a; --rust-soft:rgba(224,80,58,.14); --sage:#4f9a6b; --sage-soft:rgba(79,154,107,.16);
+  --sky:#f2b33d; --gold:#f2b33d;
+  --font-display:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;
+  --font-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --ease: cubic-bezier(.16,1,.3,1);
+  --dur: .7s;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);
+  overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.bg-wash{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 1000px 620px at -6% -12%, rgba(163,57,47,.05), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 108% 112%, rgba(47,125,106,.05), transparent 62%),
+    linear-gradient(180deg,#ffffff,#faf8f4 45%);
+}
+.deck{position:fixed;inset:0;z-index:1;}
+.slide{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(22px);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility 0s linear var(--dur);
+  visibility:hidden;pointer-events:none;
+  padding: clamp(64px,9vh,96px) clamp(28px,6vw,104px) clamp(40px,6vh,64px);
+}
+.slide.active{opacity:1;transform:translateY(0);visibility:visible;pointer-events:auto;z-index:2;transition-delay:0s;}
+.slide-inner{position:relative;width:100%;max-width:1280px;max-height:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(14px,2vh,22px);overflow:auto;padding:2px 4px 2px 0;zoom:var(--zoom,1);}
+.slide-inner::-webkit-scrollbar{width:6px;}
+.slide-inner::-webkit-scrollbar-thumb{background:rgba(163,57,47,.28);border-radius:3px;}
+.slide-inner::-webkit-scrollbar-track{background:transparent;}
+
+/* page numeral — the deck's recurring graphic signature */
+.page-num{
+  position:fixed;right:clamp(20px,4vw,54px);bottom:clamp(14px,3vh,28px);
+  font-family:var(--font-display);font-size:clamp(64px,11vw,150px);line-height:1;
+  color:rgba(32,28,22,.045);pointer-events:none;z-index:0;user-select:none;
+}
+
+/* chrome */
+.chrome-top{
+  position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:22px;
+  padding:20px clamp(20px,4vw,48px) 0;pointer-events:none;
+}
+.brand{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;}
+.brand b{color:var(--rust);font-weight:600;}
+.progress-track{flex:1;height:1px;background:var(--line);position:relative;}
+.progress-fill{position:absolute;top:-1.5px;left:0;height:4px;width:0%;background:var(--rust);transition:width .5s var(--ease);}
+.progress-fill::after{content:'';position:absolute;right:-3px;top:-2px;width:8px;height:8px;border-radius:50%;background:var(--rust);box-shadow:0 0 10px 2px var(--rust-soft);}
+.section-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;}
+.counter{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);white-space:nowrap;min-width:48px;text-align:right;}
+
+.chrome-bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,4vw,48px) 22px;pointer-events:none;
+}
+.navbtn{
+  pointer-events:auto;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(255,255,255,.75);backdrop-filter:blur(6px);
+  color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 2px 10px rgba(32,28,22,.07);
+  transition:background .25s ease, border-color .25s ease, transform .2s ease;
+}
+.navbtn:hover{background:var(--rust-soft);border-color:var(--rust);transform:translateY(-2px);}
+.navbtn:active{transform:translateY(0);}
+.navbtn svg{width:16px;height:16px;}
+.navbtn:disabled{opacity:.22;cursor:default;transform:none;}
+
+/* ask a question */
+.ask-btn{
+  position:fixed;right:clamp(20px,4vw,48px);top:54px;z-index:21;
+  pointer-events:auto;height:34px;padding:0 16px;border-radius:20px;white-space:nowrap;
+  border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(6px);
+  color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:var(--font-body);font-weight:600;font-size:13px;
+  box-shadow:0 2px 10px rgba(32,28,22,.07);
+  transition:background .25s ease, border-color .25s ease, transform .2s ease;
+}
+.ask-btn:hover{background:var(--rust-soft);border-color:var(--rust);transform:translateY(-2px);}
+.ask-backdrop{
+  position:fixed;inset:0;z-index:30;background:rgba(32,28,22,.45);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.ask-backdrop.open{opacity:1;pointer-events:auto;}
+.ask-panel{
+  width:min(480px,100%);background:#ffffff;border:1px solid var(--line);border-radius:12px;
+  padding:26px 26px 22px;box-shadow:0 40px 90px -30px rgba(32,28,22,.35);
+  transform:translateY(14px) scale(.98);opacity:0;transition:transform .3s var(--ease),opacity .3s var(--ease);
+}
+.ask-backdrop.open .ask-panel{transform:translateY(0) scale(1);opacity:1;}
+.ask-title{font-family:var(--font-display);font-weight:700;font-size:19px;color:var(--ink);margin:0 0 4px;}
+.ask-context{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--rust);margin:0 0 16px;}
+.ask-panel textarea{
+  width:100%;min-height:96px;resize:vertical;background:var(--bg2);color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;padding:12px 14px;font:14px/1.5 var(--font-body);
+  outline:none;transition:border-color .2s ease;box-sizing:border-box;
+}
+.ask-panel textarea:focus{border-color:var(--rust);}
+.ask-panel input[type=text]{
+  width:100%;margin-top:10px;background:var(--bg2);color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;padding:10px 14px;font:13px var(--font-body);
+  outline:none;transition:border-color .2s ease;box-sizing:border-box;
+}
+.ask-panel input[type=text]:focus{border-color:var(--rust);}
+.ask-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;}
+.ask-hint{font-family:var(--font-mono);font-size:10.5px;color:var(--muted2);}
+.ask-actions{display:flex;gap:10px;}
+.ask-btn-cancel,.ask-btn-send{
+  font-family:var(--font-body);font-size:13px;font-weight:600;border-radius:7px;padding:9px 16px;
+  cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);
+  transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.ask-btn-cancel:hover{color:var(--ink);border-color:var(--muted);}
+.ask-btn-send{background:var(--rust);border-color:var(--rust);color:#fff6ef;}
+.ask-btn-send:hover{filter:brightness(1.08);}
+.ask-btn-send:disabled{opacity:.5;cursor:default;filter:none;}
+.ask-status{font-family:var(--font-mono);font-size:12px;margin-top:12px;min-height:16px;}
+.ask-status.err{color:#b23a2a;}
+.ask-status.ok{color:var(--sage);}
+.hint{
+  pointer-events:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted2);opacity:1;transition:opacity 1s ease;z-index:19;
+}
+.hint.hide{opacity:0;}
+.textlink{
+  pointer-events:auto;background:none;border:none;cursor:pointer;flex-shrink:0;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--muted);padding:4px 0;position:relative;transition:color .2s ease;
+}
+.textlink::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--rust);transform:scaleX(0);transform-origin:left;transition:transform .25s ease;}
+.textlink:hover{color:var(--ink);}
+.textlink:hover::after{transform:scaleX(1);}
+.home-btn{text-decoration:none;display:inline-flex;align-items:center;}
+
+.zoom-controls{pointer-events:auto;display:flex;align-items:center;gap:2px;flex-shrink:0;font-family:var(--font-mono);}
+.zoom-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;line-height:1;padding:4px 6px;transition:color .2s ease;}
+.zoom-btn:hover{color:var(--rust);}
+.zoom-reset{min-width:40px;text-align:center;font-size:10px;color:var(--muted2);}
+.zoom-btn:disabled{opacity:.3;cursor:default;}
+
+/* reveal primitives */
+.reveal-item{opacity:0;transform:translateY(12px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
+.slide.active .reveal-item.in{opacity:1;transform:translateY(0);}
+
+.kicker{font-family:var(--font-mono);font-size:clamp(10px,.95vw,12px);letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin:0 0 10px;display:flex;align-items:center;gap:10px;}
+.kicker::before{content:'';display:inline-block;width:26px;height:1px;background:var(--rust);}
+
+h1.disp{font-family:var(--font-display);font-weight:400;line-height:1.04;margin:0;color:var(--ink);letter-spacing:-.01em;}
+.title-hero{font-size:clamp(46px,8vw,108px);}
+.title-slide{font-size:clamp(27px,3.6vw,46px);}
+.title-slide.long{font-size:clamp(22px,2.7vw,34px);}
+.subtitle{font-family:var(--font-display);font-style:italic;color:var(--muted);font-size:clamp(16px,1.8vw,23px);margin:10px 0 0;max-width:640px;}
+.meta-badge{margin-top:26px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:.09em;color:var(--muted2);text-transform:uppercase;}
+
+.lede{font-family:var(--font-display);font-style:italic;color:var(--ink);font-size:clamp(16px,1.7vw,21px);margin:0;line-height:1.5;max-width:760px;}
+
+ul.bullets{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px;max-width:760px;}
+ul.bullets li{font-size:clamp(18px,1.6vw,22px);line-height:1.55;color:var(--ink);padding-left:24px;position:relative;}
+ul.bullets li::before{content:'';position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:1px;background:var(--rust);transform:rotate(45deg);}
+ul.bullets li.q{color:var(--sky);font-style:italic;font-family:var(--font-display);font-size:clamp(19.5px,1.8vw,24.5px);}
+ul.bullets li.q::before{background:var(--sky);}
+
+.pullquote{position:relative;font-family:var(--font-display);font-style:italic;color:var(--ink);font-size:clamp(22px,2.6vw,36px);line-height:1.32;max-width:820px;padding-left:.1em;}
+mark.hl-yellow{background:rgba(163,57,47,.12);color:var(--rust);font-weight:600;padding:0 .1em;}
+.pullquote::before{content:'\201C';position:absolute;left:-.5em;top:-.28em;font-size:2.2em;color:var(--rust);font-family:var(--font-display);opacity:.45;}
+
+.source{font-family:var(--font-mono);font-size:11px;color:var(--muted2);margin-top:2px;word-break:break-word;}
+.source.source-lg{font-size:20px;}
+.source::before{content:'Source — ';color:var(--muted);}
+
+/* stats */
+.stat-row{display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px);margin:4px 0 6px;}
+.stat{display:flex;flex-direction:column;gap:8px;max-width:250px;}
+.stat-rule{width:30px;height:2px;background:var(--rust);}
+.stat-num{font-family:var(--font-display);font-size:clamp(38px,5vw,68px);color:var(--ink);line-height:1;white-space:nowrap;}
+.stat-num .u{font-size:.42em;font-family:var(--font-mono);color:var(--rust);margin-left:3px;}
+.stat-label{font-size:12.5px;color:var(--muted);line-height:1.4;}
+
+/* images — no mat, hairline + cutline, per house style */
+.photo{position:relative;border-radius:3px;overflow:hidden;box-shadow:0 10px 30px -14px rgba(32,28,22,.25);}
+.photo.flawed{outline:2px solid #b23a2a;outline-offset:3px;}
+.flaw-badge{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:7px;background:#b23a2a;color:#fff6ef;font-family:var(--font-mono);font-size:12.5px;font-weight:700;letter-spacing:.02em;padding:6px 12px 6px 9px;border-radius:20px;box-shadow:0 3px 10px rgba(0,0,0,.2);}
+.flaw-x{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:#fff6ef;color:#b23a2a;font-size:10px;line-height:1;}
+.photo img{
+  display:block;width:100%;height:auto;object-fit:cover;
+  opacity:0;transform:scale(1.06);transition:opacity .9s var(--ease), transform 1.4s var(--ease);
+  border-radius:3px;
+}
+.slide.active .photo.in img{opacity:1;transform:scale(1);}
+.photo.contain{box-shadow:none;}
+.photo.contain img{object-fit:contain;}
+.cutline{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted2);margin-top:9px;padding-left:8px;border-left:2px solid var(--rust);}
+@keyframes kenburns{ from{transform:scale(1);} to{transform:scale(1.07);} }
+.slide.active .photo.kb img{animation:kenburns 15s var(--ease) forwards;}
+
+/* layout: default stack */
+.stack-body{display:flex;flex-direction:column;gap:20px;}
+.stack-body .photo{max-height:38vh;}
+.stack-body .photo img{max-height:38vh;width:auto;max-width:100%;margin:0 auto;object-fit:contain;}
+
+/* layout: split */
+.split-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,4.5vw,72px);align-items:center;}
+.split-grid.reverse{grid-template-columns:1fr 1.15fr;}
+.split-grid.reverse .split-text{order:2;}
+.split-grid.reverse .split-media{order:1;}
+.split-media .photo{height:min(52vh,480px);}
+.split-media .photo img{height:100%;}
+.split-media .photo.contain{height:auto;}
+.split-media .photo.contain img{height:auto;max-height:min(50vh,460px);}
+
+/* layout: banner (full-bleed hero photo w/ scrim) */
+.banner-slide{padding:0 !important;}
+.banner-wrap{position:relative;width:100%;height:100%;overflow:hidden;}
+.banner-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:opacity 1.1s var(--ease),transform 1.6s var(--ease);}
+.slide.active .banner-wrap.in img{opacity:1;transform:scale(1);}
+.banner-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,16,12,.82) 0%,rgba(20,16,12,.3) 42%,rgba(20,16,12,.05) 68%);}
+.banner-text{position:absolute;left:clamp(28px,6vw,104px);right:clamp(28px,6vw,104px);bottom:clamp(40px,7vh,80px);}
+.banner-text .pullquote{color:#fff;font-size:clamp(24px,3.4vw,44px);max-width:920px;}
+.banner-text .pullquote::before{color:var(--gold);}
+
+/* layout: badge (tiny corner logo, text dominant) */
+.badge-corner{position:absolute;top:0;right:0;width:clamp(56px,7vw,92px);opacity:.92;}
+.badge-corner img{width:100%;display:block;border-radius:4px;opacity:0;transition:opacity .8s var(--ease);}
+.slide.active .badge-corner.in img{opacity:1;}
+.badge-body ul.bullets li{font-size:clamp(20px,2vw,26.5px);}
+
+/* layout: diptych */
+.diptych{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--line);border-radius:3px;overflow:hidden;}
+.diptych .photo{border-radius:0;height:min(46vh,420px);box-shadow:none;}
+.diptych .photo img{height:100%;border-radius:0;}
+.diptych .photo.contain{height:auto;align-self:center;}
+.diptych .photo.contain img{width:100%;height:auto;object-fit:contain;}
+.diptych .cutline{padding-left:14px;margin-top:8px;}
+
+/* concept diagram (converge / branch) */
+.concept-wrap{position:relative;width:100%;max-width:640px;aspect-ratio:16/10;margin:10px auto 0;}
+.concept-group{position:absolute;border:1px dashed var(--line);border-radius:14px;opacity:0;transition:opacity .6s var(--ease);}
+.slide.active .concept-group.in{opacity:1;}
+.concept-group-label{position:absolute;top:-11px;left:14px;background:var(--bg);padding:0 8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+.concept-node{
+  position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border-radius:10px;padding:8px 12px;
+  font-family:var(--font-body);font-weight:600;font-size:clamp(11.5px,1.15vw,14px);color:var(--ink);
+  opacity:0;transform:scale(.9);transition:opacity .5s var(--ease),transform .5s var(--ease);z-index:2;
+}
+.slide.active .concept-node.in{opacity:1;transform:scale(1);}
+.concept-node .sub{font-family:var(--font-body);font-weight:400;font-size:.76em;color:var(--muted);margin-top:3px;}
+.concept-node.tone-a{background:var(--surface2);border:1px solid rgba(163,57,47,.28);}
+.concept-node.tone-b{background:rgba(163,57,47,.08);border:1px solid rgba(163,57,47,.4);}
+.concept-svg{position:absolute;inset:0;overflow:visible;}
+.concept-edge{fill:none;stroke:var(--muted2);stroke-width:1.4;opacity:0;transition:opacity .5s var(--ease);}
+.slide.active .concept-edge.in{opacity:.85;}
+
+/* flow (PCM ladder) */
+.flow-wrap{display:flex;flex-direction:column;gap:2px;width:100%;max-width:920px;margin:0 auto;}
+.flow-step{display:grid;grid-template-columns:64px 1fr 1.35fr;gap:18px;align-items:center;border-top:1px solid var(--line);padding:13px 0;}
+.flow-step:first-child{border-top:1px solid transparent;}
+.flow-step .flevel{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+.flow-step .flabel{font-family:var(--font-display);font-size:clamp(17px,1.7vw,23px);color:var(--ink);}
+.flow-step .fproc{font-size:16px;font-weight:600;color:var(--sky);margin-top:3px;line-height:1.4;}
+.flow-outs{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;}
+.flow-chip{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em;color:var(--sage);border:1px solid rgba(47,125,106,.35);background:var(--sage-soft);border-radius:999px;padding:4px 11px;}
+.flow-step:last-child .flow-chip{color:var(--rust);border-color:rgba(163,57,47,.35);background:var(--rust-soft);}
+@media (max-width: 760px){ .flow-step{grid-template-columns:1fr;gap:6px;} .flow-outs{justify-content:flex-start;} }
+
+/* agenda */
+.agenda-list{display:flex;flex-direction:column;width:100%;max-width:820px;}
+.agenda-row{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:16px 0;border-top:1px solid var(--line);align-items:baseline;}
+.agenda-row:first-child{border-top:1px solid transparent;}
+.agenda-n{font-family:var(--font-mono);font-size:13px;color:var(--rust);}
+.agenda-label{font-family:var(--font-display);font-size:clamp(19px,2vw,26px);color:var(--ink);}
+.agenda-detail{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* compare (dualistic typology panels) */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.6vw,32px);margin-top:6px;}
+.compare-panel{border-radius:10px;padding:20px 22px;background:var(--surface);border:1px solid var(--line);}
+.compare-panel.win{border-color:rgba(47,125,106,.35);}
+.compare-panel.loss{border-color:rgba(163,57,47,.3);}
+.compare-head{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+.compare-panel.win .compare-head{color:var(--sage);}
+.compare-panel.loss .compare-head{color:var(--rust);}
+.compare-item{padding:12px 0;border-top:1px solid var(--line);}
+.compare-item:first-of-type{border-top:none;padding-top:0;}
+.compare-item .ci-name{font-family:var(--font-display);font-size:19px;color:var(--ink);}
+.compare-item .ci-full{font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted2);margin-top:2px;}
+.compare-item .ci-detail{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px;}
+@media (max-width:760px){ .compare-grid{grid-template-columns:1fr;} }
+
+/* hub diagram */
+.hub-wrap{position:relative;width:100%;max-width:420px;max-height:42vh;aspect-ratio:1/1;margin:8px auto 0;}
+.hub-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.6);
+  width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 34% 30%,var(--rust),#7a2b22);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:18px;color:#fff;font-weight:600;
+  box-shadow:0 18px 40px -12px rgba(163,57,47,.4);opacity:0;transition:opacity .6s var(--ease),transform .6s var(--ease);z-index:2;
+}
+.slide.active .hub-center.in{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.hub-spoke-line{position:absolute;top:50%;left:50%;height:1px;background:var(--line);transform-origin:0 0;opacity:0;transition:opacity .5s var(--ease);}
+.slide.active .hub-spoke-line.in{opacity:1;}
+.hub-node{
+  position:absolute;transform:translate(-50%,-50%) scale(.7);background:var(--surface2);border:1px solid var(--line);border-radius:999px;
+  padding:6px 13px;font-size:11.5px;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .5s var(--ease),transform .5s var(--ease);z-index:2;
+}
+.slide.active .hub-node.in{opacity:1;transform:translate(-50%,-50%) scale(1);}
+
+/* fill-in-the-blank prompt */
+.blank-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 30px;max-width:820px;}
+.blank-card .blank-text{font-family:var(--font-display);font-size:clamp(19px,2vw,25px);line-height:1.6;color:var(--ink);}
+.blank-fill{display:inline-block;min-width:118px;border-bottom:2px solid var(--rust);text-align:center;color:var(--rust);font-weight:700;opacity:0;transition:opacity .5s var(--ease);}
+.blank-fill.in{opacity:1;}
+.blank-hint{margin-top:16px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);}
+
+/* data table (rebuilt native, replacing a flawed source screenshot) */
+.data-table-wrap{width:100%;max-width:980px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+.data-table-cap{padding:14px 20px;border-bottom:1px solid var(--line);background:var(--surface);}
+.data-table-cap .dtc-label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);}
+.data-table-cap .dtc-title{font-family:var(--font-display);font-size:18px;color:var(--ink);margin-top:3px;}
+table.data-table{width:100%;border-collapse:collapse;}
+table.data-table th{text-align:left;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface);padding:10px 20px;border-bottom:1px solid var(--line);}
+table.data-table td{padding:10px 20px;border-top:1px solid var(--line);vertical-align:top;font-size:13px;line-height:1.5;}
+table.data-table td.dt-cluster{font-family:var(--font-display);font-size:15px;color:var(--rust);white-space:nowrap;width:1%;}
+table.data-table td.dt-behaviors{color:var(--ink);}
+table.data-table td.dt-behaviors div{padding:1px 0;}
+table.data-table tr.reveal-item{opacity:0;transform:translateY(8px);}
+.data-table-scroll{max-height:46vh;overflow:auto;}
+.data-table-scroll::-webkit-scrollbar{width:7px;}
+.data-table-scroll::-webkit-scrollbar-thumb{background:rgba(163,57,47,.28);border-radius:4px;}
+
+/* closing */
+.closing-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;text-align:center;}
+.closing-wrap .rule{width:56px;height:1px;background:var(--rust);}
+.closing-wrap .subtitle{margin-top:0;}
+
+/* notes panel */
+.notes-panel{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,86vw);background:rgba(255,255,255,.98);backdrop-filter:blur(10px);
+  border-left:1px solid var(--line);z-index:15;transform:translateX(100%);transition:transform .45s var(--ease);
+  padding:80px 28px 28px;display:flex;flex-direction:column;gap:14px;box-shadow:-20px 0 60px -30px rgba(32,28,22,.3);
+}
+.notes-panel.open{transform:translateX(0);}
+.notes-panel h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);margin:0;}
+.notes-panel p{font-family:var(--font-display);font-size:16px;line-height:1.6;color:var(--ink);white-space:pre-wrap;}
+.notes-panel .close-notes{position:absolute;top:24px;right:24px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;}
+.notes-empty{color:var(--muted2);font-style:italic;font-family:var(--font-display);}
+.notes-panel::-webkit-scrollbar{width:8px;}
+.notes-panel::-webkit-scrollbar-thumb{background:rgba(163,57,47,.3);border-radius:4px;}
+
+@media (max-width: 880px){
+  .split-grid,.split-grid.reverse{grid-template-columns:1fr;}
+  .split-grid.reverse .split-text{order:1;} .split-grid.reverse .split-media{order:2;}
+  .diptych{grid-template-columns:1fr;}
+  .stat-row{gap:22px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide{transition:opacity .15s linear !important;transform:none !important;}
+  .reveal-item{transition:none !important;opacity:1 !important;transform:none !important;}
+  .photo img,.banner-wrap img{transition:none !important;opacity:1 !important;transform:none !important;}
+  .photo.kb img{animation:none !important;}
+  .hub-center,.hub-node,.hub-spoke-line,.concept-node,.concept-group,.concept-edge{transition:none !important;opacity:1 !important;}
+  .hub-center,.hub-node{transform:translate(-50%,-50%) scale(1) !important;}
+  .concept-node{transform:scale(1) !important;}
+  .blank-fill{opacity:1 !important;}
+}
+.reduced .slide{transition:opacity .15s linear !important;transform:none !important;}
+.reduced .reveal-item{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .photo img,.reduced .banner-wrap img{transition:none !important;opacity:1 !important;transform:none !important;}
+.reduced .photo.kb img{animation:none !important;}
+.reduced .hub-center,.reduced .hub-node,.reduced .hub-spoke-line,.reduced .concept-node,.reduced .concept-group,.reduced .concept-edge{transition:none !important;opacity:1 !important;}
+.reduced .blank-fill{opacity:1 !important;}
+
+
+.bg-wash{display:none !important;}
+.stack-body:not(:has(ul,ol,li,blockquote,.quote)) .photo{max-height:66vh;}
+.stack-body:not(:has(ul,ol,li,blockquote,.quote)) .photo img{max-height:66vh;width:auto;max-width:100%;margin:0 auto;object-fit:contain;}
+/* SVG graphics: sit flat on slide, scale to content width */
+.photo:has(img[src$=".svg"]){box-shadow:none;background:none;border-radius:0;}
+.photo img[src$=".svg"]{border-radius:0;}
+.stack-body:not(:has(ul,ol,li,blockquote,.quote)) .photo img[src$=".svg"]{width:100%;height:auto;max-height:66vh;}
+.stack-body .photo:has(img[src$=".svg"]){max-height:none;}
+.stack-body:has(ul,ol,li,blockquote,.quote) .photo img[src$=".svg"]{width:100%;height:auto;max-height:52vh;}
+.split-media .photo.contain img[src$=".svg"]{width:100%;max-height:60vh;}
+.badge-corner{width:clamp(90px,11vw,150px);}
+.badge-corner img{mix-blend-mode:multiply;}
+.photo-callout{position:absolute;top:16px;left:16px;z-index:3;background:#fff;color:var(--ink);border:2px solid var(--rust);border-radius:14px;padding:10px 16px;font-family:var(--font-display,inherit);font-weight:700;font-size:clamp(17px,1.6vw,24px);line-height:1.15;box-shadow:0 6px 18px rgba(32,28,22,.18);}
+.photo-callout::after{content:"";position:absolute;left:28px;bottom:-12px;width:20px;height:20px;background:#fff;border-right:2px solid var(--rust);border-bottom:2px solid var(--rust);transform:rotate(45deg);}
+.slide-inner > h1.title-slide + .kicker{margin:-4px 0 0;}
+.subhead{font-family:var(--font-display,Georgia,serif);font-size:clamp(20px,2vw,28px);font-weight:600;color:var(--ink);margin:-2px 0 0;}
+.slide-inner > .badge-corner{position:static;order:99;align-self:flex-end;margin:18px 4% 0 0;width:clamp(130px,14vw,200px);}
+.stack-body > div:has(> .photo.contain)::before{content:none !important;display:none !important;}
+.cmp-fig{display:none !important;}
+ul.bullets li.q::before{content:'' !important;width:.42em !important;height:.42em !important;line-height:0 !important;border-radius:50% !important;background:var(--rust) !important;color:transparent !important;border:none !important;box-shadow:none !important;margin-top:.62em;}
+
+.photo{position:relative;}
+.photo img{cursor:zoom-in;}
+.photo-zoom{position:absolute;top:12px;right:12px;z-index:6;width:40px;height:40px;border-radius:50%;border:1px solid rgba(32,28,22,.18);background:rgba(255,255,255,.92);color:var(--rust,#8f1d1d);font:600 24px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center;cursor:zoom-in;opacity:0;transform:scale(.85);transition:opacity .2s ease,transform .2s ease;box-shadow:0 6px 16px rgba(32,28,22,.18);}
+.photo:hover .photo-zoom,.photo-zoom:focus-visible{opacity:1;transform:scale(1);}
+@media (hover:none){.photo-zoom{opacity:1;transform:scale(1);}}
+.lightbox-backdrop{position:fixed;inset:0;z-index:80;background:rgba(20,18,15,.88);opacity:0;pointer-events:none;transition:opacity .25s ease;display:flex;align-items:center;justify-content:center;padding:4vh 4vw;cursor:zoom-out;}
+.lightbox-backdrop.open{opacity:1;pointer-events:auto;}
+.lightbox-backdrop img{width:92vw;height:86vh;max-width:none;max-height:none;object-fit:contain;background:transparent;border-radius:6px;box-shadow:none;transform:scale(.96);transition:transform .25s ease;}
+.lightbox-backdrop.open img{transform:scale(1);}
+.lightbox-close{position:absolute;top:22px;right:26px;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid rgba(32,28,22,.2);color:#201c16;font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+</style>
+<style id="design-layers">
+/* ==== theme.css ==== */
+/* SPM381 Week 9 — "Inner Drive" (dark). Night-violet arena, one living ECG pulse,
+   motives glow like charged cells. Presentation only; content frozen. */
+:root{
+  --bg:#110d1c; --bg2:#171226; --surface:#1e1830; --surface2:#271f3d;
+  --ink:#f4f0fa; --muted:rgba(244,240,250,.70); --muted2:rgba(244,240,250,.46); --line:rgba(244,240,250,.12);
+  --pulse:#ff4d6d; --pulse-soft:rgba(255,77,109,.16);
+  --volt:#8f7bff;  --volt-soft:rgba(143,123,255,.18);
+  --glow:#ffb547;  --glow-soft:rgba(255,181,71,.16);
+  --rust:var(--pulse); --rust-soft:var(--pulse-soft); --sage:var(--volt); --sage-soft:var(--volt-soft);
+  --gold:var(--glow); --sky:var(--glow); --amber:var(--glow); --stamp:var(--pulse); --turf:var(--volt);
+  --paper:var(--surface); --paper-ink:var(--ink);
+  --shadow:0 30px 70px -30px rgba(5,2,15,.8);
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-beat:cubic-bezier(.34,1.56,.64,1); --ease-in:cubic-bezier(.7,0,.84,0);
+  --ease:var(--ease-out);
+  --dur:.6s;
+  --font-display:'Bricolage Grotesque',system-ui,sans-serif;
+  --font-body:'Figtree',system-ui,sans-serif;
+  --font-mono:'DM Mono',ui-monospace,monospace;
+  --mv-hed:#ff4d6d; --mv-psy:#8f7bff; --mv-peer:#ffb547;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);}
+body{color:var(--ink);font-family:var(--font-body);}
+::selection{background:var(--pulse);color:#110d1c;}
+a{color:var(--glow);}
+
+/* slide frame: 8px grid; top clears chrome + Clear?/Question row */
+.slide{padding:104px 64px 72px;}
+.slide-inner{max-width:1264px;gap:24px;}
+.slide-inner::-webkit-scrollbar-thumb{background:var(--pulse-soft);}
+.page-num{display:none !important;}
+
+/* ---------- chrome ---------- */
+.chrome-top{gap:20px;}
+.brand{font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.12em;color:var(--muted2);display:flex;align-items:center;gap:8px;}
+.brand::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--pulse);box-shadow:0 0 8px var(--pulse);}
+.brand.blink::before{animation:w9-blink .6s var(--ease-out) 1;}
+@keyframes w9-blink{0%{opacity:1;transform:scale(1);}30%{opacity:.1;transform:scale(.6);}65%{opacity:1;transform:scale(1.6);}100%{opacity:1;transform:scale(1);}}
+.brand b{color:var(--ink);font-weight:500;}
+.progress-track{height:2px;background:var(--line);}
+.progress-fill{top:0;height:2px;background:linear-gradient(90deg,var(--volt-soft),var(--volt) 30%,var(--pulse) 85%);}
+.progress-fill::after{width:6px;height:6px;top:-2px;right:-3px;background:var(--pulse);box-shadow:0 0 10px 2px var(--pulse-soft);}
+.section-label{font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.12em;color:var(--pulse);}
+.counter{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--muted2);font-variant-numeric:tabular-nums;}
+.textlink{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--muted);}
+.textlink::after{background:var(--pulse);}
+.textlink:hover{color:var(--ink);}
+#pdfDownload{color:var(--glow);}
+.zoom-btn{color:var(--muted);}
+.zoom-btn:hover{color:var(--pulse);}
+.zoom-reset{color:var(--muted2);}
+.navbtn{background:var(--surface2);border:1px solid var(--line);color:var(--ink);backdrop-filter:none;box-shadow:0 8px 20px -8px rgba(5,2,15,.8);}
+.navbtn:hover{background:var(--pulse-soft);border-color:var(--pulse);}
+.hint{color:var(--muted2);font-family:var(--font-mono);}
+
+.ask-btn{background:var(--surface2);border:1px solid var(--line);color:var(--ink);font-family:var(--font-body);font-weight:600;backdrop-filter:none;box-shadow:0 8px 20px -8px rgba(5,2,15,.8);}
+.ask-btn:hover,.ask-btn:active{background:var(--pulse-soft);border-color:var(--pulse);}
+.ask-backdrop{background:rgba(8,5,16,.7);}
+.ask-panel{background:var(--surface);border-color:var(--line);border-radius:14px;box-shadow:var(--shadow);}
+.ask-title{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.01em;color:var(--ink);}
+.ask-context{font-family:var(--font-mono);color:var(--pulse);}
+.ask-panel textarea,.ask-panel input[type=text]{background:var(--bg2);color:var(--ink);border-color:var(--line);font-family:var(--font-body);}
+.ask-panel textarea::placeholder,.ask-panel input[type=text]::placeholder{color:var(--muted2);}
+.ask-panel textarea:focus,.ask-panel input[type=text]:focus{border-color:var(--pulse);}
+.ask-hint{color:var(--muted2);}
+.ask-btn-cancel{color:var(--muted);}
+.ask-btn-send{background:var(--pulse);border-color:var(--pulse);color:#110d1c;}
+.ask-status.err{color:#ff8fa3;}
+.ask-status.ok{color:#b9adff;}
+/* widgets.js (dark mode): keep "Clear?" at full strength, buttons in house style, above .beat-sweep */
+html:not(.widgets-light) .pulse-label{color:var(--muted);font-family:var(--font-mono);font-weight:500;letter-spacing:.12em;}
+.pulse-wrap{z-index:21;opacity:1;}
+html:not(.widgets-light) .pulse-btn{background:var(--surface2);border-color:var(--line);}
+html:not(.widgets-light) .pulse-btn:hover{border-color:var(--pulse);}
+
+.notes-panel{background:rgba(23,18,38,.98);border-left-color:var(--line);box-shadow:-20px 0 60px -30px rgba(5,2,15,.9);}
+.notes-panel h3{font-family:var(--font-mono);color:var(--pulse);}
+.notes-panel p{font-family:var(--font-body);color:var(--ink);overflow-wrap:anywhere;}
+.notes-panel a{color:var(--glow);}
+.notes-empty{font-family:var(--font-body);color:var(--muted2);}
+.notes-panel .close-notes{color:var(--muted);}
+
+/* ---------- type ---------- */
+h1.disp{font-family:var(--font-display);font-weight:800;letter-spacing:-.02em;color:var(--ink);text-transform:none;}
+.title-hero{font-size:clamp(56px,7.2vw,112px);line-height:.96;}
+.title-slide{font-size:clamp(34px,3.4vw,52px);line-height:1.08;}
+.title-slide.long{font-size:clamp(30px,2.8vw,44px);line-height:1.12;}
+.subtitle{font-family:var(--font-mono);font-style:normal;font-weight:500;font-size:clamp(14px,1.1vw,17px);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.kicker{font-family:var(--font-body);font-weight:600;font-size:clamp(18px,1.5vw,24px);letter-spacing:0;text-transform:none;color:var(--pulse);margin:0;}
+.kicker::before{display:none;}
+.slide-inner > h1.title-slide + .kicker{margin:-12px 0 0;}
+.subhead{font-family:var(--font-body);font-weight:600;font-size:clamp(18px,1.5vw,24px);line-height:1.35;color:var(--pulse);margin:-12px 0 0;max-width:1100px;}
+
+ul.bullets{gap:16px;max-width:880px;}
+ul.bullets li{font-family:var(--font-body);font-size:clamp(19px,1.45vw,26px);line-height:1.5;color:var(--ink);padding-left:28px;}
+ul.bullets li::before,ul.bullets li.q::before{content:'' !important;position:absolute;left:0 !important;top:.62em !important;width:8px !important;height:8px !important;border-radius:50% !important;background:var(--pulse) !important;transform:none !important;margin:0 !important;box-shadow:0 0 10px var(--pulse-soft) !important;}
+ul.bullets li a{color:var(--glow) !important;overflow-wrap:anywhere;text-underline-offset:3px;}
+ul.bullets li a[href^="http"]{font-family:var(--font-mono);font-size:.8em;font-weight:500;}
+mark.hl-yellow{background:var(--glow-soft);color:var(--glow);}
+
+.pullquote{font-family:var(--font-body);font-style:italic;font-weight:400;font-size:clamp(24px,2vw,34px);line-height:1.42;color:var(--ink);border-left:3px solid var(--pulse);padding-left:28px;max-width:none;}
+.pullquote::before{display:none;}
+.source{font-family:var(--font-mono);font-weight:500;font-size:13px;color:var(--muted);overflow-wrap:anywhere;}
+.source::before{color:var(--muted2);}
+
+/* ---------- images: directly on the background, no mat ---------- */
+.photo{border-radius:10px;background:none;box-shadow:var(--shadow);overflow:hidden;}
+.photo img{border-radius:10px;}
+.photo.contain{box-shadow:none;}
+.photo.contain img{filter:drop-shadow(0 22px 40px rgba(5,2,15,.6));}
+.cutline{color:var(--muted);border-left-color:var(--pulse);font-family:var(--font-mono);}
+.photo-zoom{background:rgba(17,13,28,.86);border:1px solid var(--pulse);color:var(--pulse);box-shadow:0 6px 16px rgba(5,2,15,.6);}
+.lightbox-backdrop{background:rgba(8,5,16,.95);}
+.lightbox-close{background:var(--surface2);color:var(--ink);border-color:var(--line);}
+
+/* ==== components.css ==== */
+/* media sets: each item sized by aspect ratio so photos sit large and unframed */
+.media-set{display:flex;gap:40px;align-items:center;justify-content:center;min-width:0;width:100%;--mh:62vh;}
+.media-set > .media-item{container-type:inline-size;flex:var(--ar,1) 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;}
+.media-item .photo{width:fit-content;max-width:100%;margin:0 auto;max-height:none !important;}
+.slide .media-item .photo img{max-height:none !important;max-width:none !important;height:auto !important;width:min(100cqw, calc(var(--nw,800) * var(--up,2) * 1px), calc(var(--mh) * var(--ar,1.5))) !important;}
+.media-item .photo img,.media-item .photo.contain img{object-fit:contain;margin:0;}
+.equation{display:block;width:100%;}
+
+/* stack: h2, sub-heading, media centred below */
+.stack-body{gap:32px;align-items:stretch;}
+.stack-body .photo{max-height:none;}
+.stack-body .media-set{--mh:min(calc(100vh - 360px),600px);}
+.stack-body:has(ul.bullets) .media-set.multi{--mh:min(calc(100vh - 470px),420px);}
+.stack-body.image-only .media-set{--mh:calc(100vh - 230px);}
+
+/* split: text 42 / media 58 */
+.split-grid,.split-grid.reverse,.split-grid:not(.reverse){grid-template-columns:42fr 58fr;gap:56px;align-items:center;}
+.split-grid .split-text{order:1 !important;}
+.split-grid .split-media{order:2 !important;}
+.split-text{min-width:0;display:flex;flex-direction:column;gap:24px;}
+.split-media{min-width:0;display:flex;align-items:center;justify-content:center;}
+.split-media .photo{height:auto;}
+.split-media .media-set{--mh:min(calc(100vh - 300px),600px);}
+
+/* compare look (two/three photos side by side under a line of text) */
+.look-compare .stack-body:not(:has(ul.bullets)) .media-set.multi{--mh:min(calc(100vh - 400px),560px);}
+/* transparent PNG logos: no rectangular shadow box */
+.photo:has(img[src$=".png"]){box-shadow:none;}
+.photo img[src$=".png"]{filter:drop-shadow(0 22px 40px rgba(5,2,15,.6));}
+/* text-only stack slides: larger bullets */
+.stack-body:not(:has(.media-set,.equation)) ul.bullets li{font-size:clamp(20px,1.75vw,30px);}
+/* motive chips scale up when there is room */
+@media (min-height: 800px){
+  .mv-ig:not(.mv-withlist) .mv-chip{min-height:56px;}
+  .mv-ig:not(.mv-withlist) .mv-abbr{height:42px;min-width:58px;font-size:clamp(15px,1.2vw,19px);}
+  .mv-ig:not(.mv-withlist) .mv-full{font-size:clamp(16px,1.35vw,21px);}
+  .mv-ig:not(.mv-withlist) .mv-chips{gap:14px;}
+}
+.look-compare .stack-body .media-set.multi{gap:48px;}
+
+/* image-only */
+.look-image-only{height:100%;justify-content:center;}
+.look-image-only .stack-body{flex:1;justify-content:center;}
+
+/* --- title --- */
+.is-type-title .slide-inner{height:100%;justify-content:flex-end;align-items:flex-start;text-align:left;padding-bottom:9vh;overflow:visible;gap:20px;}
+.is-type-title h1.title-hero{max-width:16ch;}
+.is-type-title .subtitle{margin:0 !important;}
+.w9-ecg{position:absolute;left:0;width:100%;pointer-events:none;overflow:visible;}
+.w9-ecg polyline{fill:none;stroke:var(--pulse);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}
+.is-type-title .w9-ecg{top:44%;height:180px;transform:translateY(-50%);opacity:.25;}
+.w9-heart{position:absolute;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(255,77,109,.22),rgba(143,123,255,.08) 45%,transparent 70%);}
+.is-type-title .w9-heart{width:72vmin;height:72vmin;left:52%;top:44%;margin:-36vmin 0 0 -36vmin;}
+
+/* --- prompt slides (look prompt / section / ask): centred question + ECG drawn under it --- */
+.look-prompt,.look-section,.look-ask{height:100%;justify-content:center;align-items:center;text-align:center;}
+.look-prompt h1.title-slide,.look-section h1.title-slide{font-size:clamp(42px,4.25vw,65px);line-height:1.06;max-width:22ch;}
+.look-ask .subhead{font-family:var(--font-display);font-weight:800;letter-spacing:-.015em;color:var(--ink);font-size:clamp(32px,3.1vw,50px);line-height:1.12;margin:8px 0 0;max-width:30ch;}
+.look-ask h1.title-slide{font-size:clamp(22px,1.8vw,30px);color:var(--muted);font-weight:600;}
+.look-ask ul.bullets{max-width:820px;text-align:left;margin-top:8px;}
+.ecg-under{display:block;width:min(560px,70%);height:56px;margin:0 auto;overflow:visible;}
+.ecg-under polyline{fill:none;stroke:var(--pulse);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}
+
+/* --- slide 3: hand-written YouTube iframe, large 16:9 like the engine's video embeds --- */
+.look-clip .equation > div{max-width:min(1120px,calc((100vh - 330px) * 1.7778)) !important;}
+.look-clip .equation > div > div:has(> iframe){border-radius:10px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);}
+.look-clip .equation > div > p{margin:16px 0 0 !important;font-family:var(--font-mono);font-size:14px !important;}
+.look-clip .equation > div > p a{color:var(--glow);text-underline-offset:3px;overflow-wrap:anywhere;}
+.look-clip .equation > div > div:has(> iframe)::before{content:'';position:absolute;inset:0;pointer-events:none;}
+
+/* --- videos (slide 14): image beside a large player, link below --- */
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:100%;}
+.video-grid.n1{grid-template-columns:1fr;}
+.video-card{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.video-grid.n1 .video-card{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:1fr auto;column-gap:48px;row-gap:16px;align-items:center;}
+.video-grid.n1 .video-card .video-logo{grid-row:1 / span 2;}
+.video-card .video-logo .photo img{width:auto !important;height:min(calc(100vh - 250px),620px) !important;max-width:none !important;}
+.video-frame{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.video-link{margin:0;font-family:var(--font-mono);font-weight:500;font-size:14px;overflow-wrap:anywhere;display:flex;align-items:center;gap:10px;}
+.video-link::before{content:'';flex:none;width:0;height:0;border-left:10px solid var(--pulse);border-top:6px solid transparent;border-bottom:6px solid transparent;}
+.video-link a{color:var(--glow) !important;text-underline-offset:3px;}
+
+/* --- compare: Intrinsic vs Extrinsic (slide 7, inline .ie markup) --- */
+.slide .ie{gap:32px;}
+.slide .ie-col{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--pulse);border-radius:14px;padding:24px 28px;}
+.slide .ie-col.e{border-top-color:var(--volt);}
+.slide .ie-h{font-family:var(--font-display);font-weight:800;letter-spacing:-.01em;color:var(--pulse);font-size:clamp(28px,2.6vw,42px);text-transform:none;}
+.slide .ie-col.e .ie-h{color:var(--volt);}
+.slide .ie-t{font-family:var(--font-body);font-size:clamp(20px,1.7vw,28px);line-height:1.35;color:var(--ink);}
+.slide .ie-vs{font-family:var(--font-display);font-weight:800;color:var(--glow);font-size:clamp(30px,2.8vw,46px);text-transform:none;}
+.slide .ie-who{margin-bottom:24px;gap:24px;}
+.slide .ie-who img{height:min(20vh,180px);border-radius:10px;box-shadow:var(--shadow);}
+.slide .ie-who span{font-family:var(--font-mono);font-weight:500;letter-spacing:.12em;color:var(--muted);font-size:clamp(14px,1.2vw,18px);}
+.slide .ie-sign{margin-top:24px;}
+.slide .ie-sign img{height:min(16vh,150px);border-radius:10px;}
+
+/* --- steps (slide 19): horizontal steps joined by a pulse line --- */
+.look-steps ul.bullets{display:grid;grid-template-columns:1fr 1fr;gap:56px;max-width:none;position:relative;padding-top:40px;margin-top:16px;}
+.look-steps ul.bullets::before{content:'';position:absolute;top:6px;left:7px;width:calc(50% + 28px);height:2px;background:linear-gradient(90deg,var(--pulse),var(--volt));opacity:.55;}
+.look-steps ul.bullets li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px 32px;font-size:clamp(20px,1.6vw,28px);}
+.look-steps ul.bullets li::before{top:-41px !important;left:0 !important;width:14px !important;height:14px !important;background:var(--muted2) !important;box-shadow:none !important;transition:background .4s var(--ease-out),box-shadow .4s var(--ease-out);transition-delay:inherit;}
+.slide.active .look-steps ul.bullets li.in::before{background:var(--pulse) !important;box-shadow:0 0 0 5px var(--pulse-soft),0 0 18px var(--pulse) !important;}
+
+/* --- closing --- */
+.closing-wrap{gap:24px;}
+.closing-wrap .rule{display:none;}
+.is-type-closing h1.title-hero{font-size:clamp(80px,10vw,160px);position:relative;z-index:1;text-shadow:0 0 60px rgba(255,77,109,.3);}
+.is-type-closing .w9-ecg{position:relative;width:min(900px,90%);height:120px;margin:0 auto;opacity:.9;}
+.is-type-closing .w9-heart{width:70vmin;height:70vmin;left:50%;top:50%;margin:-35vmin 0 0 -35vmin;}
+
+/* ---------- motive-chip infographic (Kim, James & Kim, 2013) ---------- */
+.mv-ig{font-family:var(--font-body);color:var(--ink);display:grid;grid-template-columns:1fr;gap:40px;align-items:center;width:100%;}
+.mv-ig.mv-withsrc{grid-template-columns:minmax(150px,.55fr) minmax(0,3fr);}
+.mv-ig.mv-withlist{grid-template-columns:minmax(0,.9fr) minmax(0,2.4fr);}
+.mv-clusters{display:grid;grid-template-columns:2.1fr 1fr 1fr;gap:24px;align-items:stretch;}
+.mv-cluster{--g:var(--mv-hed);border:0;border-top:3px solid var(--g);border-radius:0;padding:14px 0 0;display:flex;flex-direction:column;gap:12px;background:transparent;}
+.mv-hedonic{--g:var(--mv-hed);} .mv-psych{--g:var(--mv-psy);} .mv-peer{--g:var(--mv-peer);}
+.mv-cluster-t{font-family:var(--font-body);font-weight:600;font-size:clamp(15px,1.2vw,19px);line-height:1.25;color:var(--g);margin:0;text-align:left;}
+.mv-chips{display:grid;grid-template-columns:1fr;gap:12px;margin:0;padding:0;list-style:none;}
+.mv-hedonic .mv-chips{grid-template-columns:1fr 1fr;}
+.mv-chip{position:relative;display:flex;align-items:center;gap:12px;min-width:0;min-height:48px;padding:6px 18px 6px 6px;border-radius:999px;
+  background:color-mix(in srgb,var(--g) 14%,transparent);border:1.5px solid color-mix(in srgb,var(--g) 55%,transparent);color:var(--ink);
+  transition:opacity .45s var(--ease-out),transform .45s var(--ease-out),background .4s var(--ease-out),filter .4s var(--ease-out),box-shadow .4s var(--ease-out);}
+.mv-abbr{flex:none;min-width:52px;height:36px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:clamp(14px,1.1vw,17px);color:var(--g);background:color-mix(in srgb,var(--g) 18%,transparent);}
+.mv-full{font-family:var(--font-body);font-weight:500;font-size:clamp(15px,1.2vw,19px);line-height:1.2;color:var(--ink);}
+.mv-chip.mv-on{background:var(--g);border-color:var(--g);box-shadow:0 0 0 4px color-mix(in srgb,var(--g) 22%,transparent),0 0 28px color-mix(in srgb,var(--g) 55%,transparent);}
+.mv-chip.mv-on .mv-abbr{background:rgba(17,13,28,.18);color:#110d1c;}
+.mv-chip.mv-on .mv-full{color:#110d1c;font-weight:600;}
+.mv-src{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;}
+.mv-node{width:clamp(110px,10vw,150px);aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:clamp(26px,2.4vw,36px);color:var(--ink);
+  background:radial-gradient(circle at 35% 30%,var(--surface2),var(--surface));border:2px solid var(--pulse);box-shadow:0 0 0 6px var(--pulse-soft),0 0 40px rgba(255,77,109,.3);}
+.mv-note{font-weight:600;font-size:clamp(16px,1.35vw,21px);line-height:1.35;color:var(--volt);}
+.mv-q{font-family:var(--font-display);font-weight:800;font-size:clamp(20px,1.8vw,28px);line-height:1.15;color:var(--pulse);}
+.mv-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:24px;font-weight:600;font-size:clamp(20px,1.7vw,28px);line-height:1.3;}
+.mv-list li{position:relative;padding-left:28px;}
+.mv-list li::before{content:'';position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:50%;background:var(--pulse);box-shadow:0 0 10px var(--pulse-soft);}
+/* lit vs dim: when a board has lit chips, the rest dim */
+.mv-ig:has(.mv-on) .mv-chip:not(.mv-on){opacity:.28;filter:saturate(.3);background:transparent;}
+/* slide 20: list beside board, hedonic in one column so names stay large */
+.mv-withlist .mv-clusters{grid-template-columns:1.25fr 1fr 1fr;}
+.mv-withlist .mv-hedonic .mv-chips{grid-template-columns:1fr;gap:8px;}
+.mv-withlist .mv-chip{min-height:40px;padding:4px 14px 4px 4px;}
+.mv-withlist .mv-abbr{height:30px;min-width:46px;}
+
+@media (max-width: 880px){
+  .split-grid,.split-grid.reverse,.split-grid:not(.reverse){grid-template-columns:1fr !important;}
+  .video-grid,.video-grid.n1 .video-card,.look-steps ul.bullets{grid-template-columns:1fr;}
+  .mv-ig.mv-withsrc,.mv-ig.mv-withlist,.mv-clusters{grid-template-columns:1fr;}
+}
+@media (max-height: 760px){
+  .slide{padding:96px 56px 64px;}
+  .slide-inner{gap:20px;}
+  .mv-chips{gap:8px;}
+  .mv-chip{min-height:40px;padding:4px 14px 4px 4px;}
+  .mv-abbr{height:30px;}
+  .mv-ig{gap:32px;}
+  .slide .ie-who img{height:16vh;}
+  .slide .ie-sign img{height:13vh;}
+  .slide .ie-col{padding:18px 24px;}
+}
+
+/* ==== motion.css ==== */
+/* enter: rise 14px + fade, 600ms ease-out, 70ms stagger (set in motion.js) */
+.reveal-item{transform:translateY(14px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out);}
+/* heartbeat sweep: old slide fades out (200ms) under the line, new one fades in behind it */
+.slide{transform:none !important;transition:opacity .2s linear, visibility 0s linear .2s;}
+.slide.active{transition:opacity .45s var(--ease-out) .14s, visibility 0s linear 0s;}
+.photo img{transition:opacity .6s var(--ease-out), transform .9s var(--ease-out);transform:scale(1.03);}
+.slide.active .photo.kb img{animation:none;}
+.beat-sweep{position:fixed;inset:0;z-index:19;pointer-events:none;opacity:0;}
+.beat-sweep svg{position:absolute;left:0;top:50%;width:100%;height:140px;margin-top:-70px;overflow:visible;}
+.beat-sweep polyline{fill:none;stroke:var(--pulse);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px rgba(255,77,109,.8));}
+.beat-sweep.go{animation:w9-sweep-fade .65s linear forwards;}
+.beat-sweep.go polyline{animation:w9-draw .52s var(--ease-out) forwards;}
+@keyframes w9-draw{to{stroke-dashoffset:0;}}
+@keyframes w9-sweep-fade{0%{opacity:1;}80%{opacity:1;}100%{opacity:0;}}
+/* ECG under prompt questions draws on enter (800ms) */
+.ecg-under polyline{stroke-dasharray:1;stroke-dashoffset:1;}
+.slide.active .ecg-under.in polyline{transition:stroke-dashoffset .8s var(--ease-out) .25s;stroke-dashoffset:0;}
+/* idle heartbeat (title + closing only): 1.2s beat then 0.8s rest */
+.slide.active .w9-heart{animation:w9-heartbeat 2s var(--ease-beat) infinite;}
+@keyframes w9-heartbeat{0%{transform:scale(1);}18%{transform:scale(1.06);}36%{transform:scale(1);}46%{transform:scale(1.04);}60%{transform:scale(1);}100%{transform:scale(1);}}
+/* motive chips: enter group by group (delays from motion.js), lit chips beat once after the board settles */
+.equation .mv-chip{opacity:0;transform:translateY(14px);}
+.slide.active .equation.in .mv-chip{opacity:1;transform:none;}
+.slide.active .equation.in .mv-ig:has(.mv-on) .mv-chip:not(.mv-on){opacity:.28;}
+.slide.active .equation.in .mv-chip.mv-on{animation:mv-beat .9s var(--ease-beat) 1 both;animation-delay:var(--beat-d,900ms);}
+@keyframes mv-beat{0%{scale:1;}40%{scale:1.12;}100%{scale:1;}}
+@media (prefers-reduced-motion: reduce){
+  .slide,.slide.active{transition:opacity .15s linear !important;transform:none !important;}
+  .beat-sweep{display:none !important;}
+  .reveal-item{transform:none !important;}
+  .brand.blink::before{animation:none !important;}
+  .slide.active .w9-heart{animation:none !important;}
+  .ecg-under polyline{stroke-dashoffset:0 !important;transition:none !important;}
+  .equation .mv-chip{opacity:1;transform:none !important;transition:none !important;}
+  .mv-ig:has(.mv-on) .mv-chip:not(.mv-on){opacity:.28 !important;}
+  .slide.active .equation.in .mv-chip.mv-on{animation:none !important;}
+  .look-steps ul.bullets li::before{transition:none !important;}
+}
+.reduced .slide,.reduced .slide.active{transition:opacity .15s linear !important;}
+.reduced .beat-sweep{display:none !important;}
+.reduced .w9-heart{animation:none !important;}
+.reduced .ecg-under polyline{stroke-dashoffset:0 !important;}
+.reduced .equation .mv-chip{opacity:1;transform:none !important;}
+.reduced .mv-ig:has(.mv-on) .mv-chip:not(.mv-on){opacity:.28 !important;}
+.reduced .equation .mv-chip.mv-on{animation:none !important;}
+
+/* ==== background.css ==== */
+.bga{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:radial-gradient(70% 55% at 85% -10%, rgba(255,77,109,.10), transparent),
+             radial-gradient(60% 50% at 0% 110%, rgba(143,123,255,.10), transparent),
+             var(--bg);
+  transition:opacity .6s var(--ease-out);}
+.bga::after{content:'';position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 50%, transparent 60%, rgba(5,2,15,.45));}
+.bga[data-mode="hero"]{background:radial-gradient(70% 60% at 85% -10%, rgba(255,77,109,.16), transparent),
+             radial-gradient(60% 55% at 0% 110%, rgba(143,123,255,.16), transparent),
+             var(--bg);}
+</style>
+<style id="w9-yt-poster">
+.equation:has(.yt-poster){all:unset;display:block;width:100%;margin-top:2vh;text-align:center;}
+.yt-poster{position:relative;display:inline-block;width:min(960px,100%);aspect-ratio:16/9;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.yt-poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+.yt-poster:hover img{transform:scale(1.03);}
+.yt-play{position:absolute;left:50%;top:50%;width:92px;height:64px;margin:-32px 0 0 -46px;background:#ff0033;border-radius:16px;}
+.yt-play::after{content:'';position:absolute;left:36px;top:18px;border-left:26px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;}
+.yt-cap{position:absolute;right:16px;bottom:14px;padding:8px 14px;border-radius:999px;background:rgba(0,0,0,.7);color:#fff;font-size:15px;}
+.yt-link{margin-top:12px;font-size:15px;} .yt-link a{color:inherit;opacity:.8;}
+</style>
+</head>
+<body>
+<div class="bg-wash"></div>
+
+<div class="chrome-top">
+  <a class="textlink home-btn" href="../" title="Back to course home">&larr; Home</a>
+  <div class="brand"><b>SPM 381</b> &middot; Sport Consumer Motivation &middot; Week 9</div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="section-label" id="sectionLabel"></div>
+  <div class="counter" id="counter"></div>
+  <a class="textlink home-btn" id="pdfDownload" href="SPM381_Week9_Slides.pdf" download title="Download this deck as a PDF">Download PDF</a>
+  <button class="textlink" id="notesToggle" title="Toggle speaker notes (N)">Notes &middot; N</button>
+  <div class="zoom-controls" role="group" aria-label="Zoom controls">
+    <button class="zoom-btn" id="zoomOutBtn" title="Zoom out (&minus;)" aria-label="Zoom out">&minus;</button>
+    <button class="zoom-btn zoom-reset" id="zoomResetBtn" title="Reset zoom (0)" aria-label="Reset zoom">100%</button>
+    <button class="zoom-btn" id="zoomInBtn" title="Zoom in (+)" aria-label="Zoom in">+</button>
+  </div>
+</div>
+
+<main class="deck" id="deck"></main>
+<div class="page-num" id="pageNum"></div>
+
+<div class="chrome-bottom">
+  <button class="navbtn" id="prevBtn" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="navbtn" id="nextBtn" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<div class="hint" id="hint">Click, scroll wheel, or press &rarr; to continue &middot; N for notes</div>
+
+<aside class="notes-panel" id="notesPanel">
+  <button class="close-notes" id="closeNotes" aria-label="Close notes">&times;</button>
+  <div id="notesBody"><h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p></div>
+</aside>
+
+<button class="ask-btn" id="askBtn" title="Ask a question about this slide" aria-label="Ask a question about this slide">Question?</button>
+<div class="ask-backdrop" id="askBackdrop">
+  <div class="ask-panel">
+    <p class="ask-title">Ask a question or leave a comment</p>
+    <p class="ask-context" id="askContext"></p>
+    <textarea id="askText" placeholder="What's on your mind about this slide?" maxlength="4000"></textarea>
+    <input type="text" id="askName" placeholder="Your name" maxlength="120">
+    <div class="ask-row">
+      <span class="ask-hint">Goes straight to Dr. Kim.</span>
+      <div class="ask-actions">
+        <button class="ask-btn-cancel" id="askCancel">Cancel</button>
+        <button class="ask-btn-send" id="askSend">Send</button>
+      </div>
+    </div>
+    <div class="ask-status" id="askStatus"></div>
+  </div>
+</div>
+
+<script src="../questions/config.js?v=3"></script>
+<script type="application/json" id="slide-data">[{"type": "title", "title": "Sport Consumer Motivation", "subtitle": "SPM381 Consumer Behavior in Sport", "variant": "hero"}, {"type": "media", "title": "Why do you watch NBA games?", "variant": "statement", "look": "prompt"}, {"type": "media", "layout": "stack", "title": "WATCH THIS CLIP", "subhead": "Mini documentary", "html": "<div style=\"width:100%;max-width:min(900px,70vh*1.7778);margin:0 auto\"><div style=\"position:relative;aspect-ratio:16/9;background:#000\"><iframe src=\"https://www.youtube-nocookie.com/embed/c1KTmV3aaEk?start=76&rel=0\" title=\"Mini documentary\" loading=\"lazy\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen referrerpolicy=\"strict-origin-when-cross-origin\" style=\"position:absolute;inset:0;width:100%;height:100%;border:0\"><\/iframe><\/div><p style=\"margin:10px 0 0;font-size:14px;text-align:center\"><a href=\"https://www.youtube.com/watch?v=c1KTmV3aaEk&amp;t=76s\" target=\"_blank\" rel=\"noopener\">https://www.youtube.com/watch?v=c1KTmV3aaEk&amp;t=76s<\/a><\/p><\/div>", "notes": "https://www.youtube.com/watch?v=c1KTmV3aaEk&t=76s", "variant": "rows", "rowMark": "rule", "look": "clip"}, {"type": "media", "layout": "split", "title": "What is motivation?", "quote": "“Motivation is the driving force within individuals that impels them to action” (Schiffman & Kanuk, 2004, p. 87).", "images": [{"src": "assets/p04-picture2.jpg", "w": 1134, "h": 752}], "media": "frame", "variant": "rows", "rowMark": "rule"}, {"type": "media", "layout": "split", "title": "What is motivation? cont.", "quote": "“The energizing force that activates behavior and provides purpose and direction for that behavior” (Hawkins et al., 2004).", "images": [{"src": "assets/p05-picture2.jpg", "w": 1388, "h": 768}], "media": "frame", "variant": "rows", "rowMark": "rule"}, {"type": "media", "layout": "split", "title": "Sport Consumer Motives", "subhead": "What’s your definition of sport consumer motives?", "bullets": ["Processes that direct or force consume sports."], "images": [{"src": "assets/p06-picture2.jpg", "w": 316, "h": 400}, {"src": "assets/p06-picture6.jpg", "w": 570, "h": 380}, {"src": "assets/p06-picture4.jpg", "w": 240, "h": 230}], "media": "frame", "look": "compare", "stage": "stack", "variant": "rows", "rowMark": "rule"}, {"type": "media", "layout": "stack", "title": "Intrinsic vs. Extrinsic Motivation", "html": "<style>.ie{display:grid;grid-template-columns:1fr auto 1fr;gap:28px;align-items:stretch;width:100%}.ie-col{border:1px solid var(--line);border-top:3px solid var(--amber);padding:26px 28px;background:var(--surface);display:flex;flex-direction:column;gap:14px;justify-content:center}.ie-col.e{border-top-color:var(--ink)}.ie-h{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:clamp(24px,2.4vw,40px);letter-spacing:.02em}.ie-t{font-family:var(--font-body);font-size:clamp(20px,1.9vw,30px);line-height:1.3}.ie-vs{align-self:center;font-family:var(--font-display);font-weight:800;font-size:clamp(26px,2.6vw,42px);color:var(--amber);text-transform:lowercase}.ie-who{display:flex;align-items:center;gap:20px;margin-bottom:22px}.ie-who img{height:min(22vh,190px);width:auto;display:block}.ie-who span{font-family:var(--font-mono);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:clamp(16px,1.4vw,22px);color:var(--amber)}.ie-sign{margin-top:22px;text-align:center}.ie-sign img{height:min(17vh,150px);width:auto}<\/style><div class=\"ie-who\"><img src=\"assets/p07-picture2.jpg\" alt=\"Richard Ryan and Edward Deci\"><span>Richard Ryan &amp; Edward Deci<\/span><\/div><div class=\"ie\"><div class=\"ie-col\"><div class=\"ie-h\">Intrinsic<\/div><div class=\"ie-t\">Authentic (self-authored or endorsed)<\/div><\/div><div class=\"ie-vs\">vs.<\/div><div class=\"ie-col e\"><div class=\"ie-h\">Extrinsic<\/div><div class=\"ie-t\">Externally controlled for an action<\/div><\/div><\/div><div class=\"ie-sign\"><img src=\"assets/p07-picture4.jpg\" alt=\"Motivation road sign: Intrinsic, Extrinsic\"><\/div>", "variant": "rows", "rowMark": "rule"}, {"type": "media", "layout": "stack", "images": [{"src": "assets/p08-picture2.png", "w": 1152, "h": 601, "fit": "contain", "still": true}], "media": "figure", "plate": "flat", "look": "image-only"}, {"type": "media", "layout": "stack", "title": "Intrinsic vs. Extrinsic Motivation cont.", "bullets": ["Studying because you want to get a good grade. (I vs. E)", "Participating in a sport because you find the activity enjoyable. (I vs. E)", "Solving a word puzzle because you find the challenge fun and interesting. (I vs. E)", "Cleaning your room to avoid being reprimanded by your parents. (I vs. E)", "Participating in a sport in order to win awards. (I vs. E)", "Competing in a contest in order to win a scholarship. (I vs. E)"], "variant": "rows", "rowMark": "rule"}, {"type": "media", "layout": "split", "title": "Sport Consumer Motivation", "bullets": ["Think about your previous attendance at the sporting events….."], "images": [{"src": "assets/p10-picture2.jpg", "w": 530, "h": 420}, {"src": "assets/p10-picture4.jpg", "w": 299, "h": 441}], "media": "frame", "look": "compare", "stage": "stack", "variant": "rows", "rowMark": "rule"}, {"type": "media", "layout": "stack", "title": "Sport Consumer Motivation cont.", "subhead": "Can you distinguish your motives of sports consumption into two categories, intrinsic motivation and extrinsic motivation?", "variant": "rows", "rowMark": "rule", "look": "ask"}, {"type": "media", "title": "Kim, James, Kim (2013)", "layout": "stack", "subhead": "Please read this week’s reading Kim, James, and Kim (2013) from p. 175 to p.176.", "html": "<div class=\"mv-ig \"><div class=\"mv-clusters\"><div class=\"mv-cluster mv-hedonic\"><p class=\"mv-cluster-t\">Hedonic Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Aes<\/span><span class=\"mv-full\">Aesthetics<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Dra<\/span><span class=\"mv-full\">Drama<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Esc<\/span><span class=\"mv-full\">Escape<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PA<\/span><span class=\"mv-full\">Physical Attraction<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PS<\/span><span class=\"mv-full\">Physical Skill<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Fam<\/span><span class=\"mv-full\">Family<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">SI<\/span><span class=\"mv-full\">Social Interaction<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-psych\"><p class=\"mv-cluster-t\">Psychological Connection Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Ach<\/span><span class=\"mv-full\">Achievement<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">TE<\/span><span class=\"mv-full\">Team Effort<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">TA<\/span><span class=\"mv-full\">Team Affiliation<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-peer\"><p class=\"mv-cluster-t\">Peer and Family Pressure Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">PP<\/span><span class=\"mv-full\">Peer Pressure<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">FP<\/span><span class=\"mv-full\">Family Pressure<\/span><\/li><\/ul><\/div><\/div><\/div>", "variant": "rows", "rowMark": "rule", "look": "motives"}, {"type": "media", "title": "Please assume that you are watching an NFL game", "subhead": "What would be your motivation(s) to watch the NFL game?", "images": [{"src": "assets/p13-nfl-photo.png", "w": 1365, "h": 1024}, {"src": "assets/p13-nfl-logo.png", "w": 500, "h": 500}], "variant": "rows", "rowMark": "rule", "media": "frame", "look": "compare", "stage": "stack"}, {"type": "media", "title": "", "variant": "rows", "rowMark": "rule", "media": "frame", "look": "videos", "layout": "stack", "html": "<a class=\"yt-poster\" href=\"https://www.youtube.com/watch?v=H_neSjf8QMA\" target=\"_blank\" rel=\"noopener\"><img src=\"assets/p14-picture.jpg\" alt=\"Watch on YouTube\"><span class=\"yt-play\"><\/span><span class=\"yt-cap\">Watch on YouTube<\/span><\/a><p class=\"yt-link\"><a href=\"https://www.youtube.com/watch?v=H_neSjf8QMA\" target=\"_blank\" rel=\"noopener\">https://www.youtube.com/watch?v=H_neSjf8QMA<\/a><\/p>"}, {"type": "media", "title": "Fighting in Hockey", "layout": "split", "bullets": ["5-minute Major Penalty for Fighting", "A player is automatically ejected and suspended if the player tries to leave the bench to join a fight (“Third Man In” rule, 1977)", "Automatic ejection for using weapons of any kind (i.e. skate or stick) as they can cause serious injury.", "Automatic ejection for a player who receives two instigator penalties or participates in three fights in a single game."], "images": [{"src": "assets/p15-hockey-fight.jpg", "w": 480, "h": 318}], "variant": "rows", "rowMark": "rule", "media": "frame"}, {"type": "media", "title": "Fighting in Hockey cont.", "subhead": "Does fighting belong in the NHL?", "bullets": ["Regardless of your position on fighting in the NHL, do you believe it will still be around in 10 years?"], "variant": "rows", "rowMark": "rule", "look": "ask"}, {"type": "media", "title": "Why is Dr. Kim motivated to watch the FSU football game?", "layout": "stack", "subhead": "2013 Winning Season", "html": "<div class=\"mv-ig mv-withsrc\"><div class=\"mv-src\"><div class=\"mv-node\">Kim<\/div><div class=\"mv-note\">Team Effort<br>Team Affiliation<\/div><\/div><div class=\"mv-clusters\"><div class=\"mv-cluster mv-hedonic\"><p class=\"mv-cluster-t\">Hedonic Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Aes<\/span><span class=\"mv-full\">Aesthetics<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Dra<\/span><span class=\"mv-full\">Drama<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Esc<\/span><span class=\"mv-full\">Escape<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PA<\/span><span class=\"mv-full\">Physical Attraction<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PS<\/span><span class=\"mv-full\">Physical Skill<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Fam<\/span><span class=\"mv-full\">Family<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">SI<\/span><span class=\"mv-full\">Social Interaction<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-psych\"><p class=\"mv-cluster-t\">Psychological Connection Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Ach<\/span><span class=\"mv-full\">Achievement<\/span><\/li><li class=\"mv-chip mv-on\"><span class=\"mv-abbr\">TE<\/span><span class=\"mv-full\">Team Effort<\/span><\/li><li class=\"mv-chip mv-on\"><span class=\"mv-abbr\">TA<\/span><span class=\"mv-full\">Team Affiliation<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-peer\"><p class=\"mv-cluster-t\">Peer and Family Pressure Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">PP<\/span><span class=\"mv-full\">Peer Pressure<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">FP<\/span><span class=\"mv-full\">Family Pressure<\/span><\/li><\/ul><\/div><\/div><\/div>", "variant": "rows", "rowMark": "rule", "look": "motives"}, {"type": "media", "title": "Why is Dr. Kim motivated to watch the FSU football game? cont.", "layout": "stack", "subhead": "After 2013 season", "html": "<div class=\"mv-ig mv-withsrc\"><div class=\"mv-src\"><div class=\"mv-node\">Kim<\/div><div class=\"mv-q\">Is he a real fan?<\/div><\/div><div class=\"mv-clusters\"><div class=\"mv-cluster mv-hedonic\"><p class=\"mv-cluster-t\">Hedonic Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Aes<\/span><span class=\"mv-full\">Aesthetics<\/span><\/li><li class=\"mv-chip mv-on\"><span class=\"mv-abbr\">Dra<\/span><span class=\"mv-full\">Drama<\/span><\/li><li class=\"mv-chip mv-on\"><span class=\"mv-abbr\">Esc<\/span><span class=\"mv-full\">Escape<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PA<\/span><span class=\"mv-full\">Physical Attraction<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PS<\/span><span class=\"mv-full\">Physical Skill<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Fam<\/span><span class=\"mv-full\">Family<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">SI<\/span><span class=\"mv-full\">Social Interaction<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-psych\"><p class=\"mv-cluster-t\">Psychological Connection Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Ach<\/span><span class=\"mv-full\">Achievement<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">TE<\/span><span class=\"mv-full\">Team Effort<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">TA<\/span><span class=\"mv-full\">Team Affiliation<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-peer\"><p class=\"mv-cluster-t\">Peer and Family Pressure Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">PP<\/span><span class=\"mv-full\">Peer Pressure<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">FP<\/span><span class=\"mv-full\">Family Pressure<\/span><\/li><\/ul><\/div><\/div><\/div>", "variant": "rows", "rowMark": "rule", "look": "motives"}, {"type": "media", "title": "Think about…", "bullets": ["Assume that you are an assistant AD at Arcadia University. You are requested to examine the different motives of spectators who follow sporting teams in D-I and D-III.", "How to conduct this project?", "Do survey using Sport Consumer Motivation Scale", "See differences whether sports fans in D-1 and D-III have different motives to attend games."], "variant": "rows", "rowMark": "rule", "look": "steps"}, {"type": "media", "title": "Any systematic findings?", "layout": "stack", "html": "<div class=\"mv-ig mv-withlist\"><ul class=\"mv-list\"><li>Men’s vs. Women’s sports<\/li><li>True fan vs. Spectator<\/li><li>Violence (UFC, hockey)<\/li><\/ul><div class=\"mv-clusters\"><div class=\"mv-cluster mv-hedonic\"><p class=\"mv-cluster-t\">Hedonic Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Aes<\/span><span class=\"mv-full\">Aesthetics<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Dra<\/span><span class=\"mv-full\">Drama<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Esc<\/span><span class=\"mv-full\">Escape<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PA<\/span><span class=\"mv-full\">Physical Attraction<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">PS<\/span><span class=\"mv-full\">Physical Skill<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">Fam<\/span><span class=\"mv-full\">Family<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">SI<\/span><span class=\"mv-full\">Social Interaction<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-psych\"><p class=\"mv-cluster-t\">Psychological Connection Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">Ach<\/span><span class=\"mv-full\">Achievement<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">TE<\/span><span class=\"mv-full\">Team Effort<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">TA<\/span><span class=\"mv-full\">Team Affiliation<\/span><\/li><\/ul><\/div><div class=\"mv-cluster mv-peer\"><p class=\"mv-cluster-t\">Peer and Family Pressure Motives<\/p><ul class=\"mv-chips\"><li class=\"mv-chip\"><span class=\"mv-abbr\">PP<\/span><span class=\"mv-full\">Peer Pressure<\/span><\/li><li class=\"mv-chip\"><span class=\"mv-abbr\">FP<\/span><span class=\"mv-full\">Family Pressure<\/span><\/li><\/ul><\/div><\/div><\/div>", "variant": "rows", "rowMark": "rule", "look": "motives"}, {"type": "media", "title": "Why is knowing sport consumer motives important?", "variant": "statement", "look": "section"}, {"type": "closing", "title": "Questions?", "variant": "closing", "closingMark": ""}]</script>
+<script>
+(function(){
+  const SLIDES = JSON.parse(document.getElementById('slide-data').textContent);
+  const deck = document.getElementById('deck');
+  const progressFill = document.getElementById('progressFill');
+  const counterEl = document.getElementById('counter');
+  const sectionLabel = document.getElementById('sectionLabel');
+  const pageNum = document.getElementById('pageNum');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const hint = document.getElementById('hint');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesBody = document.getElementById('notesBody');
+  const notesToggle = document.getElementById('notesToggle');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const zoomResetBtn = document.getElementById('zoomResetBtn');
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(prefersReduced) document.documentElement.classList.add('reduced');
+
+  const SECTIONS = [
+    {from:0,to:0,label:'Opening'},
+    {from:1,to:4,label:'What Is Motivation'},
+    {from:5,to:10,label:'Intrinsic & Extrinsic'},
+    {from:11,to:17,label:'Fan Motives'},
+    {from:18,to:20,label:'Applying Motives'},
+    {from:21,to:21,label:'Closing'}
+  ];
+  function sectionFor(i){ for(const s of SECTIONS){ if(i>=s.from && i<=s.to) return s.label; } return ''; }
+
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function revealItem(node, delayMs){ node.classList.add('reveal-item'); node.style.transitionDelay=(delayMs||0)+'ms'; return node; }
+  function isQuestion(text){ return /\?\s*$/.test(text.trim()); }
+  function escapeHTML(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function titleEl(text, delay){
+    const cls = 'disp title-slide'+(text.length>52?' long':'')+' reveal-item';
+    const h = el('h1',cls, escapeHTML(text));
+    revealItem(h, delay||0);
+    return h;
+  }
+  function buildKicker(text, delay){ const k = el('p','kicker reveal-item', escapeHTML(text)); revealItem(k, delay||0); return k; }
+
+  const LINK_MARKER_RE = /\[\[LINK:([^|\]]+)\|([^\]]+)\]\]/g;
+  const HL_MARKER_RE = /==([^=]+)==/g;
+  function renderMarkedText(text){
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    LINK_MARKER_RE.lastIndex = 0;
+    while((m = LINK_MARKER_RE.exec(text))){
+      if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const a = document.createElement('a');
+      a.href = m[1].trim(); a.target = '_blank'; a.rel = 'noopener'; a.style.color = 'inherit';
+      a.textContent = m[2];
+      frag.appendChild(a);
+      last = LINK_MARKER_RE.lastIndex;
+    }
+    if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    const out = document.createDocumentFragment();
+    Array.from(frag.childNodes).forEach(node => {
+      if(node.nodeType !== Node.TEXT_NODE){ out.appendChild(node); return; }
+      const t = node.textContent;
+      let l2 = 0, mm;
+      HL_MARKER_RE.lastIndex = 0;
+      while((mm = HL_MARKER_RE.exec(t))){
+        if(mm.index > l2) out.appendChild(document.createTextNode(t.slice(l2, mm.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'hl-yellow';
+        mark.textContent = mm[1];
+        out.appendChild(mark);
+        l2 = HL_MARKER_RE.lastIndex;
+      }
+      if(l2 < t.length) out.appendChild(document.createTextNode(t.slice(l2)));
+    });
+    return out;
+  }
+  function buildBullets(list, baseDelay){
+    const ul = el('ul','bullets');
+    list.forEach((t,i)=>{
+      const li = el('li','');
+      li.appendChild(renderMarkedText(t));
+      revealItem(li, (baseDelay||0)+90*i);
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  const URL_RE = /\b((?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?:\.[a-z]{2,})?(?:\/[^\s]*)?)/gi;
+  function linkifyText(text){
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    URL_RE.lastIndex = 0;
+    while((m = URL_RE.exec(text))){
+      if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      let url = m[0], trail = '';
+      while(/[.,;:)\]]$/.test(url)){ trail = url.slice(-1) + trail; url = url.slice(0, -1); }
+      const href = /^https?:\/\//i.test(url) ? url : 'https://' + url;
+      const a = document.createElement('a');
+      a.href = href; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = url;
+      frag.appendChild(a);
+      if(trail) frag.appendChild(document.createTextNode(trail));
+      last = URL_RE.lastIndex;
+    }
+    if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
+  function buildSource(text){ const p = el('p','source reveal-item'); p.appendChild(linkifyText(text)); return p; }
+  function buildPhoto(img, opts){
+    opts = opts||{};
+    const outer = el('div','');
+    const wrap = el('div','photo'+(opts.contain?' contain':'')+(opts.kb!==false?' kb':''));
+    if(opts.delay!=null) wrap.style.transitionDelay = opts.delay+'ms';
+    const im = document.createElement('img');
+    im.src = img.src; im.loading='lazy'; im.alt = img.caption || '';
+    if(img.w && img.h) im.style.aspectRatio = img.w+' / '+img.h;
+    wrap.appendChild(im);
+    if(img.flawBadge){
+      wrap.classList.add('flawed');
+      const badge = el('div','flaw-badge');
+      badge.innerHTML = '<span class="flaw-x">&#10005;</span> '+escapeHTML(img.flawBadge);
+      wrap.appendChild(badge);
+    }
+    if(img.callout){
+      wrap.appendChild(el('div','photo-callout', escapeHTML(img.callout)));
+    }
+    outer.appendChild(wrap);
+    if(img.caption) outer.appendChild(el('div','cutline', escapeHTML(img.caption)));
+    return outer;
+  }
+  function badgeCorner(img, delay){
+    const b = el('div','badge-corner');
+    b.style.transitionDelay=(delay||0)+'ms';
+    const im = document.createElement('img'); im.src = img.src; im.loading='lazy';
+    b.appendChild(im);
+    return b;
+  }
+
+  // ---------- slide type builders ----------
+  function build(slide, idx){
+    const s = el('section','slide');
+    s.dataset.index = idx;
+    let inner = el('div','slide-inner');
+
+    switch(slide.type){
+      case 'title': {
+        inner.style.textAlign='center'; inner.style.alignItems='center'; inner.style.justifyContent='center';
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        const h = el('h1','disp title-hero reveal-item', escapeHTML(slide.title)); revealItem(h,140);
+        inner.appendChild(h);
+        if(slide.subtitle){ const sub = el('p','subtitle reveal-item', escapeHTML(slide.subtitle)); sub.style.margin='14px auto 0'; revealItem(sub,300); inner.appendChild(sub); }
+        if(slide.meta){ const m = el('div','meta-badge reveal-item', escapeHTML(slide.meta)); revealItem(m,420); inner.appendChild(m); }
+        break;
+      }
+      case 'agenda': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,60));
+        const list = el('div','agenda-list');
+        slide.items.forEach((it,i)=>{
+          const row = el('div','agenda-row reveal-item'); revealItem(row,180+i*110);
+          row.appendChild(el('div','agenda-n', escapeHTML(it.n)));
+          const right = el('div','');
+          right.appendChild(el('div','agenda-label', escapeHTML(it.label)));
+          right.appendChild(el('div','agenda-detail', escapeHTML(it.detail)));
+          row.appendChild(right);
+          list.appendChild(row);
+        });
+        inner.appendChild(list);
+        if(slide.source){ const src = buildSource(slide.source); src.classList.add('source-lg'); inner.appendChild(src); }
+        break;
+      }
+      case 'hub': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,50));
+        const wrap = el('div','hub-wrap');
+        wrap.appendChild(el('div','hub-center', escapeHTML(slide.center)));
+        const n = slide.spokes.length, radiusPct = 40;
+        slide.spokes.forEach((label,i)=>{
+          const angle = (Math.PI*2*i/n) - Math.PI/2;
+          const dx = radiusPct*Math.cos(angle), dy = radiusPct*Math.sin(angle);
+          const x = 50+dx, y = 50+dy;
+          const line = el('div','hub-spoke-line');
+          const len = Math.sqrt(dx*dx+dy*dy);
+          line.style.width = 'calc(' + len + '% * 1.02)';
+          line.style.transform = 'rotate(' + (Math.atan2(dy,dx)*180/Math.PI) + 'deg)';
+          line.style.transitionDelay = (200+i*70)+'ms';
+          wrap.appendChild(line);
+          const node = el('div','hub-node', escapeHTML(label));
+          node.style.left = x+'%'; node.style.top = y+'%'; node.style.transitionDelay = (300+i*70)+'ms';
+          wrap.appendChild(node);
+        });
+        inner.appendChild(wrap);
+        if(slide.bullets && slide.bullets.length) inner.appendChild(buildBullets(slide.bullets, 200+n*70+120));
+        break;
+      }
+      case 'blank': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,50));
+        const card = el('div','blank-card reveal-item'); revealItem(card,140);
+        const parts = slide.blankText.split('[[BLANK]]');
+        const txt = el('div','blank-text');
+        parts.forEach((part,i)=>{
+          txt.appendChild(document.createTextNode(part));
+          if(i < parts.length-1){
+            const fill = el('span','blank-fill', escapeHTML((slide.fills&&slide.fills[i])||'      '));
+            fill.style.transitionDelay = (600+i*220)+'ms';
+            txt.appendChild(fill);
+          }
+        });
+        card.appendChild(txt);
+        inner.appendChild(card);
+        if(slide.hint) inner.appendChild(el('div','blank-hint reveal-item', escapeHTML(slide.hint)));
+        break;
+      }
+      case 'datatable': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,40));
+        const wrap = el('div','data-table-wrap reveal-item'); revealItem(wrap,160);
+        if(slide.tableLabel || slide.tableTitle){
+          const cap = el('div','data-table-cap');
+          cap.appendChild(el('div','dtc-label', escapeHTML(slide.tableLabel||'')));
+          cap.appendChild(el('div','dtc-title', escapeHTML(slide.tableTitle||'')));
+          wrap.appendChild(cap);
+        }
+        const scroll = el('div','data-table-scroll');
+        const g = slide.grid;
+        const table = el('table','data-table'+(g?' data-grid':''));
+        const thead = el('thead','');
+        const htr = el('tr','');
+        (g ? g.columns : slide.columns).forEach(c=> htr.appendChild(el('th','',escapeHTML(c))));
+        thead.appendChild(htr); table.appendChild(thead);
+        const tbody = el('tbody','');
+        if(g){
+          /* real multi-column grid (rebuilt from the pptx table) */
+          g.rows.forEach((row,ri)=>{
+            const tr = el('tr','reveal-item'); revealItem(tr, 220+ri*70);
+            row.forEach((cell,ci)=>{
+              if(ci===0){ tr.appendChild(el('th','dt-var',escapeHTML(cell))); return; }
+              const v = String(cell).trim();
+              const td = el('td','dt-mark '+(/^o$/i.test(v)?'is-yes':(/^x$/i.test(v)?'is-no':'')), escapeHTML(v));
+              td.setAttribute('aria-label', g.columns[ci]+': '+(/^o$/i.test(v)?'yes':'no'));
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+        } else {
+          slide.rows.forEach((row,ri)=>{
+            const tr = el('tr','reveal-item'); revealItem(tr, 260+ri*70);
+            tr.appendChild(el('td','dt-cluster', escapeHTML(row[0])));
+            const behCell = el('td','dt-behaviors');
+            row[1].forEach(line=> behCell.appendChild(el('div','',escapeHTML(line))));
+            tr.appendChild(behCell);
+            tbody.appendChild(tr);
+          });
+        }
+        table.appendChild(tbody);
+        scroll.appendChild(table);
+        wrap.appendChild(scroll);
+        inner.appendChild(wrap);
+        if(slide.source){
+          if(slide.legend){ const lg = el('p','table-legend reveal-item', escapeHTML(slide.source)); revealItem(lg, 700); inner.appendChild(lg); }
+          else inner.appendChild(buildSource(slide.source));
+        }
+        break;
+      }
+      case 'flow': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        inner.appendChild(titleEl(slide.title,60));
+        if(slide.lede){ const l = el('p','lede reveal-item'); l.appendChild(renderMarkedText(slide.lede)); revealItem(l,120); inner.appendChild(l); }
+        const wrap = el('div','flow-wrap');
+        slide.stages.forEach((st,i)=>{
+          const row = el('div','flow-step reveal-item'); revealItem(row, 200+i*130);
+          const left = el('div','');
+          left.appendChild(el('div','flevel', escapeHTML(st.level||'')));
+          const mid = el('div','');
+          mid.appendChild(el('div','flabel', escapeHTML(st.label)));
+          if(st.process) mid.appendChild(el('div','fproc', escapeHTML(st.process)));
+          const outs = el('div','flow-outs');
+          (st.outcomes||[]).forEach(o=> outs.appendChild(el('span','flow-chip', escapeHTML(o))));
+          row.appendChild(left); row.appendChild(mid); row.appendChild(outs);
+          wrap.appendChild(row);
+        });
+        inner.appendChild(wrap);
+        if(slide.bullets) inner.appendChild(buildBullets(slide.bullets, 200+slide.stages.length*130+80));
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        break;
+      }
+      case 'compare': {
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        if(slide.badge) inner.appendChild(badgeCorner(slide.badge,140));
+        inner.appendChild(titleEl(slide.title,40));
+        if(slide.bullets) inner.appendChild(buildBullets(slide.bullets,120));
+        const grid = el('div','compare-grid');
+        slide.panels.forEach((p,pi)=>{
+          const panel = el('div','compare-panel '+p.tone+' reveal-item');
+          revealItem(panel, 280+pi*160);
+          panel.appendChild(el('div','compare-head', escapeHTML(p.label)));
+          p.items.forEach(it=>{
+            const item = el('div','compare-item');
+            item.appendChild(el('div','ci-name', escapeHTML(it.name)));
+            item.appendChild(el('div','ci-full', escapeHTML(it.full)));
+            item.appendChild(el('div','ci-detail', escapeHTML(it.detail)));
+            panel.appendChild(item);
+          });
+          grid.appendChild(panel);
+        });
+        inner.appendChild(grid);
+        if(slide.source) inner.appendChild(buildSource(slide.source));
+        break;
+      }
+      case 'media': {
+        const imgs = slide.images || [];
+        const YT_RE = /^\s*\[\[LINK:(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{6,})[^|\]]*)\|([^\]]+)\]\]\s*$/;
+        const videos = (slide.bullets||[]).map(t=>{ const m = String(t).match(YT_RE); return m ? {url:m[1], id:m[2], text:t} : null; });
+        const isVideo = videos.length>0 && videos.every(Boolean);
+        const hasText = !!(slide.quote || slide.html || (slide.bullets && slide.bullets.length));
+        let layout = slide.stage || slide.layout || 'stack';
+        if(!hasText && !isVideo && slide.look!=='prompt') layout = 'stack';            /* image-only: no empty text column */
+        if(slide.kicker) inner.appendChild(buildKicker(slide.kicker,0));
+        if(slide.title) inner.appendChild(titleEl(slide.title,50));
+
+        function photoOpts(im, d){ return {delay:d, contain: im.fit==='contain', kb: im.still!==true}; }
+        function mediaSet(list, d0){
+          const set = el('div','media-set'+(list.length>1?' multi n'+list.length:''));
+          list.forEach((im,i)=>{ const ph = buildPhoto(im, photoOpts(im, d0+i*140)); ph.classList.add('media-item');
+            if(im.w && im.h){ ph.style.setProperty('--ar', (im.w/im.h).toFixed(4)); ph.style.setProperty('--nw', im.w); ph.style.setProperty('--up', im.w < 420 ? 1.6 : 2); }
+            set.appendChild(ph); });
+          return set;
+        }
+        function bodyContent(delayBase){
+          const frag = document.createDocumentFragment();
+          if(slide.html){
+            /* rich equation (sub/superscripts); the plain `quote` duplicate is not rendered */
+            const eq = el('div','equation reveal-item'); eq.innerHTML = slide.html; revealItem(eq,delayBase); frag.appendChild(eq); delayBase+=140;
+          } else if(slide.quote){ const pq = el('p','pullquote reveal-item'); pq.appendChild(renderMarkedText(slide.quote)); revealItem(pq,delayBase); frag.appendChild(pq); delayBase+=140; }
+          if(slide.bullets && slide.bullets.length){ frag.appendChild(buildBullets(slide.bullets, delayBase)); }
+          return frag;
+        }
+
+        if(isVideo){
+          /* embedded, playable YouTube players + clickable fallback link; images[i] pairs with video i */
+          const grid = el('div','video-grid n'+videos.length);
+          videos.forEach((v,i)=>{
+            const card = el('div','video-card reveal-item'); revealItem(card, 160+i*160);
+            if(imgs[i]){ const ph = buildPhoto(imgs[i], photoOpts(imgs[i], 200+i*160)); ph.classList.add('video-logo'); card.appendChild(ph); }
+            const fr = el('div','video-frame');
+            const ifr = document.createElement('iframe');
+            ifr.src = 'https://www.youtube-nocookie.com/embed/'+v.id+'?rel=0';
+            ifr.title = 'YouTube video '+v.id; ifr.loading = 'lazy';
+            ifr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            ifr.allowFullscreen = true; ifr.referrerPolicy = 'strict-origin-when-cross-origin';
+            fr.appendChild(ifr); card.appendChild(fr);
+            const link = el('p','video-link'); link.appendChild(renderMarkedText(v.text)); card.appendChild(link);
+            grid.appendChild(card);
+          });
+          imgs.slice(videos.length).forEach((im,i)=> grid.appendChild(buildPhoto(im, photoOpts(im, 400+i*140))));
+          inner.appendChild(grid);
+        } else if(layout === 'split' || layout === 'split-reverse'){
+          const grid = el('div','split-grid'+(layout==='split-reverse'?' reverse':''));
+          const text = el('div','split-text');
+          text.appendChild(bodyContent(120));
+          const media = el('div','split-media');
+          if(imgs.length) media.appendChild(mediaSet(imgs, 260));
+          grid.appendChild(text); grid.appendChild(media);
+          inner.appendChild(grid);
+        } else {
+          const body = el('div','stack-body'+(hasText?'':' image-only'));
+          body.appendChild(bodyContent(100));
+          if(imgs.length) body.appendChild(mediaSet(imgs, 280));
+          inner.appendChild(body);
+        }
+
+        if(slide.source){ const src = buildSource(slide.source); src.classList.add('source-lg'); inner.appendChild(src); }
+        break;
+      }
+      case 'closing': {
+        inner.classList.add('closing-wrap');
+        const h = el('h1','disp title-hero reveal-item', escapeHTML(slide.title)); revealItem(h,100);
+        const rule = el('div','rule reveal-item'); revealItem(rule,40);
+        const rule2 = el('div','rule reveal-item'); revealItem(rule2,360);
+        inner.appendChild(rule); inner.appendChild(h);
+        if(slide.subtitle){ const sub=el('p','subtitle reveal-item', escapeHTML(slide.subtitle)); revealItem(sub,220); inner.appendChild(sub); }
+        inner.appendChild(rule2);
+        break;
+      }
+      default: break;
+    }
+    if(slide.type!=='title' && slide.type!=='closing'){
+      const t = inner.querySelector(':scope > h1.title-slide');
+      const k = inner.querySelector(':scope > .kicker');
+      if(t && k && (k.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)) t.after(k);
+      if(slide.subhead){ const sh = el('p','subhead reveal-item', escapeHTML(slide.subhead)); revealItem(sh,90); (k||t||inner.firstChild).after(sh); }
+    }
+    s.appendChild(inner);
+    return s;
+  }
+
+  const slideEls = SLIDES.map((sl,i)=> build(sl,i));
+  slideEls.forEach(e=> deck.appendChild(e));
+
+  let current = -1, notesOpen = false;
+
+  function activate(idx){
+    current = idx;
+    slideEls.forEach((e,i)=>{
+      if(i===idx){ e.classList.add('active'); }
+      else{
+        e.classList.remove('active');
+        e.querySelectorAll('.reveal-item').forEach(r=> r.classList.remove('in'));
+        e.querySelectorAll('.photo').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.banner-wrap').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.hub-center,.hub-node,.hub-spoke-line').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.badge-corner').forEach(x=> x.classList.remove('in'));
+        e.querySelectorAll('.blank-fill').forEach(x=> x.classList.remove('in'));
+      }
+    });
+    const activeEl = slideEls[idx];
+    requestAnimationFrame(()=>{
+      activeEl.querySelectorAll('.reveal-item').forEach(r=> r.classList.add('in'));
+      activeEl.querySelectorAll('.photo').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.banner-wrap').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.hub-center,.hub-node,.hub-spoke-line').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.badge-corner').forEach(x=> x.classList.add('in'));
+      activeEl.querySelectorAll('.blank-fill').forEach(x=> x.classList.add('in'));
+    });
+
+    progressFill.style.width = ((idx)/(SLIDES.length-1)*100).toFixed(2)+'%';
+    counterEl.textContent = (idx+1)+' / '+SLIDES.length;
+    sectionLabel.textContent = sectionFor(idx);
+    pageNum.textContent = String(idx+1).padStart(2,'0');
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===SLIDES.length-1;
+
+    const notesText = SLIDES[idx].notes;
+    if(notesText){
+      notesBody.innerHTML = '<h3>Speaker Notes</h3><p></p>';
+      notesBody.querySelector('p').appendChild(linkifyText(notesText));
+      notesToggle.style.opacity = 1;
+    } else {
+      notesBody.innerHTML = '<h3>Speaker Notes</h3><p class="notes-empty">No speaker notes for this slide.</p>';
+      notesToggle.style.opacity = .45;
+    }
+    location.hash = 's'+(idx+1);
+  }
+
+  function next(){ if(current < SLIDES.length-1) activate(current+1); hideHint(); }
+  function prev(){ if(current > 0) activate(current-1); hideHint(); }
+  let hintHidden = false;
+  function hideHint(){ if(!hintHidden){ hint.classList.add('hide'); hintHidden = true; } }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+  deck.addEventListener('click', (e)=>{ if(e.target.closest('a')) return; next(); });
+
+  window.addEventListener('keydown', (e)=>{
+    const tag = (e.target && e.target.tagName) || '';
+    if(tag==='TEXTAREA' || tag==='INPUT' || (e.target && e.target.isContentEditable)) return;
+    if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft' || e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ e.preventDefault(); activate(0); }
+    else if(e.key==='End'){ e.preventDefault(); activate(SLIDES.length-1); }
+    else if(e.key==='n' || e.key==='N'){ toggleNotes(); }
+    else if(e.key==='Escape'){ if(notesOpen) toggleNotes(); }
+    else if(e.key==='+' || e.key==='='){ e.preventDefault(); zoomIn(); }
+    else if(e.key==='-' || e.key==='_'){ e.preventDefault(); zoomOut(); }
+    else if(e.key==='0'){ e.preventDefault(); zoomReset(); }
+  });
+
+  const ZOOM_MIN=0.75, ZOOM_MAX=2, ZOOM_STEP=0.1;
+  let zoomLevel = 1;
+  try{ const saved = parseFloat(localStorage.getItem('spm381_w9_zoom')); if(!isNaN(saved)&&saved>=ZOOM_MIN&&saved<=ZOOM_MAX) zoomLevel=saved; }catch(err){}
+  function applyZoom(){
+    document.documentElement.style.setProperty('--zoom', zoomLevel.toFixed(2));
+    zoomResetBtn.textContent = Math.round(zoomLevel*100)+'%';
+    zoomOutBtn.disabled = zoomLevel<=ZOOM_MIN; zoomInBtn.disabled = zoomLevel>=ZOOM_MAX;
+    try{ localStorage.setItem('spm381_w9_zoom', zoomLevel); }catch(err){}
+  }
+  function zoomIn(){ zoomLevel=Math.min(ZOOM_MAX,+(zoomLevel+ZOOM_STEP).toFixed(2)); applyZoom(); }
+  function zoomOut(){ zoomLevel=Math.max(ZOOM_MIN,+(zoomLevel-ZOOM_STEP).toFixed(2)); applyZoom(); }
+  function zoomReset(){ zoomLevel=1; applyZoom(); }
+  zoomInBtn.addEventListener('click',(e)=>{ e.stopPropagation(); zoomIn(); });
+  zoomOutBtn.addEventListener('click',(e)=>{ e.stopPropagation(); zoomOut(); });
+  zoomResetBtn.addEventListener('click',(e)=>{ e.stopPropagation(); zoomReset(); });
+  applyZoom();
+
+  function toggleNotes(){ notesOpen = !notesOpen; notesPanel.classList.toggle('open', notesOpen); }
+  notesToggle.addEventListener('click', toggleNotes);
+  document.getElementById('closeNotes').addEventListener('click', toggleNotes);
+
+  setTimeout(hideHint, 5000);
+
+  // ask a question / leave a comment
+  (function(){
+    const askBtn = document.getElementById('askBtn');
+    const backdrop = document.getElementById('askBackdrop');
+    const context = document.getElementById('askContext');
+    const textEl = document.getElementById('askText');
+    const nameEl = document.getElementById('askName');
+    const sendBtn = document.getElementById('askSend');
+    const cancelBtn = document.getElementById('askCancel');
+    const statusEl = document.getElementById('askStatus');
+    const DECK = 'SPM381 Week 9 — Sport Consumer Motivation';
+
+    function open(){
+      const slide = SLIDES[current] || {};
+      const title = slide.title || slide.text || slide.label || '(untitled)';
+      context.textContent = 'Slide ' + (current+1) + ' of ' + SLIDES.length + ' — ' + title;
+      statusEl.textContent = ''; statusEl.className = 'ask-status';
+      sendBtn.disabled = false; sendBtn.textContent = 'Send';
+      backdrop.classList.add('open');
+      setTimeout(()=> textEl.focus(), 50);
+    }
+    function close(){
+      backdrop.classList.remove('open');
+      textEl.value=''; nameEl.value='';
+    }
+    async function send(){
+      const question = textEl.value.trim();
+      const name = nameEl.value.trim();
+      if(!name){
+        statusEl.textContent = 'Please enter your name.';
+        statusEl.className = 'ask-status err';
+        nameEl.focus();
+        return;
+      }
+      if(!question){
+        statusEl.textContent = 'Please enter a question or comment.';
+        statusEl.className = 'ask-status err';
+        textEl.focus();
+        return;
+      }
+      if(!window.QUESTIONS_API){
+        statusEl.textContent = "This form isn't connected yet — let your professor know.";
+        statusEl.className = 'ask-status err';
+        return;
+      }
+      sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
+      statusEl.textContent = ''; statusEl.className = 'ask-status';
+      const slide = SLIDES[current] || {};
+      try{
+        await fetch(window.QUESTIONS_API, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({
+            deck: DECK,
+            slideIndex: current+1,
+            slideTitle: slide.title || slide.text || slide.label || '',
+            question: question,
+            name: name
+          })
+        });
+        statusEl.textContent = 'Sent — thanks!';
+        statusEl.className = 'ask-status ok';
+        setTimeout(close, 1100);
+      }catch(err){
+        statusEl.textContent = "Couldn't send — check your connection and try again.";
+        statusEl.className = 'ask-status err';
+        sendBtn.disabled = false; sendBtn.textContent = 'Send';
+      }
+    }
+    askBtn.addEventListener('click', open);
+    cancelBtn.addEventListener('click', close);
+    sendBtn.addEventListener('click', send);
+    backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) close(); });
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && backdrop.classList.contains('open')) close();
+    });
+  })();
+
+  let startIdx = 0;
+  const m = location.hash.match(/s(\d+)/);
+  if(m){ const n = parseInt(m[1],10)-1; if(n>=0 && n<SLIDES.length) startIdx = n; }
+  activate(startIdx);
+})();
+</script>
+<script>/* ==== components.js ==== */
+/* SPM381 Week 9 — "Inner Drive" layout components.
+ * Post-render enhancer driven by `type` and `look` in #slide-data. It never changes
+ * text: it only adds classes and decorative, aria-hidden SVG/glow elements. */
+(function(){
+  'use strict';
+  var dataEl = document.getElementById('slide-data');
+  if(!dataEl) return;
+  var SLIDES; try{ SLIDES = JSON.parse(dataEl.textContent); }catch(e){ return; }
+  var NS = 'http://www.w3.org/2000/svg';
+  var ECG = '0,50 360,50 392,50 404,40 416,50 444,50 456,58 472,6 490,94 504,50 530,50 548,38 572,50 1000,50';
+
+  function ecg(cls){
+    var svg = document.createElementNS(NS,'svg');
+    svg.setAttribute('class', cls); svg.setAttribute('viewBox','0 0 1000 100');
+    svg.setAttribute('preserveAspectRatio','none'); svg.setAttribute('aria-hidden','true'); svg.setAttribute('data-deco','');
+    var pl = document.createElementNS(NS,'polyline'); pl.setAttribute('points', ECG); pl.setAttribute('pathLength','1');
+    svg.appendChild(pl); return svg;
+  }
+  function heart(){ var d = document.createElement('div'); d.className = 'w9-heart'; d.setAttribute('aria-hidden','true'); d.setAttribute('data-deco',''); return d; }
+  function reveal(node, delay){ node.classList.add('reveal-item'); node.style.transitionDelay = (delay||0)+'ms'; return node; }
+
+  function promptLine(inner, target){
+    if(!target) return;
+    var line = ecg('ecg-under'); reveal(line, 0);
+    target.after(line);
+  }
+
+  var looks = {
+    'prompt':  function(sec, inner){ promptLine(inner, inner.querySelector(':scope > h1.title-slide')); },
+    'section': function(sec, inner){ inner.removeAttribute('style'); promptLine(inner, inner.querySelector(':scope > h1.title-slide')); },
+    'ask':     function(sec, inner){ promptLine(inner, inner.querySelector(':scope > .subhead')); },
+    'clip': function(){}, 'compare': function(){}, 'videos': function(){}, 'image-only': function(){},
+    'motives': function(){}, 'steps': function(){}
+  };
+  var types = {
+    'title': function(sec, inner){
+      inner.removeAttribute('style');
+      sec.insertBefore(ecg('w9-ecg'), sec.firstChild);
+      sec.insertBefore(heart(), sec.firstChild);
+    },
+    'closing': function(sec, inner){
+      inner.insertBefore(heart(), inner.firstChild);
+      var h = inner.querySelector('h1.title-hero'); if(h) h.after(reveal(ecg('w9-ecg'), 0));
+    }
+  };
+
+  function enhance(sec){
+    if(sec.dataset.cmp) return;
+    var s = SLIDES[+sec.dataset.index] || {};
+    var inner = sec.querySelector('.slide-inner'); if(!inner) return;
+    sec.dataset.cmp = '1';
+    sec.classList.add('is-type-'+s.type);
+    if(types[s.type]) types[s.type](sec, inner, s);
+    if(s.look && looks[s.look]){ inner.classList.add('look-'+s.look); sec.classList.add('is-'+s.look); looks[s.look](sec, inner, s); }
+    if(sec.classList.contains('active')) requestAnimationFrame(function(){ sec.querySelectorAll('.reveal-item').forEach(function(r){ r.classList.add('in'); }); });
+  }
+  function run(){ document.querySelectorAll('#deck > section.slide').forEach(enhance); }
+  run();
+  window.DeckComponents = { run: run };
+})();
+</script>
+<script>/* ==== motion.js ==== */
+/* "Heartbeat sweep" transition, 70ms stagger capped at 8, brand-dot blink,
+ * motive chips entering group by group with a single beat on lit chips. */
+(function(){
+  'use strict';
+  var deck = document.getElementById('deck'); if(!deck) return;
+  var root = document.documentElement;
+  var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function reduced(){ return (mq && mq.matches) || root.classList.contains('reduced'); }
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+
+  slides.forEach(function(s){
+    var n = 0;
+    Array.prototype.forEach.call(s.querySelectorAll('.reveal-item'), function(r){
+      r.style.transitionDelay = (reduced() ? 0 : Math.min(n,7)*70)+'ms'; n++;
+    });
+    /* steps: nodes light 120ms apart after their card lands */
+    Array.prototype.forEach.call(s.querySelectorAll('.look-steps ul.bullets > li'), function(li, i){
+      li.style.transitionDelay = (reduced() ? 0 : 200 + i*120)+'ms';
+    });
+    /* motive chips: hedonic, then psychological, then peer; 50ms per chip */
+    var eq = s.querySelector('.equation'); var board = eq && eq.querySelector('.mv-ig');
+    if(board){
+      var base = 250 + (parseInt(eq.style.transitionDelay,10)||0), k = 0;
+      ['.mv-hedonic','.mv-psych','.mv-peer'].forEach(function(g){
+        board.querySelectorAll(g+' .mv-chip').forEach(function(c){ c.style.transitionDelay = (reduced() ? 0 : base + k*50)+'ms'; k++; });
+      });
+      var settle = base + k*50 + 450 + 300;
+      board.querySelectorAll('.mv-chip.mv-on').forEach(function(c){ c.style.setProperty('--beat-d', settle+'ms'); });
+    }
+  });
+
+  var sweep = document.createElement('div'); sweep.className = 'beat-sweep'; sweep.setAttribute('aria-hidden','true');
+  sweep.innerHTML = '<svg viewBox="0 0 1000 100" preserveAspectRatio="none"><polyline pathLength="1" points="0,50 360,50 392,50 404,40 416,50 444,50 456,58 472,6 490,94 504,50 530,50 548,38 572,50 1000,50"/></svg>';
+  document.body.appendChild(sweep);
+  var brand = document.querySelector('.brand'), sweepT = 0, blinkT = 0, first = true;
+
+  function onEnter(entering){
+    if(brand && !reduced()){ brand.classList.remove('blink'); void brand.offsetWidth; brand.classList.add('blink'); clearTimeout(blinkT); blinkT = setTimeout(function(){ brand.classList.remove('blink'); }, 700); }
+    if(first){ first = false; return; }
+    if(reduced()) return;
+    sweep.classList.remove('go'); void sweep.offsetWidth; sweep.classList.add('go');
+    clearTimeout(sweepT); sweepT = setTimeout(function(){ sweep.classList.remove('go'); }, 700);
+  }
+  var mo = new MutationObserver(function(recs){
+    var entering = null;
+    recs.forEach(function(r){
+      var el = r.target; if(!el.classList || !el.classList.contains('slide')) return;
+      var was = /(^|\s)active(\s|$)/.test(r.oldValue || ''), is = el.classList.contains('active');
+      if(is && !was) entering = el;
+    });
+    if(entering) onEnter(entering);
+  });
+  mo.observe(deck, {subtree:true, attributes:true, attributeFilter:['class'], attributeOldValue:true});
+  first = false;
+  root.classList.add('m-on');
+})();
+</script>
+<script>/* ==== background.js ==== */
+/* Violet/coral arena glow; slightly brighter on the title and closing slides. */
+(function(){
+  'use strict';
+  function init(){
+    if(document.querySelector('.bga')) return;
+    var bga = document.createElement('div'); bga.className = 'bga'; bga.setAttribute('aria-hidden','true');
+    document.body.insertBefore(bga, document.body.firstChild);
+    var deck = document.getElementById('deck'); if(!deck) return;
+    function update(){
+      var a = deck.querySelector('.slide.active'); if(!a) return;
+      var hero = a.classList.contains('is-type-title') || a.classList.contains('is-type-closing');
+      bga.setAttribute('data-mode', hero ? 'hero' : 'body');
+    }
+    new MutationObserver(update).observe(deck, {subtree:true, attributes:true, attributeFilter:['class']});
+    update();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+<script>window.SLIDE_POLLS = {};</script>
+<script src="../questions/widgets.js?v=3"></script>
+<div class="lightbox-backdrop" id="lightboxBackdrop"><button class="lightbox-close" id="lightboxClose" aria-label="Close enlarged image">&times;</button><img id="lightboxImg" src="" alt=""></div>
+<script>
+(function(){
+  var bd=document.getElementById('lightboxBackdrop'), lim=document.getElementById('lightboxImg');
+  function open(src,alt){ lim.src=src; lim.alt=alt||''; bd.classList.add('open'); }
+  function close(){ bd.classList.remove('open'); }
+  function srcOf(photo){ var im=photo.querySelector('img'); return im ? im.getAttribute('src') : null; }
+  function addButtons(){
+    document.querySelectorAll('#deck .photo').forEach(function(p){
+      if(p.querySelector('.photo-zoom') || !srcOf(p)) return;
+      var b=document.createElement('button'); b.className='photo-zoom'; b.type='button';
+      b.setAttribute('aria-label','Enlarge image'); b.title='Enlarge image'; b.textContent='+';
+      p.appendChild(b);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var p=e.target.closest && e.target.closest('#deck .photo');
+    if(p && (e.target.closest('.photo-zoom') || e.target.tagName==='IMG' || e.target.closest('svg'))){
+      var s=srcOf(p); if(!s) return;
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      open(s, (p.querySelector('img')||{}).alt);
+    }
+  }, true);
+  bd.addEventListener('click', function(e){ e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e){
+    if(!bd.classList.contains('open')) return;
+    e.stopPropagation(); e.stopImmediatePropagation();
+    if(e.key==='Escape') close();
+  }, true);
+  addButtons(); setTimeout(addButtons, 800); setTimeout(addButtons, 2500);
+})();
+</script>
+</body>
+</html>
