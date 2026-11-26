@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPM 381 &middot; Week 14 &mdash; Culture &amp; Globalization: NBA and UFC in China</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#fbfaf6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@75..100,500..900&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf6; --paper2:#f3f0e8; --line:rgba(14,27,44,.12);
+  --ink:#0e1b2c; --muted:#56606f; --red:#d62828; --red-ink:#a61b1b; --gold:#f2a541; --gold-ink:#a8640a; --teal:#1b998b; --sky:#2f6fd6;
+  --f-display:'Anton',Impact,'Archivo',sans-serif;
+  --f-title:'Archivo','Manrope',system-ui,sans-serif;
+  --f-body:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --s:1;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);overflow:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--sky)}
+
+/* ---------- ambient globe + grid ---------- */
+.amb{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+   radial-gradient(circle at 1px 1px, rgba(14,27,44,.07) 1px, transparent 1.4px) 0 0/28px 28px,
+   radial-gradient(ellipse 900px 600px at 105% 110%, rgba(27,153,139,.08), transparent 60%),
+   radial-gradient(ellipse 800px 520px at -5% -10%, rgba(214,40,40,.06), transparent 60%);}
+.amb svg{position:absolute;right:-220px;bottom:-300px;width:920px;height:920px;opacity:.10}
+.amb svg *{fill:none;stroke:var(--ink);stroke-width:1.4}
+
+/* ---------- chrome ---------- */
+.chrome-top{position:fixed;top:0;left:0;right:0;height:54px;z-index:20;display:flex;align-items:center;gap:14px;padding:0 150px 0 150px;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.chrome-top .brand{white-space:nowrap}
+.chrome-top{justify-content:space-between}.cl,.cr{display:flex;align-items:center;gap:14px;width:calc(50% - 140px);min-width:0}.cr{justify-content:flex-end}
+.chrome-top .brand b{color:var(--ink)}
+.tl{appearance:none;background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap}
+.tl:hover{border-color:var(--ink)}
+.home{position:fixed;top:12px;left:16px;z-index:21}
+.progress{flex:1;height:3px;background:var(--line);border-radius:3px;overflow:hidden;min-width:60px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .5s var(--ease)}
+.sec-label{white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.counter{white-space:nowrap;font-variant-numeric:tabular-nums}
+.ask-btn{position:fixed;top:10px;right:16px;z-index:21;background:var(--red);color:#fff;border:0;border-radius:999px;padding:9px 16px;font:600 14px var(--f-body);cursor:pointer;box-shadow:0 6px 18px rgba(214,40,40,.25)}
+.chrome-bottom{position:fixed;right:18px;bottom:16px;z-index:20;display:flex;gap:8px}
+.nav{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.8);color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.nav:hover{background:var(--ink);color:#fff}
+.nav svg{width:20px;height:20px}
+.hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:20;font:12px var(--f-mono);color:var(--muted);transition:opacity .6s}
+.hint.hide{opacity:0}
+
+/* ---------- stage ---------- */
+#deck{position:fixed;left:0;right:0;top:54px;bottom:0;z-index:1}
+.slide{position:absolute;left:50%;top:50%;width:1600px;height:900px;margin:-450px 0 0 -800px;transform:scale(var(--s));
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .55s var(--ease),visibility 0s linear .55s}
+.slide.active{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}
+.inner{position:absolute;inset:40px 90px 60px 90px;display:flex;flex-direction:column}
+.r{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.slide.active .r{opacity:1;transform:none}
+.slide.active .r.d1{transition-delay:.08s}.slide.active .r.d2{transition-delay:.18s}.slide.active .r.d3{transition-delay:.28s}
+.slide.active .r.d4{transition-delay:.38s}.slide.active .r.d5{transition-delay:.48s}.slide.active .r.d6{transition-delay:.58s}
+.slide.active .r.d7{transition-delay:.68s}.slide.active .r.d8{transition-delay:.78s}
+.notes{display:none}
+
+/* ---------- type ---------- */
+.kicker{font:600 17px/1 var(--f-mono);letter-spacing:.14em;color:var(--red);text-transform:uppercase;margin:0 0 14px;display:flex;align-items:center;gap:12px}
+.kicker::after{content:"";height:1px;width:80px;background:var(--red);opacity:.5}
+h2.t{font:850 60px/1.06 var(--f-title);font-stretch:82%;letter-spacing:-.01em;margin:0 0 30px;color:var(--ink)}
+p.lede{font-size:26px;line-height:1.4;margin:0 0 18px}
+ul.b{list-style:none;margin:0;padding:0;font-size:30px;line-height:1.38}
+ul.b li{position:relative;padding-left:38px;margin:0 0 18px}
+ul.b li::before{content:"";position:absolute;left:4px;top:.5em;width:12px;height:12px;border-radius:50%;border:3px solid var(--red);background:var(--gold)}
+ul.b.sm{font-size:26px}
+ul.b.sm li{margin-bottom:14px}
+h3.h{font:800 30px/1.1 var(--f-title);font-stretch:88%;margin:0 0 14px;color:var(--ink);display:flex;align-items:center;gap:10px}
+h3.h .tag{font:600 13px var(--f-mono);letter-spacing:.12em;color:#fff;background:var(--ink);padding:4px 8px;border-radius:4px}
+h3.h.red{color:var(--red-ink)}
+.src{font:13px var(--f-mono);color:var(--muted);margin-top:auto}
+
+/* ---------- layout helpers ---------- */
+.row{display:flex;gap:40px;min-height:0}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+.grow{flex:1;min-height:0}
+
+/* ---------- photos (zoomable) ---------- */
+.ph{position:relative;margin:0;border-radius:14px;overflow:hidden;background:#ddd;box-shadow:0 14px 30px rgba(14,27,44,.14)}
+.ph img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.ph.contain{background:transparent;box-shadow:none}
+.ph.contain img{object-fit:contain}
+.ph figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 16px 10px;font:500 15px var(--f-body);color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+.zbtn{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(14,27,44,.75);color:#fff;font:700 22px/1 var(--f-body);cursor:pointer;opacity:0;transition:opacity .2s;display:grid;place-items:center}
+.ph:hover .zbtn{opacity:1}
+.lb{position:fixed;inset:0;z-index:60;background:rgba(10,16,26,.88);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:90vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+
+/* ---------- stats ---------- */
+.stats{display:grid;gap:22px;margin-bottom:30px}
+.stats.c2{grid-template-columns:1fr 1fr}.stats.c3{grid-template-columns:repeat(3,1fr)}
+.stat{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 24px 18px 30px;overflow:hidden}
+.stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--c,var(--red))}
+.stat .n{font:400 76px/1 var(--f-display);color:var(--c,var(--red));letter-spacing:.01em}
+.stat .l{font:500 22px/1.3 var(--f-body);color:var(--ink);margin-top:8px}
+.stat.navy{--c:var(--ink)}.stat.gold{--c:var(--gold-ink)}.stat.teal{--c:var(--teal)}
+
+/* ---------- discuss (boarding stub) ---------- */
+.discuss{position:relative;display:flex;align-items:center;gap:22px;background:var(--ink);color:#fff;border-radius:14px;padding:20px 28px 20px 34px;font-size:26px;line-height:1.35}
+.discuss::before{content:"";position:absolute;left:-9px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:var(--paper)}
+.discuss b{font:600 14px var(--f-mono);letter-spacing:.18em;color:var(--gold);white-space:nowrap;border-right:2px dashed rgba(255,255,255,.3);padding-right:20px}
+
+/* ---------- cards ---------- */
+.cards{display:grid;gap:22px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 26px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--c,var(--red))}
+.card h4{font:800 25px/1.15 var(--f-title);font-stretch:88%;margin:6px 0 10px}
+.card p{font-size:24px;line-height:1.4;margin:0;color:#253244}
+.quote{background:var(--paper2);border-left:8px solid var(--red);border-radius:0 16px 16px 0;padding:28px 34px;font:italic 500 28px/1.45 var(--f-body);color:var(--ink);margin-bottom:30px}
+.quote cite{display:block;font:normal 600 17px var(--f-mono);color:var(--muted);margin-top:12px}
+
+/* ---------- boarding pass (title + sections) ---------- */
+.pass{position:relative;display:flex;background:#fff;border-radius:22px;box-shadow:0 30px 70px rgba(14,27,44,.18);overflow:hidden}
+.pass .main{flex:1;padding:42px 48px}
+.pass .stub{width:290px;border-left:3px dashed var(--line);padding:42px 30px;background:var(--paper2);position:relative}
+.pass .stub::before,.pass .stub::after{content:"";position:absolute;left:-16px;width:30px;height:30px;border-radius:50%;background:var(--paper)}
+.pass .stub::before{top:-15px}.pass .stub::after{bottom:-15px}
+.pass .bar{height:14px;background:repeating-linear-gradient(90deg,var(--red) 0 60px,var(--gold) 60px 90px,var(--ink) 90px 150px)}
+.pass .lbl{font:600 13px var(--f-mono);letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.pass .val{font:800 26px var(--f-title);font-stretch:85%;color:var(--ink);margin-top:4px}
+.route{display:flex;align-items:center;gap:26px;margin:26px 0}
+.route .code{font:400 92px/1 var(--f-display);color:var(--ink)}
+.route .code small{display:block;font:600 14px var(--f-mono);letter-spacing:.14em;color:var(--muted);margin-top:8px}
+.route .arc{flex:1;height:80px}
+.route .arc path{fill:none;stroke:var(--red);stroke-width:3;stroke-dasharray:8 9}
+.barcode{height:110px;margin-top:28px;background:repeating-linear-gradient(90deg,var(--ink) 0 3px,transparent 3px 6px,var(--ink) 6px 7px,transparent 7px 11px,var(--ink) 11px 15px,transparent 15px 17px)}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 26px;margin-top:10px}
+
+.title-slide .inner{justify-content:center}
+.title-slide h1{font:400 92px/1 var(--f-display);text-transform:uppercase;letter-spacing:.01em;margin:6px 0 10px;color:var(--ink)}
+.title-slide .sub{font:800 36px var(--f-title);font-stretch:85%;color:var(--red);margin:0}
+
+.sec .inner{inset:0;flex-direction:row}
+.sec .photo{width:44%;height:100%;position:relative}
+.sec .photo img{width:100%;height:100%;object-fit:cover;display:block}
+.sec .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,var(--paper))}
+.sec .right{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 90px 0 40px}
+.sec .part{font:400 160px/1 var(--f-display);color:transparent;-webkit-text-stroke:2px var(--red);margin-bottom:-10px}
+.sec h2{font:400 76px/1.02 var(--f-display);text-transform:uppercase;margin:0 0 30px;color:var(--ink)}
+.sec .pass .main{padding:26px 32px}
+.sec .route{margin:0}
+.sec .route .code{font-size:64px}
+
+/* ---------- timeline ---------- */
+.tline{position:relative;height:430px;margin:10px 0 26px}
+.tline svg{position:absolute;inset:0;width:100%;height:100%}
+.tline svg path{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-dasharray:7 8;opacity:.45}
+.tline svg .plane{fill:var(--red)}
+.tstops{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr)}
+.tstop{position:relative;text-align:center}
+.tstop .dot{position:absolute;left:50%;top:215px;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--c,var(--ink));border:5px solid #fff;box-shadow:0 0 0 2px var(--c,var(--ink))}
+.tstop .yr{position:absolute;left:6px;right:6px;font:400 38px/1 var(--f-display);color:var(--c,var(--ink))}
+.tstop .tx{position:absolute;left:6px;right:6px;font:500 21px/1.3 var(--f-body)}
+.tstop.up .yr{top:150px}.tstop.up .tx{bottom:292px}
+.tstop.dn .yr{top:248px}.tstop.dn .tx{top:296px}
+.tstop.red{--c:var(--red)}.tstop.gold{--c:var(--gold-ink)}
+
+/* ---------- table ---------- */
+table.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:25px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table.cmp th,table.cmp td{padding:20px 24px;text-align:left;border-bottom:1px solid var(--line)}
+table.cmp tr:last-child td,table.cmp tr:last-child th{border-bottom:0}
+table.cmp thead th{font:700 16px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--ink)}
+table.cmp thead th.now{background:var(--red)}
+table.cmp tbody th{font-weight:800;width:22%;background:var(--paper2)}
+
+/* ---------- list rows (sponsors, games) ---------- */
+.lrows{display:flex;flex-direction:column;gap:14px}
+.lrow{display:grid;grid-template-columns:190px 160px 1fr;align-items:center;background:#fff;border:1px solid var(--line);border-left:8px solid var(--c,var(--red));border-radius:12px;padding:18px 22px;font-size:24px}
+.lrow .nm{font:800 26px var(--f-title);font-stretch:85%}
+.lrow .yr{font:600 16px var(--f-mono);color:var(--muted)}
+.lrow.hl{background:var(--ink);color:#fff}.lrow.hl .yr{color:var(--gold)}
+.lrow.navy{--c:var(--ink)}.lrow.gold{--c:var(--gold)}.lrow.grey{--c:#9aa3ad}
+
+/* ---------- agenda ---------- */
+.agenda{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:20px}
+.stop{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 26px;position:relative}
+.stop .c{font:400 66px/1 var(--f-display);color:var(--red)}
+.stop .c small{font:600 14px var(--f-mono);letter-spacing:.14em;color:var(--muted);display:block;margin-top:8px}
+.stop h4{font:800 27px/1.12 var(--f-title);font-stretch:85%;margin:18px 0 10px}
+.stop p{font-size:19px;line-height:1.4;color:var(--muted);margin:0}
+.stop:nth-child(4) .c{color:var(--gold-ink)}
+.mapline{height:120px;margin-top:10px}
+.mapline path{fill:none;stroke:var(--red);stroke-width:3;stroke-dasharray:9 9}
+
+/* video */
+.vid{border-radius:14px;overflow:hidden;background:#000;box-shadow:0 14px 30px rgba(14,27,44,.2)}
+.vid video,.vid iframe{display:block;width:100%;height:100%;border:0}
+
+/* big number */
+.mega{font:400 300px/.9 var(--f-display);color:var(--red)}
+
+/* closing */
+.closing .inner{align-items:center;justify-content:center;text-align:center}
+.closing h1{font:400 150px/1 var(--f-display);text-transform:uppercase;margin:0}
+
+/* notes panel */
+.notes-panel{position:fixed;top:54px;right:0;bottom:0;width:min(440px,92vw);z-index:30;background:#fff;border-left:1px solid var(--line);box-shadow:-20px 0 50px rgba(14,27,44,.12);padding:26px 26px;transform:translateX(105%);transition:transform .4s var(--ease);overflow:auto;font-size:15px;line-height:1.55}
+.notes-panel.open{transform:none}
+.notes-panel h3{font:600 13px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin:0 0 12px}
+.notes-panel .x{position:absolute;top:12px;right:14px;border:0;background:none;font-size:26px;cursor:pointer;color:var(--muted)}
+
+/* ask modal */
+.ask-backdrop{position:fixed;inset:0;z-index:50;background:rgba(14,27,44,.45);display:none;align-items:center;justify-content:center}
+.ask-backdrop.open{display:flex}
+.ask-panel{width:min(520px,92vw);background:#fff;border-radius:16px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.ask-title{font:800 20px var(--f-title);margin:0 0 6px}
+.ask-context{font:13px var(--f-mono);color:var(--muted);margin:0 0 14px}
+.ask-panel textarea,.ask-panel input{width:100%;font:15px var(--f-body);padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+.ask-panel textarea{height:120px;resize:vertical}
+.ask-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ask-hint{font-size:13px;color:var(--muted)}
+.ask-actions button{border:0;border-radius:999px;padding:9px 18px;font:600 14px var(--f-body);cursor:pointer}
+.ask-btn-cancel{background:var(--paper2)}.ask-btn-send{background:var(--red);color:#fff}
+.ask-status{font-size:13px;margin-top:8px}.ask-status.err{color:var(--red)}.ask-status.ok{color:var(--teal)}
+
+/* export mode */
+html.export .chrome-top,html.export .home,html.export .ask-btn,html.export .chrome-bottom,html.export .hint,html.export .zbtn,html.export .pulse-wrap,html.export .poll-card{display:none!important}
+html.export #deck{top:0}
+html.export .r{transition:none!important;opacity:1!important;transform:none!important}
+
+@media (prefers-reduced-motion:reduce){.r{transition:none!important;opacity:1!important;transform:none!important}}
+@media (max-width:1100px){.sec-label{display:none}}@media (max-width:820px){.chrome-top{padding:0 120px 0 100px}.chrome-top .brand,.progress{display:none}}
+</style>
+</head>
+<body>
+<div class="amb" aria-hidden="true">
+  <svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="190"/>
+    <ellipse cx="200" cy="200" rx="190" ry="60"/>
+    <line x1="10" y1="200" x2="390" y2="200"/><line x1="35" y1="110" x2="365" y2="110"/><line x1="35" y1="290" x2="365" y2="290"/><line x1="100" y1="40" x2="300" y2="40"/><line x1="100" y1="360" x2="300" y2="360"/>
+    <ellipse cx="200" cy="200" rx="40" ry="190"><animate attributeName="rx" values="0;190;0" dur="24s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="200" cy="200" rx="120" ry="190"><animate attributeName="rx" values="120;190;0;120" keyTimes="0;.3;.8;1" dur="24s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="200" cy="200" rx="190" ry="190"><animate attributeName="rx" values="190;0;190" dur="24s" repeatCount="indefinite"/></ellipse>
+    <line x1="200" y1="10" x2="200" y2="390"/>
+  </svg>
+</div>
+
+<a class="tl home" href="../" title="Back to course home">&larr; Home</a>
+<div class="chrome-top">
+  <div class="cl"><div class="brand"><b>SPM 381</b> &middot; Week 14</div>
+  <div class="progress"><i id="progressFill"></i></div></div>
+  <div class="cr"><div class="sec-label" id="sectionLabel"></div>
+  <div class="counter" id="counter"></div>
+  <a class="tl" id="pdfDownload" href="SPM381_Week14_Slides.pdf" download title="Download this deck as a PDF">Download PDF</a>
+  <button class="tl" id="notesToggle" title="Toggle speaker notes (N)">Notes &middot; N</button></div>
+</div>
+<button class="ask-btn" id="askBtn" title="Ask a question about this slide" aria-label="Ask a question about this slide">Question?</button>
+
+<main id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide title-slide" data-section="Opening" aria-label="Culture & Globalization in Sports: NBA and UFC’s Expansion into China">
+ <div class="inner">
+  <div class="pass r d1">
+   <div class="main">
+    <div class="lbl">Boarding pass &middot; SPM381 Consumer Behavior in Sport</div>
+    <h1>Culture &amp; Globalization in Sports</h1>
+    <p class="sub">NBA and UFC’s Expansion into China</p>
+    <div class="route">
+      <div class="code">USA<small>New York &middot; Las Vegas</small></div>
+      <svg class="arc" viewBox="0 0 600 80" preserveAspectRatio="none"><path id="ta" d="M10 70 Q300 -40 590 70"/><g class="plane-g"><path d="M-12 -4 L10 0 L-12 4 L-8 0 Z" fill="#d62828" stroke="none"><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#ta"/></animateMotion></path></g></svg>
+      <div class="code">CHN<small>Beijing &middot; Shanghai &middot; Macao</small></div>
+    </div>
+    <div class="fields">
+      <div><div class="lbl">Flight</div><div class="val">SPM 381</div></div>
+      <div><div class="lbl">Gate</div><div class="val">Week 14</div></div>
+      <div><div class="lbl">Updated</div><div class="val">Nov 2026</div></div>
+      <div><div class="lbl">Class</div><div class="val">Global Fan</div></div>
+    </div>
+   </div>
+   <div class="stub">
+    <div class="lbl">Destinations</div>
+    <div class="val" style="font-size:22px;line-height:1.5">Seoul &middot; Tokyo<br>Madrid &middot; Beijing<br>Shanghai &middot; Macao</div>
+    <div class="barcode"></div>
+   </div>
+  </div>
+  <div class="bar r d3" style="height:12px;margin-top:26px;border-radius:6px;background:repeating-linear-gradient(90deg,var(--red) 0 60px,var(--gold) 60px 90px,var(--ink) 90px 150px)"></div>
+ </div>
+</section>
+
+<!-- 2 AGENDA -->
+<section class="slide" data-section="Opening" aria-label="This week">
+ <div class="inner">
+  <p class="kicker r">Itinerary</p>
+  <h2 class="t r d1">This week…</h2>
+  <svg class="mapline r d2" viewBox="0 0 1420 120" preserveAspectRatio="none"><path d="M40 100 Q215 0 390 90 T745 90 T1100 90 T1390 60"/></svg>
+  <div class="agenda">
+   <div class="stop r d2"><div class="c">01<small>Seoul &middot; Tokyo &middot; Madrid</small></div><h4>Culture and Globalization in Sports</h4><p>Cultural intelligence, fan cultures in Japan and Korea, bullfighting, esports</p></div>
+   <div class="stop r d3"><div class="c">02<small>New York &rarr; Beijing</small></div><h4>NBA’s Expansion into China</h4><p>Why China, the 2019 setback, and the 2025 return</p></div>
+   <div class="stop r d4"><div class="c">03<small>Las Vegas &rarr; Shanghai</small></div><h4>UFC’s Marketing Strategies and Expansion into China</h4><p>Media, venues, games, sponsors, labor issues, and China</p></div>
+   <div class="stop r d5"><div class="c">04<small>Madrid &rarr; World</small></div><h4>Case Study: Club Atlético de Madrid</h4><p>Local or global? Branding a club in Real Madrid’s shadow</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- 3 SECTION 1 -->
+<section class="slide sec" data-section="Culture & Globalization in Sport" aria-label="Culture & Globalization in Sport">
+ <div class="inner">
+  <div class="photo"><img src="assets/bullring-crowd.jpg" alt="Crowd at a bullring in Spain"></div>
+  <div class="right">
+   <div class="part r">01</div>
+   <h2 class="r d1">Culture &amp; Globalization in Sport</h2>
+   <div class="pass r d2"><div class="main"><div class="route"><div class="code">LOCAL<small>Traditions</small></div><svg class="arc" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M10 70 Q150 -30 290 70"/></svg><div class="code">GLOBAL<small>Fans worldwide</small></div></div></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 4 CULTURE -->
+<section class="slide" data-section="Culture & Globalization in Sport" aria-label="What Is Culture?">
+ <div class="inner">
+  <p class="kicker r">Part 1 &middot; Foundations</p>
+  <h2 class="t r d1">What Is Culture?</h2>
+  <div class="quote r d2">“Shared beliefs, attitudes, norms, roles, and values found among speakers of a particular language who live during the same historical period of a specific geographic region.”<cite>de Mooij (2004, p. 26)</cite></div>
+  <div class="cards r d3" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px">
+   <div class="card"><h4>Cultural Intelligence (CQ)</h4><p>The capability to relate and work effectively in culturally diverse settings.</p></div>
+   <div class="card" style="--c:var(--gold)"><h4>How is it built?</h4><p>Mostly through experience: travel, study abroad, global internships, working on mixed teams.</p></div>
+   <div class="card" style="--c:var(--teal)"><h4>Why it matters in sport</h4><p>Leagues, clubs, and brands now sell to fans in dozens of countries at once.</p></div>
+  </div>
+  <div class="discuss r d4"><b>DISCUSS</b>Where do you get your cultural knowledge? Which sport taught you something about another culture?</div>
+ </div>
+ <div class="notes">Definition: de Mooij (2004), p. 26. Cultural intelligence (CQ): Earley &amp; Ang (2003); Forbes/IESE (2015) on developing CQ through experience: https://www.forbes.com/sites/iese/2015/03/24/why-you-need-cultural-intelligence-and-how-to-develop-it/</div>
+</section>
+
+<!-- 5 BASEBALL -->
+<section class="slide" data-section="Culture & Globalization in Sport" aria-label="Different Cultures in Sports: Baseball in Japan and Korea">
+ <div class="inner">
+  <p class="kicker r">Tokyo &middot; Seoul</p>
+  <h2 class="t r d1">Different Cultures in Sports: Baseball in Japan and Korea</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 470px;gap:18px">
+    <figure class="ph r d2" style="height:300px"><img src="assets/npb-beer-vendor.jpg" alt="Beer vendor at a Japanese baseball game"><figcaption>Japan: beer vendors (uriko) work the stands</figcaption></figure>
+    <figure class="ph r d3" style="height:300px"><img src="assets/kbo-fans.jpg" alt="Korean baseball fans cheering"><figcaption>Korea: cheer leaders, chants, and team songs</figcaption></figure>
+   </div>
+   <div class="col">
+    <div class="stats c2 r d3">
+     <div class="stat"><div class="n" data-to="27.04" data-dec="2" data-suf="M">27.04M</div><div class="l">NPB fans in 2025, an all-time record (31,515 per game)</div></div>
+     <div class="stat navy"><div class="n" data-to="12.31" data-dec="2" data-suf="M">12.31M</div><div class="l">KBO fans in 2025, first Korean pro league over 12 million</div></div>
+    </div>
+    <h3 class="h r d4"><span class="tag">JPN</span>Japan (NPB)</h3>
+    <ul class="b sm r d4"><li>Polite, organized fandom: beer vendors carrying kegs, coordinated trumpet bands, clean-up after games</li></ul>
+    <h3 class="h r d5"><span class="tag">KOR</span>Korea (KBO)</h3>
+    <ul class="b sm r d5"><li>Ballpark as a party: cheerleaders, food culture, young and female fans driving growth</li><li>Attendance record broken again in Oct 2026, the third straight record season</li></ul>
+   </div>
+  </div>
+ </div>
+ <div class="notes">NPB 2025: 27,040,286 regular-season attendance, 31,515 per game (Nippon.com; NPB). 2024: 26.68M. KBO 2025: 12,312,519 (record; first Korean pro league over 12M). 2024: 10,887,705. KBO broke the record again in Oct 2026 with six days left in the season (Korea Times, Oct 5, 2026). Original links: Yomiuri Giants phone voice (NYT 2013) http://www.nytimes.com/2013/12/15/business/international/japans-top-voice-high-polite-and-on-the-phone.html ; KBO cheer culture (ABC News) http://abcnews.go.com/International/video/korean-baseball-includes-dance-moves-booming-cheers-50816102</div>
+</section>
+
+<!-- 6 BULLFIGHTING -->
+<section class="slide" data-section="Culture & Globalization in Sport" aria-label="Bullfighting: Culture or Cruelty?">
+ <div class="inner">
+  <p class="kicker r">Madrid &middot; Bogotá &middot; Mexico City</p>
+  <h2 class="t r d1">Bullfighting: Culture or Cruelty?</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 470px;gap:18px">
+    <figure class="ph r d2" style="height:290px"><img src="assets/las-ventas.jpg" alt="Las Ventas bullring, Madrid"><figcaption>Las Ventas, Madrid</figcaption></figure>
+    <figure class="ph r d3" style="height:300px"><img src="assets/bullfight.jpg" alt="Mounted bullfighter facing a bull"></figure>
+   </div>
+   <div class="col">
+    <div class="row" style="gap:30px">
+     <div class="col r d3"><h3 class="h"><span class="tag">ESP</span>Spain</h3>
+      <ul class="b sm"><li>Tourists still see bullfights as synonymous with Spain</li><li>An estimated 7,000 bulls are killed each year</li><li>Events fell from 2,684 (2009) to 1,474 (2023)</li><li>Spain scrapped its National Bullfighting Prize in 2024</li></ul></div>
+     <div class="col r d4"><h3 class="h"><span class="tag">LATAM</span>Latin America</h3>
+      <ul class="b sm"><li>Colombia: national ban signed in 2024, fully in force by 2027</li><li>Mexico City (2025): only “violence-free” bullfights, no swords or lances</li></ul></div>
+    </div>
+    <div class="discuss r d5" style="margin-top:auto">
+     <b>DISCUSS</b>Bullfight fans (culture, tradition, jobs) vs. animal-rights activists: who should decide?</div>
+   </div>
+  </div>
+ </div>
+ <div class="notes">Spain bulls killed: about 7,000 per year (estimate). Spanish bullfighting events: 2,684 (2009) to 1,474 (2023), Spanish Ministry of Culture statistics. Spain abolished the National Bullfighting Prize in 2024. Colombia: President Petro signed the ban in Aug 2024; full ban by 2027 after a transition period. Mexico City: March 2025 law requiring "violence-free" bullfights (no lances, banderillas, or swords).</div>
+</section>
+
+<!-- 7 VIDEO -->
+<section class="slide" data-section="Culture & Globalization in Sport" aria-label="Bullfighting: Watch This Clip">
+ <div class="inner">
+  <p class="kicker r">Watch</p>
+  <h2 class="t r d1">Bullfighting: Watch This Clip</h2>
+  <div class="row grow">
+   <div class="col r d2" style="justify-content:center">
+    <p class="lede"><b>Watch the clip, then think about:</b></p>
+    <ul class="b"><li>What does the crowd value in this event?</li><li>How would this look to a first-time visitor from the U.S. or China?</li><li>Can a cultural event survive when its global audience rejects it?</li></ul>
+   </div>
+   <div class="vid r d3" style="flex:0 0 390px;height:690px"><video controls preload="metadata" playsinline poster="assets/bullfight-video-poster.jpg" src="assets/bullfight.mp4"></video></div>
+  </div>
+ </div>
+</section>
+
+<!-- 8 ESPORTS KOREA -->
+<section class="slide" data-section="Culture & Globalization in Sport" aria-label="Esports in South Korea">
+ <div class="inner">
+  <p class="kicker r">Seoul &middot; Chengdu &middot; Nagoya</p>
+  <h2 class="t r d1">Esports in South Korea</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 520px;gap:18px">
+    <figure class="ph r d2" style="height:340px"><img src="assets/esports-arena.jpg" alt="Packed esports arena"></figure>
+    <figure class="ph r d3" style="height:250px"><img src="assets/pc-bang.jpg" alt="Korean PC bang gaming room"><figcaption>PC bang (internet café)</figcaption></figure>
+   </div>
+   <div class="col">
+    <div class="stats c2 r d3">
+     <div class="stat"><div class="n">3-PEAT</div><div class="l">T1 (Faker) won LoL Worlds 2023, 2024, and 2025, a first</div></div>
+     <div class="stat navy"><div class="n" data-to="257" data-pre="₩" data-suf="B">₩257B</div><div class="l">Korea’s esports industry in 2023, up 7.8% (KOCCA)</div></div>
+    </div>
+    <ul class="b sm r d4"><li>Mainstream culture for Korean millennials and Gen Z; pro gamers are national celebrities</li><li>PC bang (internet café) culture built the fan base from the late 1990s</li><li>Asian Games: esports became a medal event at Hangzhou 2022; at Aichi-Nagoya 2026, Korea won gold in League of Legends and fighting games</li></ul>
+   </div>
+  </div>
+ </div>
+ <div class="notes">T1 beat KT Rolster 3-2 in the 2025 LoL World Championship final, Chengdu, Nov 9, 2025; first three-peat (2023, 2024, 2025); sixth title. Korea domestic esports industry ₩256.95B in 2023, +7.8% (KOCCA 2024 Esports Status Survey). Aichi-Nagoya 2026 Asian Games: 11 esports medal events; South Korea won gold in League of Legends and fighting games.</div>
+</section>
+
+<!-- 9 ESPORTS SPORT? -->
+<section class="slide" data-section="Culture & Globalization in Sport" aria-label="Are Esports a Sport?">
+ <div class="inner">
+  <p class="kicker r">Debate</p>
+  <h2 class="t r d1">Are Esports a Sport?</h2>
+  <div class="cards r d2" style="grid-template-columns:1fr 1fr;margin-bottom:34px">
+   <div class="card" style="--c:var(--teal)"><h4>The case for “yes”</h4><ul class="b sm" style="margin-top:12px"><li>Medal events at the Asian Games (2022 and 2026)</li><li>Pro leagues, transfer fees, sponsors, and sold-out arenas</li><li>Saudi Arabia launches an Esports Nations Cup (Nov 2026)</li></ul></div>
+   <div class="card"><h4 style="color:var(--red-ink)">The case for “not yet”</h4><ul class="b sm" style="margin-top:12px"><li>The IOC and Saudi Arabia cancelled the Olympic Esports Games deal in Oct 2025; no new host yet</li><li>Video game addiction: the WHO lists “gaming disorder” as a health condition</li><li>Game publishers, not federations, own the rules</li></ul></div>
+  </div>
+  <div class="discuss r d3"><b>DISCUSS</b>Are video games/competitions a sport? What would it take to convince you?</div>
+ </div>
+ <div class="notes">IOC and Saudi Arabia ended the 12-year Olympic Esports Games partnership in Oct 2025; IOC says it will develop a new approach. Saudi Arabia: Esports Nations Cup starting Nov 2026. WHO added "gaming disorder" to ICD-11 (adopted 2019, in effect 2022).</div>
+</section>
+
+<!-- 10 SECTION 2 -->
+<section class="slide sec" data-section="NBA’s Expansion into China" aria-label="NBA’s Expansion into China">
+ <div class="inner">
+  <div class="photo"><img src="assets/nba-china-fans.jpg" alt="NBA star greeting fans in China"></div>
+  <div class="right">
+   <div class="part r">02</div>
+   <h2 class="r d1">NBA’s Expansion into China</h2>
+   <div class="pass r d2"><div class="main"><div class="route"><div class="code">NYC<small>NBA league office</small></div><svg class="arc" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M10 70 Q150 -30 290 70"/></svg><div class="code">PEK<small>Beijing &middot; Macao</small></div></div></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 11 GLOBALIZATION -->
+<section class="slide" data-section="NBA’s Expansion into China" aria-label="Globalization">
+ <div class="inner">
+  <p class="kicker r">Part 2 &middot; Concept</p>
+  <h2 class="t r d1">Globalization</h2>
+  <div class="row grow">
+   <div class="col" style="gap:22px">
+    <div class="quote r d2" style="font-style:normal;margin:0"><b style="color:var(--red)">Globalization:</b> the process of interaction and integration among the people or organizations of different nations. Sport now moves with no national boundaries.</div>
+    <div class="discuss r d3"><b>DISCUSS</b>What is the NBA’s motivation to expand globally? What criteria guide its choice of market?</div>
+    <div class="discuss r d4"><b>DISCUSS</b>What has been the NBA’s strategy in China, and how did it change after 2019?</div>
+   </div>
+   <div class="col" style="flex:0 0 600px;gap:18px">
+    <figure class="ph r d3" style="height:340px"><img src="assets/nba-china-event.jpg" alt="NBA player event with fans in China"></figure>
+    <figure class="ph r d4" style="height:270px"><img src="assets/nba-china-fans.jpg" alt="Crowd of NBA fans in China"></figure>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 12 WHY CHINA -->
+<section class="slide" data-section="NBA’s Expansion into China" aria-label="Why China? Motivation and Strategy">
+ <div class="inner">
+  <p class="kicker r">New York &rarr; Beijing</p>
+  <h2 class="t r d1">Why China? Motivation and Strategy</h2>
+  <div class="cards" style="grid-template-columns:1fr 1fr;flex:1">
+   <div class="card r d2"><h4 style="color:var(--red-ink)">Motivation</h4><ul class="b sm" style="margin-top:14px">
+    <li>The U.S. market was near saturation by the 1990s</li>
+    <li>Basketball is as popular as soccer in China, about 1.4 billion potential fans</li>
+    <li>Bigger markets bring economies of scale in media and merchandise</li>
+    <li>Star bridges: Yao Ming (2002–2011), and now Yang Hansen (Portland, 2025 draft)</li>
+    <li>Streaming lets every game reach phones in China live</li></ul></div>
+   <div class="card r d3" style="--c:var(--ink)"><h4>Strategy (2026)</h4><ul class="b sm" style="margin-top:14px">
+    <li>Glocalization: Chinese New Year games, Chinese-language content and halftime elements</li>
+    <li>Digital partner Tencent: about $1.5B over 5 years (2019 extension, through 2027)</li>
+    <li>Back on state TV (CCTV) since 2022</li>
+    <li>Live games again: NBA China Games in Macao, two a year through 2029</li>
+    <li>Star player summer tours and social media (Douyin, Weibo)</li></ul></div>
+  </div>
+ </div>
+ <div class="notes">Tencent: 2019 extension reported at about $1.5B over five years (about $300M/yr), reported to run through 2027. Yang Hansen: drafted No. 16 by Portland in 2025. NBA China Games: Sands China agreement, two games a year in Macao through 2029.</div>
+</section>
+
+<!-- 13 TIMELINE -->
+<section class="slide" data-section="NBA’s Expansion into China" aria-label="The NBA in China: Setback and Return">
+ <div class="inner">
+  <p class="kicker r">Flight log 2019 &rarr; 2026</p>
+  <h2 class="t r d1">The NBA in China: Setback and Return</h2>
+  <div class="tline r d2">
+   <svg viewBox="0 0 1420 430" preserveAspectRatio="none"><path id="tlp" d="M118 215 Q236 140 355 215 T591 215 T828 215 T1065 215 T1302 215"/>
+    <path class="plane" d="M-14 -5 L12 0 L-14 5 L-9 0 Z" style="opacity:1;stroke:none"><animateMotion dur="9s" repeatCount="indefinite" rotate="auto"><mpath href="#tlp"/></animateMotion></path></svg>
+   <div class="tstops">
+    <div class="tstop up red"><div class="tx">Morey tweet on Hong Kong; CCTV blackout, Tencent pauses games</div><div class="yr">2019</div><div class="dot"></div></div>
+    <div class="tstop dn"><div class="dot"></div><div class="yr">2020</div><div class="tx">CCTV airs Game 5 of the NBA Finals</div></div>
+    <div class="tstop up"><div class="tx">Full return to CCTV</div><div class="yr">2022</div><div class="dot"></div></div>
+    <div class="tstop dn gold"><div class="dot"></div><div class="yr">2025</div><div class="tx">Yang Hansen drafted No. 16 by Portland</div></div>
+    <div class="tstop up gold"><div class="tx">First China games since 2019: Suns vs. Nets in Macao, sold out</div><div class="yr">OCT 2025</div><div class="dot"></div></div>
+    <div class="tstop dn red"><div class="dot"></div><div class="yr">OCT 2026</div><div class="tx">Mavericks vs. Rockets in Macao (Oct 9 &amp; 11); deal runs to 2029</div></div>
+   </div>
+  </div>
+  <div class="discuss r d4"><b>DISCUSS</b>One tweet cost the NBA years of access. What does this teach about doing business in China?</div>
+ </div>
+ <div class="notes">Oct 2019: Rockets GM Daryl Morey's tweet supporting Hong Kong protesters; CCTV and Tencent pulled games. CCTV aired 2020 Finals Game 5; full CCTV return in 2022. Oct 2025: Suns vs. Nets, Venetian Arena, Macao; sold out (about 11,000). Oct 9 and 11, 2026: Mavericks vs. Rockets, Macao.</div>
+</section>
+
+<!-- 14 NUMBERS -->
+<section class="slide" data-section="NBA’s Expansion into China" aria-label="NBA in China by the Numbers">
+ <div class="inner">
+  <p class="kicker r">By the numbers</p>
+  <h2 class="t r d1">NBA in China by the Numbers</h2>
+  <div class="stats c3 r d2">
+   <div class="stat"><div class="n" data-to="490" data-suf="M">490M</div><div class="l">People in China who watched NBA content on Tencent in 2018–19</div></div>
+   <div class="stat navy"><div class="n" data-to="21" data-suf="M">21M</div><div class="l">Watched Game 6 of the 2019 Finals digitally</div></div>
+   <div class="stat gold"><div class="n" data-to="5.2" data-dec="1" data-suf="M">5.2M</div><div class="l">Watched one Yang Hansen Summer League game on Tencent (2025)</div></div>
+  </div>
+  <ul class="b r d3"><li>Yang Hansen’s 2025 Summer League games drew more viewers in China than the 2025 NBA Finals (NBA Deputy Commissioner Mark Tatum)</li><li>The 2025 Macao games sold out, about 11,000 fans per game</li><li>Before 2019, about 83% of Chinese men aged 15–24 called themselves NBA fans</li><li>A local star still moves the audience more than any marketing campaign</li></ul>
+ </div>
+ <div class="notes">490M: NBA/Tencent release on the 2019 extension (2018-19 season). 21M: Game 6 of the 2019 Finals watched digitally in China. 5.2M: Yang Hansen Summer League game vs. Memphis on Tencent's free broadcast (Washington Post via NBA official, July 2025). NBA Deputy Commissioner Mark Tatum said his Summer League games drew bigger China numbers than the 2025 Finals. Older figures (2015-2017): 83% of Chinese men 15-24 were NBA fans; 690M watched the 2014-15 season.</div>
+</section>
+
+<!-- 15 SECTION 3 -->
+<section class="slide sec" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="UFC’s Marketing Strategies and Expansion into China">
+ <div class="inner">
+  <div class="photo"><img src="assets/zhang-weili.jpg" alt="Zhang Weili holding the Chinese flag" style="object-position:50% 20%"></div>
+  <div class="right">
+   <div class="part r">03</div>
+   <h2 class="r d1" style="font-size:66px">UFC’s Marketing Strategies and Expansion into China</h2>
+   <div class="pass r d2"><div class="main"><div class="route"><div class="code">LAS<small>UFC headquarters</small></div><svg class="arc" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M10 70 Q150 -30 290 70"/></svg><div class="code">SHA<small>Shanghai &middot; Macau</small></div></div></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 16 MEDIA -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="Media: From ESPN Pay-Per-View to Paramount+">
+ <div class="inner">
+  <p class="kicker r">Media rights</p>
+  <h2 class="t r d1">Media: From ESPN Pay-Per-View to Paramount+</h2>
+  <div class="stats c3 r d2">
+   <div class="stat"><div class="n" data-to="7.7" data-dec="1" data-pre="$" data-suf="B">$7.7B</div><div class="l">Paramount deal, 7 years (2026–2032), about $1.1B a year</div></div>
+   <div class="stat navy"><div class="n">$0</div><div class="l">Extra cost for numbered events; pay-per-view is gone</div></div>
+   <div class="stat gold"><div class="n" data-to="8.99" data-dec="2" data-pre="$">$8.99</div><div class="l">Paramount+ Essential per month ($89.99 a year)</div></div>
+  </div>
+  <table class="cmp r d3">
+   <thead><tr><th></th><th>ESPN era (2019–2025)</th><th class="now">Paramount era (2026–2032)</th></tr></thead>
+   <tbody>
+    <tr><th>Rights fee</th><td>$1.5B for 5 years</td><td>$7.7B for 7 years</td></tr>
+    <tr><th>Where to watch</th><td>ESPN+ (subscription required)</td><td>Paramount+, some events on CBS</td></tr>
+    <tr><th>Big events</th><td>PPV, $79.99 each</td><td>Included, no PPV</td></tr>
+    <tr><th>Fan goal</th><td>Maximize revenue per fan</td><td>Maximize reach and widen the fanbase</td></tr>
+   </tbody>
+  </table>
+ </div>
+ <div class="notes">Paramount Skydance-TKO deal announced Aug 11, 2025: $7.7B over 7 years (about $1.1B/yr) starting 2026. All 13 numbered events and 30 Fight Nights on Paramount+; select numbered events simulcast on CBS; no PPV. ESPN era: $1.5B over 5 years (2019-2025); PPV $79.99 plus ESPN+ subscription. Paramount+ Essential: $8.99/month or $89.99/year.</div>
+</section>
+
+<!-- 17 META APEX -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="Meta APEX: The UFC’s Home Venue">
+ <div class="inner">
+  <p class="kicker r">Las Vegas</p>
+  <h2 class="t r d1">Meta APEX: The UFC’s Home Venue</h2>
+  <div class="row r d2" style="gap:20px;height:330px;margin-bottom:30px">
+   <figure class="ph col"><img src="assets/meta-apex-exterior.jpg" alt="UFC APEX building exterior"></figure>
+   <figure class="ph col"><img src="assets/apex-control-room.jpg" alt="APEX broadcast control room"></figure>
+   <figure class="ph col"><img src="assets/apex-arena.jpg" alt="APEX arena with octagon"></figure>
+  </div>
+  <ul class="b r d3"><li>Formerly UFC Apex (Las Vegas, opened 2019); renamed Meta APEX in 2026 under a five-year deal</li><li>2026 renovation: seating raised from about 175 to about 1,200, and tickets now sold to the public</li><li>Built as a TV studio: production space plus offices for UFC and Zuffa Boxing</li><li>Home of Dana White’s Contender Series, where unsigned fighters earn UFC contracts</li></ul>
+ </div>
+ <div class="notes">UFC Apex renamed Meta APEX under a five-year deal announced Jan 14, 2026. 2026 renovation raised seating from about 175 to about 1,200 and opened public ticket sales.</div>
+</section>
+
+<!-- 18 EA -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="EA Sports UFC: The Video Game Pipeline">
+ <div class="inner">
+  <p class="kicker r">Gaming</p>
+  <h2 class="t r d1">EA Sports UFC: The Video Game Pipeline</h2>
+  <div class="row" style="margin-bottom:30px">
+   <figure class="ph r d2" style="flex:0 0 560px;height:330px"><img src="assets/ea-ufc3.jpg" alt="EA Sports UFC 3 gameplay"></figure>
+   <div class="col lrows r d3">
+    <div class="lrow"><div class="nm" style="color:var(--red)">UFC 3</div><div class="yr">2018</div><div>About 267,000 copies in the first week</div></div>
+    <div class="lrow"><div class="nm" style="color:var(--red)">UFC 4</div><div class="yr">2020</div><div>About 267,000 copies in the first week</div></div>
+    <div class="lrow"><div class="nm" style="color:var(--red)">UFC 5</div><div class="yr">2023</div><div>Current-gen consoles only</div></div>
+    <div class="lrow hl"><div class="nm" style="color:var(--gold)">UFC 6</div><div class="yr">JUNE 2026</div><div>PS5 and Xbox Series X|S, $69.99</div></div>
+   </div>
+  </div>
+  <ul class="b sm r d4"><li>Games reach young fans who may never buy a ticket or a subscription</li><li>Players learn fighters’ names and styles, which builds demand for real events</li><li>The game uses fighters’ name, image, and likeness (NIL), a long-running pay dispute</li></ul>
+ </div>
+ <div class="notes">UFC 3 (Feb 2018): about 266,919 first-week retail units (VGChartz). UFC 4 (Aug 2020): about 267,000 first week. UFC 5 (Oct 2023). UFC 6 released June 19, 2026 for PS5 and Xbox Series X|S, $69.99.</div>
+</section>
+
+<!-- 19 SPONSORS -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="UFC’s Sponsorship Deals">
+ <div class="inner">
+  <p class="kicker r">Sponsorship</p>
+  <h2 class="t r d1">UFC’s Sponsorship Deals</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 460px;gap:18px">
+    <figure class="ph r d2" style="height:330px"><img src="assets/ufc-walkout.jpg" alt="UFC fighter walkout in sponsor gear"></figure>
+    <figure class="ph r d3" style="height:250px"><img src="assets/octagon-sponsors.jpg" alt="Overhead view of octagon with sponsor logos"></figure>
+   </div>
+   <div class="col lrows r d3">
+    <div class="lrow grey"><div class="nm">Reebok</div><div class="yr">2015–2021</div><div>Uniform deal, $70M over 6 years (expired)</div></div>
+    <div class="lrow"><div class="nm">Venum</div><div class="yr">2021–2029*</div><div>Official outfitter; reportedly extended through 2029</div></div>
+    <div class="lrow navy"><div class="nm">Meta</div><div class="yr">2025–</div><div>Official Fan Technology Partner; Meta APEX naming rights (2026)</div></div>
+    <div class="lrow gold"><div class="nm">Crypto.com</div><div class="yr">Ongoing</div><div>Sponsors the fighter bonus awards</div></div>
+    <p class="src" style="margin-top:6px">* Extension terms reported, not officially disclosed</p>
+    <figure class="ph contain" style="height:90px;width:360px;margin-top:10px"><img src="assets/ufc-venum.jpg" alt="UFC and Venum logos"></figure>
+   </div>
+  </div>
+ </div>
+ <div class="notes">Reebok: 2015-2021, $70M over 6 years. Venum: official outfitter since April 2021; reportedly extended through 2029. Meta: Official Fan Technology Partner (2025), Meta APEX naming (2026). Crypto.com: fighter bonus sponsor.</div>
+</section>
+
+<!-- 20 PI -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="UFC Performance Institute">
+ <div class="inner">
+  <p class="kicker r">Las Vegas &middot; Shanghai</p>
+  <h2 class="t r d1">UFC Performance Institute</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 720px;gap:14px">
+    <div class="vid r d2" style="height:405px"><iframe src="https://www.youtube-nocookie.com/embed/IxpVoG508nk?rel=0" title="UFC Performance Institute video" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <p class="r d3" style="font-size:19px;margin:0"><a href="https://www.youtube.com/watch?v=IxpVoG508nk" target="_blank" rel="noopener">Watch this video clip on YouTube</a></p>
+   </div>
+   <div class="col r d3">
+    <h3 class="h"><span class="tag">LAS</span>Las Vegas (2017)</h3>
+    <ul class="b sm"><li>Sports science, strength, nutrition, and rehab for UFC athletes</li></ul>
+    <h3 class="h" style="margin-top:10px"><span class="tag">SHA</span>Shanghai (2019)</h3>
+    <ul class="b sm"><li>93,000 sq ft, about $13M, the world’s largest MMA training center</li><li>Built to develop Chinese and Asia-Pacific fighters</li><li>Official High Performance Advisor to the Chinese Olympic Committee (2020)</li></ul>
+    <figure class="ph r d4" style="height:220px;margin-top:auto"><img src="assets/ufc-pi-shanghai.jpg" alt="UFC Performance Institute building"></figure>
+   </div>
+  </div>
+ </div>
+ <div class="notes">Las Vegas PI opened 2017. Shanghai PI opened June 2019: 93,000 sq ft, about $13M, nearly three times the size of Las Vegas. In 2020 UFC became Official High Performance Advisor to the Chinese Olympic Committee.</div>
+</section>
+
+<!-- 21 GYM -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="UFC Gym">
+ <div class="inner">
+  <p class="kicker r">Fitness</p>
+  <h2 class="t r d1">UFC Gym</h2>
+  <div class="row grow">
+   <div class="col">
+    <div class="stats c2 r d2">
+     <div class="stat"><div class="n">170–200+</div><div class="l">UFC Gym locations (2026)</div></div>
+     <div class="stat navy"><div class="n" data-to="30" data-suf="+">30+</div><div class="l">Countries</div></div>
+    </div>
+    <ul class="b r d3"><li>About 60 new gyms planned for 2026, including 7 in Spain</li><li>First international gym: Australia, 2013</li><li>Co-venture between UFC and New Evolution Ventures</li><li>Turns fans into members, and members into fans</li></ul>
+   </div>
+   <div class="col" style="flex:0 0 640px;gap:24px">
+    <figure class="ph r d3" style="height:460px"><img src="assets/ufc-gym.jpg" alt="UFC Gym training floor"></figure>
+    <div class="discuss r d4"><b>DISCUSS</b>Is UFC Gym a fitness business or a marketing tool?</div>
+   </div>
+  </div>
+ </div>
+ <div class="notes">UFC Gym figures (2026): about 170-200+ locations in 30+ countries; about 60 new locations planned for 2026, including 7 in Spain. First international location: Australia, 2013. Joint venture with New Evolution Ventures.</div>
+</section>
+
+<!-- 22 NY -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="Legal Issues: New York and the Big Stage">
+ <div class="inner">
+  <p class="kicker r">New York &middot; Washington</p>
+  <h2 class="t r d1">Legal Issues: New York and the Big Stage</h2>
+  <div class="row grow">
+   <figure class="ph r d2" style="flex:0 0 400px;height:600px"><img src="assets/ufc205-poster.jpg" alt="UFC 205 Madison Square Garden poster"></figure>
+   <div class="col">
+    <ul class="b r d3"><li>New York was the last U.S. state to legalize pro MMA (2016)</li><li>UFC 205 at Madison Square Garden (2016): 20,427 fans, $17.7M gate, still the MSG record</li><li>UFC 322 at MSG (Nov 2025): 20,664 fans, about $13.6M gate</li><li>UFC Freedom 250 at the White House (June 14, 2026): about 4,300 fans on the South Lawn</li></ul>
+    <div class="discuss r d4" style="margin-top:auto"><b>DISCUSS</b>From banned in New York to fighting at the White House in ten years: what changed?</div>
+   </div>
+  </div>
+ </div>
+ <div class="notes">New York legalized professional MMA in 2016 (NY State Athletic Commission). UFC 205, MSG, Nov 12, 2016: 20,427 attendance, about $17.7M gate, about 1.3M PPV buys. UFC 322, MSG, Nov 15, 2025: 20,664 attendance, about $13.6M gate (third-highest at MSG). UFC Freedom 250 at the White House, June 14, 2026: about 4,300 attendance, about $60M production cost.</div>
+</section>
+
+<!-- 23 PAY -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="Legal Issues: Fighter Pay">
+ <div class="inner">
+  <p class="kicker r">Labor</p>
+  <h2 class="t r d1">Legal Issues: Fighter Pay</h2>
+  <div class="stats c3 r d2">
+   <div class="stat navy"><div class="n" data-to="1.50" data-dec="2" data-pre="$" data-suf="B">$1.50B</div><div class="l">UFC revenue in 2025 (TKO Group)</div></div>
+   <div class="stat"><div class="n" data-to="851" data-pre="$" data-suf="M">$851M</div><div class="l">UFC adjusted EBITDA in 2025, a 57% margin</div></div>
+   <div class="stat gold"><div class="n" data-to="375" data-pre="$" data-suf="M">$375M</div><div class="l">Le v. Zuffa antitrust settlement (2025)</div></div>
+  </div>
+  <ul class="b r d3"><li>No collective bargaining agreement (CBA); fighters sign individual multi-fight contracts as independent contractors</li><li>Plaintiffs say fighters receive under 20% of UFC revenue, while NBA, NFL, and NHL players get 49–51%</li><li>A second case, Johnson v. Zuffa, is still in court in 2026</li><li>No league-style workers’ compensation or medical benefits</li></ul>
+ </div>
+ <div class="notes">Le v. Zuffa: $375M settlement, final approval Feb 6, 2025. Johnson v. Zuffa (fights from July 2017 on) still pending in D. Nev.; spoliation hearing Feb 2026. UFC 2025 revenue $1.502B, adjusted EBITDA $851M (TKO Group 2025 results). Revenue-share comparison (NBA/NFL/NHL about 49-51%) and under-20% fighter share are as alleged by plaintiffs.</div>
+</section>
+
+<!-- 24 CHINA -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="UFC’s Expansion into China">
+ <div class="inner">
+  <p class="kicker r">Shanghai &middot; Macau</p>
+  <h2 class="t r d1">UFC’s Expansion into China</h2>
+  <div class="row grow">
+   <div class="col">
+    <div class="stats c2 r d2">
+     <div class="stat"><div class="n" data-to="188" data-suf="M+">188M+</div><div class="l">UFC fans in China, up 70% since 2021</div></div>
+     <div class="stat navy"><div class="n">2031</div><div class="l">Migu (China Mobile) partnership now runs through</div></div>
+    </div>
+    <ul class="b sm r d3"><li>Migu: exclusive distributor and co-organizer of mainland events</li><li>Fight Night Shanghai: Aug 2025 and Aug 29, 2026</li><li>Fight Night Macau (Galaxy Arena): May 30, 2026</li><li>UFC Performance Institute Shanghai develops Chinese fighters</li><li>Social media on Weibo and Douyin</li></ul>
+   </div>
+   <div class="col" style="flex:0 0 480px;gap:12px">
+    <figure class="ph r d3" style="height:560px"><img src="assets/zhang-weili.jpg" alt="Zhang Weili with the Chinese flag" style="object-position:50% 15%"><figcaption>Zhang Weili, China’s first UFC champion (2019)</figcaption></figure>
+    <p class="r d4" style="font-size:17px;margin:0"><a href="https://www.ufc.com/news/ufc-announces-major-expansion-china" target="_blank" rel="noopener">ufc.com: UFC in China</a></p>
+   </div>
+  </div>
+ </div>
+ <div class="notes">Migu (China Mobile) deal extended through 2031, announced Mar 4, 2026; Migu is exclusive distributor and co-organizer of mainland events. UFC China fan base 188M+, up 70% since 2021. Fight Night Shanghai Aug 2025 and Aug 29, 2026. Fight Night Macau, Galaxy Arena, May 30, 2026. Zhang Weili: first Chinese UFC champion (2019).</div>
+</section>
+
+<!-- 25 ROSTER -->
+<section class="slide" data-section="UFC’s Marketing Strategies and Expansion into China" aria-label="A Global Roster">
+ <div class="inner">
+  <p class="kicker r">Passports in the octagon</p>
+  <h2 class="t r d1">A Global Roster</h2>
+  <div class="row grow">
+   <div class="col r d2" style="flex:0 0 560px">
+    <div class="mega" data-to="76">76</div>
+    <p style="font:700 28px/1.3 var(--f-title);margin:10px 0 18px">countries represented on the UFC roster (Feb 2026)</p>
+    <p style="font-size:20px;margin:0"><a href="https://www.ufc.com/athletes/all" target="_blank" rel="noopener">Browse every UFC athlete</a></p>
+   </div>
+   <div class="col">
+    <ul class="b r d3"><li>Each local star opens a new market: China, Brazil, Mexico, Georgia, Kazakhstan</li><li>Promoters stage events where their stars are from</li><li>A fighter from a new country can mean new sponsors and a new media deal</li></ul>
+    <div class="discuss r d4" style="margin-top:auto"><b>DISCUSS</b>Pick one country with no UFC champion yet. How would you build a star there?</div>
+   </div>
+  </div>
+ </div>
+ <div class="notes">UFC roster drew fighters from 76 countries as of Feb 2026.</div>
+</section>
+
+<!-- 26 SECTION CASE -->
+<section class="slide sec" data-section="Case Study: Club Atlético de Madrid" aria-label="The Branding of Club Atlético de Madrid: Local or Global?">
+ <div class="inner">
+  <div class="photo"><img src="assets/metropolitano-stands.jpg" alt="Inside the Metropolitano stadium"></div>
+  <div class="right">
+   <div class="part r">04</div>
+   <p class="kicker r d1">Case study analysis</p>
+   <h2 class="r d1" style="font-size:66px">The Branding of Club Atlético de Madrid: Local or Global?</h2>
+   <div class="pass r d2"><div class="main"><div class="route"><div class="code">MAD<small>Since 1903</small></div><svg class="arc" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M10 70 Q150 -30 290 70"/></svg><div class="code">WORLD<small>Global fans</small></div></div></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 27 VIDEO ATLETI -->
+<section class="slide" data-section="Case Study: Club Atlético de Madrid" aria-label="The Branding of Club Atlético de Madrid: Local or Global?">
+ <div class="inner">
+  <p class="kicker r">Watch &middot; 4’ 41”</p>
+  <h2 class="t r d1">The Branding of Club Atlético de Madrid: Local or Global?</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 900px;gap:14px">
+    <div class="vid r d2" style="height:506px"><iframe src="https://www.youtube-nocookie.com/embed/OaAM77RzZRM?rel=0" title="Atlético de Madrid branding video" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <p class="r d3" style="font-size:19px;margin:0"><a href="https://www.youtube.com/watch?v=OaAM77RzZRM" target="_blank" rel="noopener">Watch this video clip (4’ 41”) on YouTube</a></p>
+   </div>
+   <div class="col r d3" style="justify-content:center">
+    <p class="lede"><b>As you watch, note:</b></p>
+    <ul class="b sm"><li>What makes Atlético’s identity different from Real Madrid’s?</li><li>Who are Atlético’s fans, locally and globally?</li><li>What is the club selling beyond the match?</li></ul>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 28 CLUB TODAY -->
+<section class="slide" data-section="Case Study: Club Atlético de Madrid" aria-label="Club Atlético de Madrid Today">
+ <div class="inner">
+  <p class="kicker r">Madrid</p>
+  <h2 class="t r d1">Club Atlético de Madrid Today</h2>
+  <div class="stats c3 r d2">
+   <div class="stat"><div class="n" data-to="454.5" data-dec="1" data-pre="€" data-suf="M">€454.5M</div><div class="l">Revenue 2024/25; 13th in the Deloitte Money League 2026</div></div>
+   <div class="stat navy"><div class="n">~55%</div><div class="l">Stake bought by Apollo Sports Capital (Nov 2025)</div></div>
+   <div class="stat gold"><div class="n">1903</div><div class="l">Founded in Madrid</div></div>
+  </div>
+  <div class="row grow">
+   <ul class="b col r d3"><li>Third most successful club in Spain, behind Real Madrid and Barcelona</li><li>La Liga champions in 2014 and 2021; Europa League winners in 2010, 2012, and 2018</li><li>Champions League runner-up in 1974, 2014, and 2016</li><li>New U.S. owner, Apollo, is investing in the stadium district and global growth</li></ul>
+   <figure class="ph contain r d4" style="flex:0 0 300px;height:420px"><img src="assets/atletico-crest.png" alt="Atlético de Madrid crest"></figure>
+  </div>
+ </div>
+ <div class="notes">Deloitte Football Money League 2026: 13th, €454.5M (2024/25). Apollo Sports Capital majority stake (about 55%), announced Nov 2025 at about €2.5B valuation, completed Q1 2026. La Liga titles 2013-14 and 2020-21.</div>
+</section>
+
+<!-- 29 STADIUM -->
+<section class="slide" data-section="Case Study: Club Atlético de Madrid" aria-label="Stadium, Identity, and Brand">
+ <div class="inner">
+  <p class="kicker r">Riyadh Air Metropolitano</p>
+  <h2 class="t r d1">Stadium, Identity, and Brand</h2>
+  <div class="row grow">
+   <div class="col" style="flex:0 0 640px;gap:16px">
+    <figure class="ph r d2" style="height:470px"><img src="assets/metropolitano-pitch.jpg" alt="Atlético crest on the Metropolitano pitch"></figure>
+    <figure class="ph r d3" style="height:230px;width:380px"><img src="assets/metropolitano-metro.jpg" alt="Estadio Metropolitano metro station"><figcaption>Estadio Metropolitano metro station</figcaption></figure>
+   </div>
+   <div class="col">
+    <h3 class="h r d3">Riyadh Air Metropolitano</h3>
+    <ul class="b sm r d3"><li>Opened 2017 as the Wanda Metropolitano; renamed for Saudi airline Riyadh Air (deal to 2033)</li><li>Capacity 70,460; hosts the 2027 Champions League final</li><li>Ciudad del Deporte: a sports and entertainment district rising next door</li></ul>
+    <h3 class="h r d4" style="margin-top:8px">Identity</h3>
+    <ul class="b sm r d4"><li>Real Madrid and Atlético: same city, contrasting identities</li><li>The underdog image of being “second” to Real Madrid</li><li>Some of the most loyal fans in Spain</li></ul>
+   </div>
+  </div>
+ </div>
+ <div class="notes">Riyadh Air Metropolitano: opened 2017 as Wanda Metropolitano; naming deal with Riyadh Air through 2033; capacity 70,460. Chosen to host the 2027 UEFA Champions League final (Atlético de Madrid). Ciudad del Deporte sports district next to the stadium; first stone laid 2025.</div>
+</section>
+
+<!-- 30 ASSIGNMENT -->
+<section class="slide" data-section="Case Study: Club Atlético de Madrid" aria-label="Case Study Analysis">
+ <div class="inner">
+  <p class="kicker r">Assignment</p>
+  <h2 class="t r d1">Case Study Analysis</h2>
+  <div class="row grow">
+   <ul class="b col r d2" style="font-size:34px"><li>Case study: <b>The Branding of Club Atlético de Madrid: Local or Global?</b> It is shared on the course website.</li><li>Please see Module 12</li><li>There is a set of questions (5 questions)</li><li>Word doc (with questions) is posted under Module 12</li><li>Please return your answer no later than Nov 25 (Monday) 11:59 pm.</li></ul>
+   <figure class="ph contain r d3" style="flex:0 0 360px;height:500px"><img src="assets/atletico-crest.png" alt="Atlético de Madrid crest"></figure>
+  </div>
+ </div>
+</section>
+
+<!-- 31 CLOSING -->
+<section class="slide closing" data-section="Closing" aria-label="Questions?">
+ <div class="inner">
+  <p class="kicker r" style="justify-content:center">Arrivals</p>
+  <h1 class="r d1">Questions?</h1>
+  <div class="r d2" style="height:12px;width:600px;margin-top:30px;border-radius:6px;background:repeating-linear-gradient(90deg,var(--red) 0 60px,var(--gold) 60px 90px,var(--ink) 90px 150px)"></div>
+ </div>
+</section>
+
+</main>
+
+<div class="chrome-bottom">
+  <button class="nav" id="prevBtn" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="nav" id="nextBtn" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+<div class="hint" id="hint">Click, scroll wheel, or press &rarr; to continue &middot; N for notes</div>
+
+<aside class="notes-panel" id="notesPanel"><button class="x" id="closeNotes" aria-label="Close notes">&times;</button><div id="notesBody"></div></aside>
+<div class="lb" id="lb"><img alt=""></div>
+
+<div class="ask-backdrop" id="askBackdrop">
+  <div class="ask-panel">
+    <p class="ask-title">Ask a question or leave a comment</p>
+    <p class="ask-context" id="askContext"></p>
+    <textarea id="askText" placeholder="What's on your mind about this slide?" maxlength="4000"></textarea>
+    <input type="text" id="askName" placeholder="Your name" maxlength="120">
+    <div class="ask-row">
+      <span class="ask-hint">Goes straight to Dr. Kim.</span>
+      <div class="ask-actions"><button class="ask-btn-cancel" id="askCancel">Cancel</button> <button class="ask-btn-send" id="askSend">Send</button></div>
+    </div>
+    <div class="ask-status" id="askStatus"></div>
+  </div>
+</div>
+
+<script src="../questions/config.js?v=3"></script>
+<script>
+(function(){
+  var EXPORT = /[?&]export\b/.test(location.search);
+  if(EXPORT) document.documentElement.classList.add('export');
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var N = slides.length, cur = -1;
+  var fill = document.getElementById('progressFill'), counter = document.getElementById('counter'), secLabel = document.getElementById('sectionLabel');
+  var notesPanel = document.getElementById('notesPanel'), notesBody = document.getElementById('notesBody'), notesToggle = document.getElementById('notesToggle');
+  var hint = document.getElementById('hint');
+  var DECK = 'SPM381 Week 14 — Culture & Globalization: NBA and UFC in China';
+  window.DECK_LABEL = DECK;
+
+  function fit(){
+    var top = EXPORT ? 0 : 54;
+    var s = Math.min(window.innerWidth/1600, (window.innerHeight-top)/900);
+    document.documentElement.style.setProperty('--s', s);
+  }
+  window.addEventListener('resize', fit); fit();
+
+  function linkify(t){
+    var esc = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return esc.replace(/(https?:\/\/[^\s)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  }
+  function countUp(sl){
+    sl.querySelectorAll('[data-to]').forEach(function(el){
+      var to = parseFloat(el.dataset.to), dec = +(el.dataset.dec||0), pre = el.dataset.pre||'', suf = el.dataset.suf||'';
+      var final = pre + to.toFixed(dec) + suf;
+      if(EXPORT || matchMedia('(prefers-reduced-motion: reduce)').matches){ el.textContent = final; return; }
+      var t0 = null, dur = 1300;
+      function step(ts){ if(!t0) t0 = ts; var p = Math.min(1,(ts-t0)/dur); var e = 1-Math.pow(1-p,3);
+        el.textContent = pre + (to*e).toFixed(dec) + suf; if(p<1) requestAnimationFrame(step); else el.textContent = final; }
+      requestAnimationFrame(step);
+    });
+  }
+  function go(i){
+    if(i<0||i>=N||i===cur) return;
+    if(cur>=0){ slides[cur].classList.remove('active'); slides[cur].querySelectorAll('video').forEach(function(v){v.pause();}); }
+    cur = i; var sl = slides[i];
+    sl.classList.add('active');
+    fill.style.width = ((i+1)/N*100)+'%';
+    counter.textContent = (i+1)+' / '+N;
+    secLabel.textContent = sl.dataset.section||'';
+    var n = sl.querySelector('.notes');
+    notesBody.innerHTML = '<h3>Speaker Notes</h3>' + (n ? '<p>'+linkify(n.textContent.trim())+'</p>' : '<p style="color:#888">No speaker notes for this slide.</p>');
+    notesToggle.style.opacity = n ? 1 : .5;
+    countUp(sl);
+    if(!EXPORT) history.replaceState(null,'','#s'+(i+1));
+  }
+  function next(){ go(cur+1); hint.classList.add('hide'); }
+  function prev(){ go(cur-1); hint.classList.add('hide'); }
+  document.getElementById('nextBtn').onclick = next;
+  document.getElementById('prevBtn').onclick = prev;
+  function typing(e){ var t=e.target; return t && (t.tagName==='TEXTAREA'||t.tagName==='INPUT'); }
+  document.addEventListener('keydown', function(e){
+    if(typing(e) || document.getElementById('askBackdrop').classList.contains('open')) return;
+    if(['ArrowRight','PageDown',' '].indexOf(e.key)>=0){ e.preventDefault(); next(); }
+    else if(['ArrowLeft','PageUp'].indexOf(e.key)>=0){ e.preventDefault(); prev(); }
+    else if(e.key==='Home') go(0); else if(e.key==='End') go(N-1);
+    else if(e.key==='n'||e.key==='N') toggleNotes();
+    else if(e.key==='Escape'){ notesPanel.classList.remove('open'); }
+  });
+  var wheelLock = false;
+  deck.addEventListener('wheel', function(e){ if(wheelLock || Math.abs(e.deltaY)<20) return; wheelLock = true; setTimeout(function(){wheelLock=false;},700); e.deltaY>0?next():prev(); }, {passive:true});
+  deck.addEventListener('click', function(e){
+    if(e.target.closest('a,button,video,iframe,.ph,.vid,input,textarea')) return;
+    if(window.getSelection && String(window.getSelection())) return;
+    next();
+  });
+  var tx=null; deck.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+  deck.addEventListener('touchend',function(e){ if(tx===null) return; var dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50){ dx<0?next():prev(); } tx=null; });
+  function toggleNotes(){ notesPanel.classList.toggle('open'); }
+  notesToggle.onclick = toggleNotes;
+  document.getElementById('closeNotes').onclick = toggleNotes;
+
+  /* zoomable photos: (+) button + lightbox */
+  var lb = document.getElementById('lb'), lbi = lb.querySelector('img');
+  deck.querySelectorAll('.ph').forEach(function(p){
+    var im = p.querySelector('img'); if(!im) return;
+    var b = document.createElement('button'); b.className='zbtn'; b.type='button'; b.textContent='+'; b.title='Enlarge image'; b.setAttribute('aria-label','Enlarge image');
+    p.appendChild(b);
+    function open(e){ e.preventDefault(); e.stopPropagation(); lbi.src = im.getAttribute('src'); lbi.alt = im.alt; lb.classList.add('open'); }
+    b.addEventListener('click', open); im.addEventListener('click', open);
+  });
+  lb.addEventListener('click', function(){ lb.classList.remove('open'); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') lb.classList.remove('open'); }, true);
+
+  /* ask */
+  var bd = document.getElementById('askBackdrop'), ctx = document.getElementById('askContext'), tA = document.getElementById('askText'), nm = document.getElementById('askName'),
+      send = document.getElementById('askSend'), st = document.getElementById('askStatus');
+  function title(i){ return slides[i].getAttribute('aria-label')||''; }
+  function openAsk(){ ctx.textContent = 'Slide '+(cur+1)+' of '+N+' — '+title(cur); st.textContent=''; st.className='ask-status'; send.disabled=false; send.textContent='Send'; bd.classList.add('open'); setTimeout(function(){tA.focus();},50); }
+  function closeAsk(){ bd.classList.remove('open'); tA.value=''; nm.value=''; }
+  document.getElementById('askBtn').onclick = openAsk;
+  document.getElementById('askCancel').onclick = closeAsk;
+  bd.addEventListener('click', function(e){ if(e.target===bd) closeAsk(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && bd.classList.contains('open')) closeAsk(); });
+  send.onclick = function(){
+    var q = tA.value.trim(), name = nm.value.trim();
+    if(!name){ st.textContent='Please enter your name.'; st.className='ask-status err'; nm.focus(); return; }
+    if(!q){ st.textContent='Please enter a question or comment.'; st.className='ask-status err'; tA.focus(); return; }
+    if(!window.QUESTIONS_API){ st.textContent="This form isn't connected yet — let your professor know."; st.className='ask-status err'; return; }
+    send.disabled = true; send.textContent = 'Sending…';
+    fetch(window.QUESTIONS_API, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({deck:DECK, slideIndex:cur+1, slideTitle:title(cur), question:q, name:name})})
+    .then(function(){ st.textContent='Sent — thanks!'; st.className='ask-status ok'; setTimeout(closeAsk,1100); })
+    .catch(function(){ st.textContent="Couldn't send — check your connection and try again."; st.className='ask-status err'; send.disabled=false; send.textContent='Send'; });
+  };
+
+  var m = location.hash.match(/s(\d+)/), start = 0;
+  if(m){ var k = parseInt(m[1],10)-1; if(k>=0 && k<N) start = k; }
+  go(start);
+  window.__goSlide = go; window.__nSlides = N;
+})();
+</script>
+<script>window.SLIDE_POLLS = {};</script>
+<script src="../questions/widgets.js?v=3"></script>
+</body>
+</html>
